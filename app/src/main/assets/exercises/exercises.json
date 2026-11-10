@@ -1,0 +1,112 @@
+{
+  "exercises": [
+    {
+      "id": "long-tones-basic",
+      "type": "LONG_TONE",
+      "title": { "en": "Long tones", "fr": "Notes tenues" },
+      "description": {
+        "en": "Pick a note, breathe low, and hold it at a steady medium volume until the target time. Listen to the start, middle and end of the note: they should sound the same. Rest a few breaths, then move a step up or down.",
+        "fr": "Choisis une note, respire bas, et tiens-la à volume moyen et stable jusqu'au temps visé. Écoute le début, le milieu et la fin : les trois doivent sonner pareil. Repose-toi quelques respirations, puis monte ou descends d'un degré."
+      },
+      "tips": [
+        { "en": "Keep the corners of the mouth firm and the jaw still; let the air do the work.", "fr": "Garde les coins de la bouche fermes et la mâchoire immobile ; c'est l'air qui travaille." },
+        { "en": "If the pitch sags at the end, stop a little earlier rather than squeezing.", "fr": "Si la justesse baisse à la fin, arrête un peu plus tôt plutôt que de pincer." },
+        { "en": "Use the tuner panel only now and then; train the ear first.", "fr": "N'utilise l'accordeur que de temps en temps ; entraîne d'abord l'oreille." }
+      ]
+    },
+    {
+      "id": "range-extension",
+      "type": "RANGE_EXTENSION",
+      "title": { "en": "Range extension tones", "fr": "Notes tenues pour l'étendue" },
+      "description": {
+        "en": "Hold notes at the edge of your range: the lowest notes (soft and full, no honk) and the palm-key notes at the top. Start from a comfortable note and step outward one semitone at a time. Stop as soon as the sound gets pinched.",
+        "fr": "Tiens des notes au bord de ton étendue : les plus graves (douces et pleines, sans canard) et les notes des clés de paume en haut. Pars d'une note confortable et éloigne-toi d'un demi-ton à la fois. Arrête dès que le son se pince."
+      }
+    },
+    {
+      "id": "scale-runs",
+      "type": "SCALE",
+      "title": { "en": "Scale runs", "fr": "Gammes" },
+      "description": {
+        "en": "Play the scale over its full range, up and down, in even eighth notes with the metronome. A run is clean only if every note speaks, the rhythm stays even and nothing is fixed on the way. Two clean runs in a row and the tempo goes up next time.",
+        "fr": "Joue la gamme sur toute l'étendue, en montant et en descendant, en croches régulières avec le métronome. Un passage est propre seulement si chaque note sort, si le rythme reste égal et si rien n'est rattrapé en route. Deux passages propres d'affilée et le tempo monte la prochaine fois."
+      },
+      "tips": [
+        { "en": "Slow is fine. A clean slow run teaches the fingers more than a messy fast one.", "fr": "Lent, c'est bien. Un passage lent et propre apprend plus aux doigts qu'un rapide et brouillon." },
+        { "en": "Keep the fingers close to the keys.", "fr": "Garde les doigts près des clés." }
+      ]
+    },
+    {
+      "id": "scale-review",
+      "type": "SCALE",
+      "title": { "en": "Scale review", "fr": "Révision de gamme" },
+      "description": {
+        "en": "A second scale from the ones you already know, the one you played least recently. Same rules: full range, even, two clean runs in a row.",
+        "fr": "Une deuxième gamme parmi celles que tu connais déjà, celle jouée il y a le plus longtemps. Mêmes règles : toute l'étendue, régulier, deux passages propres d'affilée."
+      }
+    },
+    {
+      "id": "new-material",
+      "type": "NEW_MATERIAL",
+      "title": { "en": "Something new", "fr": "Quelque chose de nouveau" },
+      "description": {
+        "en": "Work on a new piece or one section of it. Read it through slowly first, then loop the hardest bar until it is easy, then put it back in context. Mark the section's stage when it changes.",
+        "fr": "Travaille un nouveau morceau ou une section. Lis-le d'abord lentement en entier, puis boucle la mesure la plus difficile jusqu'à ce qu'elle soit facile, puis replace-la dans son contexte. Note l'étape de la section quand elle change."
+      }
+    },
+    {
+      "id": "play-for-fun",
+      "type": "PLAY_FOR_FUN",
+      "title": { "en": "Play for fun", "fr": "Jouer pour le plaisir" },
+      "description": {
+        "en": "Play something you already know and like, for the music. No metronome, no judging. This block is protected: it is never dropped when time is short.",
+        "fr": "Joue quelque chose que tu connais déjà et que tu aimes, pour la musique. Pas de métronome, pas de jugement. Ce bloc est protégé : il n'est jamais supprimé quand le temps manque."
+      }
+    },
+    {
+      "id": "breathing-pacer",
+      "type": "BREATHING_PACER",
+      "title": { "en": "Breathing pacer", "fr": "Rythme de respiration" },
+      "description": {
+        "en": "Without the sax: breathe in for 4 counts, low into the belly and back, then out for 8 counts on a steady hiss. Optional; only added by hand in the editor.",
+        "fr": "Sans le saxophone : inspire sur 4 temps, bas dans le ventre et le dos, puis expire sur 8 temps en sifflant régulièrement. Facultatif ; ajouté seulement à la main dans l'éditeur."
+      }
+    },
+    {
+      "id": "reading-drill",
+      "type": "READING",
+      "title": { "en": "Note reading", "fr": "Lecture de notes" },
+      "description": {
+        "en": "Name the written note on the staff. A fixed number of notes, then you are done.",
+        "fr": "Nomme la note écrite sur la portée. Un nombre fixe de notes, puis c'est fini."
+      }
+    },
+    {
+      "id": "scale-recognition",
+      "type": "SCALE_RECOGNITION",
+      "title": { "en": "Scale recognition", "fr": "Reconnaissance de gammes" },
+      "description": {
+        "en": "Name a scale from its key signature or its notes, or build it from a root with the whole-step and half-step pattern.",
+        "fr": "Nomme une gamme d'après son armure ou ses notes, ou construis-la depuis une tonique avec le motif de tons et demi-tons."
+      }
+    },
+    {
+      "id": "theory-lesson",
+      "type": "THEORY_LESSON",
+      "title": { "en": "Theory lesson", "fr": "Leçon de théorie" },
+      "description": {
+        "en": "Read a short lesson, then answer a few questions in your own words or by building the answer.",
+        "fr": "Lis une courte leçon, puis réponds à quelques questions avec tes mots ou en construisant la réponse."
+      }
+    },
+    {
+      "id": "fingering-drill",
+      "type": "FINGERING",
+      "title": { "en": "Fingerings", "fr": "Doigtés" },
+      "description": {
+        "en": "See a note and tap its keys, or see a fingering and name the note.",
+        "fr": "Vois une note et touche ses clés, ou vois un doigté et nomme la note."
+      }
+    }
+  ]
+}

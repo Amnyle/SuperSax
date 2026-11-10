@@ -1,0 +1,42 @@
+{
+  "splits": [
+    { "minutes": 10, "longTones": 3, "scales": 4, "newMaterial": 0, "playForFun": 3 },
+    { "minutes": 20, "longTones": 4, "scales": 6, "newMaterial": 5, "playForFun": 5 },
+    { "minutes": 30, "longTones": 5, "scales": 8, "newMaterial": 9, "playForFun": 8 }
+  ],
+  "dropOrder": ["NEW_MATERIAL", "SCALES", "LONG_TONES"],
+  "restSec": 60,
+  "enduranceCapSec": {
+    "UNDER_3": 120,
+    "FROM_3_TO_5": 180,
+    "FROM_5_TO_10": 300,
+    "FROM_10_TO_20": 600,
+    "OVER_20": 1200
+  },
+  "focusShare": 0.10,
+  "limiterShare": 0.10,
+  "consistencySuggestedShare": 0.67,
+  "minBlockMinutes": 1,
+  "phoneDrills": { "sessionsPerWeek": 3, "minutes": 5, "maxShareOfSaxMinutes": 0.20 },
+  "adaptation": {
+    "bpmStep": 5,
+    "cleanRunsForBump": 2,
+    "minBpm": 40,
+    "maxBpm": 240,
+    "solidMinBpm": 60,
+    "holdStepSec": 1,
+    "holdMaxSec": 40,
+    "holdMinSec": 3,
+    "maxDriftForGrowthCents": 20.0,
+    "tiredEarlyShare": 0.75,
+    "staminaStepSec": 30,
+    "staminaSessionsForStep": 3,
+    "staminaMaxSec": 1200,
+    "unlockOrder": [
+      "MAJOR:Eb", "MAJOR:Bb", "MAJOR:Ab", "NATURAL_MINOR:C", "MAJOR:F", "MAJOR:Db",
+      "NATURAL_MINOR:G", "NATURAL_MINOR:F", "MAJOR:C", "MAJOR:Gb", "NATURAL_MINOR:D", "NATURAL_MINOR:Bb",
+      "MAJOR:G", "MAJOR:B", "NATURAL_MINOR:A", "NATURAL_MINOR:Eb", "MAJOR:D", "MAJOR:E",
+      "NATURAL_MINOR:E", "NATURAL_MINOR:B", "MAJOR:A", "NATURAL_MINOR:F#", "NATURAL_MINOR:C#", "NATURAL_MINOR:G#"
+    ]
+  }
+}
