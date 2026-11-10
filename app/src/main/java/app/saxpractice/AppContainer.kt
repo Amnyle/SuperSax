@@ -3,7 +3,13 @@ package app.saxpractice
 import android.app.NotificationManager
 import android.content.Context
 import android.os.SystemClock
+import app.saxpractice.audio.AudioEngine
+import app.saxpractice.audio.MicCapture
 import app.saxpractice.data.assets.ContentRepository
+import app.saxpractice.domain.audio.Timbre
+import app.saxpractice.domain.backup.SynthTimbre
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import app.saxpractice.data.backup.BackupRepository
 import app.saxpractice.data.db.SaxDatabase
 import app.saxpractice.data.repo.AppClock
@@ -61,7 +67,30 @@ class AppContainer(val context: Context) {
     val sessions by lazy { SessionManager(appScope, clock, settings, practice, progress, content, quietMode) }
 
     /** Phone drill types that exist in this build (the generator only schedules these). */
-    val availablePhoneDrills: List<ExerciseType> = emptyList()
+    val availablePhoneDrills: List<ExerciseType> = listOf(ExerciseType.READING)
+
+    val audio = AudioEngine()
+    val mic = MicCapture()
+
+    init {
+        // Keep the synth's reference pitch and timbre in step with the settings.
+        appScope.launch {
+            settings.settings.collect { s ->
+                audio.a4 = s.a4Hz
+                audio.timbre = if (s.synthTimbre == SynthTimbre.SOFT) Timbre.SOFT else Timbre.SINE
+            }
+        }
+    }
+
+    /** Starts today's planned session if none is running (used by the home-screen widget). */
+    suspend fun startTodaySession(): Boolean {
+        if (sessions.run.value != null) return true
+        val plan = today.plan(practice.activeProgram.first(), practice.playerNow(), clock.nowMs())
+        val session = plan.session ?: return false
+        if (session.steps.isEmpty()) return false
+        sessions.start(session, plan.day?.dayOfWeek)
+        return true
+    }
 
     /** The rank system's weakest pillar, fed to the generator (null until the rank system exists). */
     suspend fun currentLimiter(): Pillar? = null

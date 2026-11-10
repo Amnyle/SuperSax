@@ -36,6 +36,10 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
+    bundle {
+        // The language is chosen in the app, so every language must ship in the base APK.
+        language { enableSplit = false }
+    }
     testOptions {
         unitTests.isReturnDefaultValues = true
         unitTests.all { it.maxHeapSize = "2g" }

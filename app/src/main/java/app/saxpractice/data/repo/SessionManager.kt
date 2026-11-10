@@ -156,7 +156,10 @@ class SessionManager(
             val planned = longTones.sumOf { it.plannedSec }
             val actual = longTones.sumOf { it.actualSec }
             val tiredEarly = longTones.any { it.lipsTired } && Adaptation.tiredEarly(planned, actual, cfg)
-            player = player.copy(holdTargetSec = Adaptation.nextHoldTarget(player.holdTargetSec, tiredEarly, record.tiredness, null, cfg))
+            // Tuner drift of holds measured during this session, if the tuner was used.
+            val drift = progress.holds.first().filter { it.atMs in record.startedAtMs..record.endedAtMs }
+                .takeIf { it.isNotEmpty() }?.map { kotlin.math.abs(it.driftCents) }?.average()
+            player = player.copy(holdTargetSec = Adaptation.nextHoldTarget(player.holdTargetSec, tiredEarly, record.tiredness, drift, cfg))
             if (actual >= planned * cfg.tiredEarlyShare) {
                 progress.addRankEvent(RankEventRecord(UUID.randomUUID().toString(), now, RankEventKind.LONG_TONE_BLOCK))
             }

@@ -65,3 +65,28 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Migration policy**: `schemaVersion` bump + one JSON-rewrite step per version in `BackupCodec.migrations`; newer files are refused, unknown fields ignored, missing fields defaulted. Tested with a simulated v2.
 - **Import is staged**: the zip is read and validated into a cache folder first; data is replaced only after the confirmation dialog, in one Room transaction.
 - **Recordings are optional in exports**; importing a backup without recordings keeps the files already on the phone.
+
+## Audio (phase 2)
+
+- **YIN window 3072 samples (70 ms) at 44.1 kHz, hop 512 (11.6 ms)**: the lowest alto note (concert D♭3, 139 Hz) gets about ten periods, which made low notes stable in noise; latency stays acceptable for long tones.
+- **Difference function by FFT** (d(τ) = e1 + e2(τ) − 2·r(τ), r by FFT): O(W log W) per frame instead of O(W·τ), so the longer window is cheap.
+- **Search 100–1500 Hz, threshold 0.12, RMS gate 0.01 (≈ −40 dBFS)**; confidence = 1 − d′(τ); frames under 0.8 confidence are ignored by the tuner and hold analysis.
+- **Dip refinement**: in noise, d(τ) has wiggles and the classic "walk down to the local minimum" can stop a few lags early (measured: 10+ cents at 139 Hz with 18 dB SNR). The minimum is now searched within ±τ/16, then a least-squares parabola is fitted over a neighbourhood that grows while d stays quadratic (rise under 20 percent of the signal energy). Measured worst errors over every semitone 139–1397 Hz detuned ±50 cents: pure sine 0.3¢, harmonic-rich 0.7¢, strong 2nd harmonic 0.3¢, 24 dB SNR noise 0.4¢, 18 dB SNR noise 1.4¢; no octave errors.
+- **Median smoothing over 5 frames**, in log-frequency, reset on silence.
+- **Hold analysis**: onset 150 ms, release gap 200 ms, attack trim 300 ms, release trim 200 ms, tolerance ±10¢ by default, trace at 10 Hz; drift = mean of the last 0.5 s minus mean of the first 0.5 s (or a third of the hold if shorter); direction from the mean offset with a ±tolerance/2 dead zone.
+- **Tuner holds of at least 1 s within ±50¢ write a tuner-verified Range note** (the written note), used by the Range pillar.
+- **Microphone source**: `UNPROCESSED` (no AGC or noise suppression) when the device supports it, otherwise `VOICE_RECOGNITION`.
+- **One output AudioTrack (float, mono, 44.1 kHz, low-latency mode)** mixes metronome, drone, reference tones and melody playback; the thread stops after ~0.2 s of silence.
+- **Metronome clicks** are 25 ms decaying sine bursts (2000 Hz accent, 1300 Hz beat, quieter subdivisions), written at exact sample positions (fractional position carried between buffers).
+- **Soft timbre** = fundamental plus harmonics 2–5 at 0.45, 0.22, 0.10, 0.05.
+- **Match-the-note**: within ±25¢ for 1 s counts; 8 notes per round from the player's range, limited to written C4–C6.
+
+## Reading, notation, review (phase 2)
+
+- **Staff renderer**: pure layout in staff spaces (`notation/StaffLayout.kt`, unit-tested) + a Canvas view; Bravura glyphs drawn as text at 4 staff spaces per em. Eighth and sixteenth notes use flags (no beams), which is correct notation and simpler; non-drawable durations are split into tied notes.
+- **Reading drill**: 15 notes per round; levels 1 staff only (E4–F5), 2 one ledger line (C4–A5), 3 whole alto range, 4 accidentals in the middle, 5 everything; up after 90 percent with mean answer under 4 s, down under 60 percent. E♯, B♯, F♭, C♭ are not asked. The answer must match the spelling.
+- **Phone drills are logged twice**: a drill result (for Musicianship) and a phone session (for history and the weekly review). Consistency counts sax sessions only.
+- **Weekly review**: planned = the active program's days up to today; skipped = planned days with no sax session; BPM progress = best clean pair this week vs before; numbers only, no encouragement wording.
+- **Reminders**: one WorkManager periodic job per day at the chosen time; it posts only if today is a planned day and nothing was played yet.
+- **Widget**: a Glance widget whose tap opens the app with a start flag; the app starts today's session and opens the player (one tap from the home screen).
+- **App bundle language splits disabled**: the language is chosen inside the app.

@@ -61,12 +61,15 @@ private val tabs = listOf(
     Tab(Routes.PROGRESS, R.string.progress, Icons.Default.Insights),
 )
 
-/** Navigation graph. [startOnboarding] is true on first launch; [startSession] comes from the widget. */
+/** Navigation graph. [startOnboarding] is true on first launch; [startSignal] changes when the widget asks to start. */
 @Composable
-fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSession: Boolean, onRecreate: () -> Unit) {
+fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, onRecreate: () -> Unit) {
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
-    LaunchedEffect(startSession) { if (startSession && !startOnboarding) nav.navigate(Routes.SESSION) }
+    val container = LocalContainer.current
+    LaunchedEffect(startSignal) {
+        if (startSignal > 0 && !startOnboarding && container.startTodaySession()) nav.navigate(Routes.SESSION) { launchSingleTop = true }
+    }
     Scaffold(
         bottomBar = {
             if (tabs.any { it.route == route }) NavigationBar {

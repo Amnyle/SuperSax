@@ -18,3 +18,18 @@ Verified:
 - Not verified on a device (no emulator here): see `docs/DEVICE_CHECKS.md`.
 
 Not done in phase 1 (by design, later phases): audio, library pieces, rank (the limiter hook returns null), phone drills.
+
+## Phase 2: Listening and reading — done
+
+Built:
+- Pure audio domain: YIN (FFT difference, adaptive dip refinement), pitch tracker with median smoothing, hold analysis (segmentation, trims, drift, slope, trace, recompute at another tolerance), live hold tracker, tone synth (sine / soft), sample-accurate metronome, melody player.
+- Android audio: `AudioEngine` (one AudioTrack mixing metronome, drone, tones, melodies), `MicCapture` (AudioRecord → YIN frames, visible errors: no permission, busy, failure, with retry).
+- Tuner screen (written note large, concert small, needle with in-tune zone, "+12¢ sharp"), target note, reference tone, drone with headphone warning, hold report (trace with ±10¢ band, "in tune for 9 of 12 s", "ends 22¢ flat"), per-note history (last 4 weeks vs earlier). Microphone permission asked at first use with an explanation.
+- Match-the-note drill (8 notes, finite), metronome & drone screen with tempo trainer, metronome inside scale blocks (follows the tempo bump), optional tuner inside long-tone blocks (holds saved; drift feeds the long-tone growth rule).
+- Staff renderer (Canvas + Bravura), reading drill (15 notes, adaptive levels, note-name keypad in the chosen naming, accidental toggle, calm "done for today").
+- Weekly review (facts + EN/FR text), copy and share.
+- Home-screen widget (Glance) starting today's session; opt-in reminders (WorkManager, POST_NOTIFICATIONS asked only when turned on).
+
+Verified:
+- `assembleDebug` green; 67 unit tests, 0 failures (YIN across every semitone 139–1397 Hz with detuning, noise and harmonics; hold analysis cases; metronome tick positions; synth pitch; melody; reading drill; weekly review text EN/FR; staff layout); lint 0 errors.
+- Not verified on a device: audio latency, real microphone behaviour, widget, reminders, staff glyph placement on screen (see `docs/DEVICE_CHECKS.md`).
