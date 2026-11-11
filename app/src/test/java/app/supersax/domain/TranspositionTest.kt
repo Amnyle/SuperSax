@@ -63,8 +63,8 @@ class TranspositionTest {
 
     @Test fun enharmonicRespellingInSharpKeys() {
         // Concert E major written in Db: concert G# is written F, not E#.
-        assertEquals("F5", alto.concertToWritten(SpelledPitch.parse("G#4"), concertFifths = 4).toString())
-        assertEquals("E#5", alto.concertToWritten(SpelledPitch.parse("G#4"), concertFifths = 0).toString())
+        assertEquals("F5", alto.concertToWritten(SpelledPitch.parse("G#4"), 4).toString())
+        assertEquals("E#5", alto.concertToWritten(SpelledPitch.parse("G#4"), 0).toString())
     }
 
     @Test fun naming() {
