@@ -42,6 +42,9 @@ data class HomeUi(
     val weekMinutes: Int = 0,
     val upcoming: List<Upcoming> = emptyList(),
     val rank: RankSummary? = null,
+    /** Days in a row with the daily exercise, and whether today's is done. */
+    val streak: Int = 0,
+    val dailyDone: Boolean = false,
 )
 
 /** The dashboard: today's session with one Start action, this week's log, the rank, and what comes next. */
@@ -65,7 +68,7 @@ class HomeViewModel(private val c: AppContainer) : ViewModel() {
         Inputs(l[0] as Program?, l[1] as app.supersax.domain.program.PlayerState, l[2] as Int?, l[3] as Boolean, sessions)
     }
 
-    val ui: StateFlow<HomeUi> = combine(inputs, c.rank.result) { i, r -> i to r }.mapLatest { (i, r) ->
+    val ui: StateFlow<HomeUi> = combine(inputs, c.rank.result, c.progress.drills) { i, r, d -> Triple(i, r, d) }.mapLatest { (i, r, drills) ->
         val now = c.clock.nowMs()
         val zone = ZoneId.systemDefault()
         val today = Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
@@ -88,6 +91,8 @@ class HomeViewModel(private val c: AppContainer) : ViewModel() {
             week = week, weekDone = week.count { it.planned && it.done }, weekPlanned = week.count { it.planned }, weekMinutes = weekMinutes,
             upcoming = upcoming,
             rank = RankSummary(r.overallTier, r.division, r.limiter),
+            streak = app.supersax.domain.drills.DailyMix.streak(app.supersax.ui.practice.dailyDays(drills, zone), today.toEpochDay()),
+            dailyDone = today.toEpochDay() in app.supersax.ui.practice.dailyDays(drills, zone),
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUi())
 

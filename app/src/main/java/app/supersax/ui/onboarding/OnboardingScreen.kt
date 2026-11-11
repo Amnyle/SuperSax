@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.GraphicEq
-import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -101,11 +100,10 @@ fun OnboardingScreen(onFinished: (manualProgramId: String?) -> Unit) {
                         vm.settings { it.copy(noteNaming = if (i == 0) NoteNaming.LETTERS else NoteNaming.SOLFEGE) }
                     }
                     3 -> DaysPage(a.days, a.minutesPerSession, { d -> vm.answers { it.copy(days = d) } }, { m -> vm.answers { it.copy(minutesPerSession = m) } })
-                    4 -> RegistersPage(a.registers) { r -> vm.answers { it.copy(registers = r) } }
-                    5 -> ScalesPage(a.cleanScales, a.comfortableBpm, { s -> vm.answers { it.copy(cleanScales = s) } }, { b -> vm.answers { it.copy(comfortableBpm = b) } })
-                    6 -> RadioPage(stringResource(R.string.onb_reading_q), readingLevels(), a.readingLevel) { i -> vm.answers { it.copy(readingLevel = i) } }
-                    7 -> RadioPage(stringResource(R.string.onb_theory_q), theoryLevels(), a.theoryLevel) { i -> vm.answers { it.copy(theoryLevel = i) } }
-                    8 -> FocusPage(a.focus) { f -> vm.answers { it.copy(focus = f) } }
+                    4 -> ScalesPage(a.cleanScales, a.comfortableBpm, { s -> vm.answers { it.copy(cleanScales = s) } }, { b -> vm.answers { it.copy(comfortableBpm = b) } })
+                    5 -> RadioPage(stringResource(R.string.onb_reading_q), readingLevels(), a.readingLevel) { i -> vm.answers { it.copy(readingLevel = i) } }
+                    6 -> RadioPage(stringResource(R.string.onb_theory_q), theoryLevels(), a.theoryLevel) { i -> vm.answers { it.copy(theoryLevel = i) } }
+                    7 -> FocusPage(a.focus) { f -> vm.answers { it.copy(focus = f) } }
                     else -> ResultPage(ui)
                 }
             }
@@ -174,24 +172,11 @@ private fun RadioPage(question: String, options: List<String>, selected: Int, on
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun RegistersPage(registers: Set<Registers>, onRegisters: (Set<Registers>) -> Unit) {
-    Question(stringResource(R.string.onb_registers_q))
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Registers.entries.forEach { r ->
-            val label = stringResource(when (r) { Registers.LOW -> R.string.register_low; Registers.MIDDLE -> R.string.register_middle; Registers.HIGH -> R.string.register_high })
-            FilterChip(selected = r in registers, onClick = { onRegisters(if (r in registers) registers - r else registers + r) },
-                label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp))
-        }
-    }
-}
-
 /** First page: what the app is for, before any question. */
 @Composable
 private fun WelcomePage() {
-    Box(Modifier.size(72.dp).clip(RoundedCornerShape(22.dp)).background(Sax.colors.accent), contentAlignment = Alignment.Center) {
-        Icon(Icons.Rounded.MusicNote, null, tint = Sax.colors.onAccent, modifier = Modifier.size(40.dp))
+    Box(Modifier.size(84.dp).clip(RoundedCornerShape(24.dp)).background(Sax.colors.accent), contentAlignment = Alignment.Center) {
+        androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(R.drawable.ic_launcher_foreground), null, modifier = Modifier.size(84.dp))
     }
     Text(stringResource(R.string.onb_welcome_title), style = MaterialTheme.typography.headlineLarge)
     Text(stringResource(R.string.onb_welcome_body), style = MaterialTheme.typography.bodyLarge, color = Sax.colors.textSecondary)

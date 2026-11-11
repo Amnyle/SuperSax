@@ -115,5 +115,5 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
         }
     }
 
-    companion object { const val LAST_PAGE = 9 }
+    companion object { const val LAST_PAGE = 8 }
 }

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Event
+import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Smartphone
@@ -83,6 +84,7 @@ fun HomeScreen(
     onPhoneDrill: (ExerciseType) -> Unit,
     onRank: () -> Unit,
     onHistory: () -> Unit,
+    onDaily: () -> Unit = {},
 ) {
     val vm = appViewModel { HomeViewModel(it) }
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -101,6 +103,7 @@ fun HomeScreen(
         }
         if (!ui.loading) {
             TodayHero(ui, vm, onStartSession, onPrograms)
+            DailyCard(ui, onDaily)
             WeekCard(ui, locale, onHistory)
             RankCard(ui, onRank)
             UpcomingCard(ui, locale)
@@ -291,6 +294,30 @@ private fun UpcomingCard(ui: HomeUi, locale: Locale) {
                 }
                 Text(stringResource(R.string.minutes_short, u.day.minutes), style = MaterialTheme.typography.titleSmall, textAlign = TextAlign.End)
             }
+        }
+    }
+}
+
+/** The daily 5-minute phone exercise, with the streak. */
+@Composable
+private fun DailyCard(ui: HomeUi, onDaily: () -> Unit) {
+    val s = Sax.colors
+    SectionCard(modifier = Modifier.clickable(onClick = onDaily)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(56.dp).clip(RoundedCornerShape(18.dp)).background(if (ui.streak > 0) s.warn.copy(alpha = 0.16f) else s.elevated),
+                contentAlignment = Alignment.Center) {
+                Icon(Icons.Rounded.LocalFireDepartment, null, tint = if (ui.streak > 0) s.warn else s.textTertiary, modifier = Modifier.size(32.dp))
+            }
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Overline(stringResource(R.string.daily_title))
+                Text(androidx.compose.ui.res.pluralStringResource(R.plurals.streak_days, ui.streak, ui.streak), style = MaterialTheme.typography.headlineSmall)
+                Text(stringResource(if (ui.dailyDone) R.string.daily_done_today else R.string.daily_sub),
+                    style = MaterialTheme.typography.bodySmall, color = s.textSecondary)
+            }
+            if (ui.dailyDone) Icon(Icons.Rounded.Check, stringResource(R.string.daily_done_today), tint = s.good, modifier = Modifier.size(28.dp))
+            else Button(onClick = onDaily, shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = s.accent, contentColor = s.onAccent)) { Text(stringResource(R.string.daily_go)) }
         }
     }
 }

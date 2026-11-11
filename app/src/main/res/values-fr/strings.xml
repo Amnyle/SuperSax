@@ -624,4 +624,55 @@
     <string name="onb_naming_q">Comment nommes-tu les notes ?</string>
     <string name="onb_naming_letters">A B C D E F G</string>
     <string name="onb_naming_solfege">Do Ré Mi Fa Sol La Si</string>
+    <string name="levels_hint">Obtiens 2 étoiles à un niveau pour ouvrir le suivant. 3 étoiles = maîtrisé.</string>
+    <string name="level_locked">verrouillé</string>
+    <string name="stars_total">%1$d étoiles sur %2$d</string>
+    <string name="stars_n">%1$d étoiles sur 3</string>
+    <string name="q_reading">Quelle est cette note ?</string>
+    <string name="lv_read_1">Notes sur la portée (Mi à Fa)</string>
+    <string name="lv_read_2">Une ligne supplémentaire (Do grave à La aigu)</string>
+    <string name="lv_read_3">Toute la tessiture (Si♭ grave à Fa♯ aigu)</string>
+    <string name="lv_read_4">Dièses et bémols, Do grave à La aigu</string>
+    <string name="lv_read_5">Dièses et bémols, toute la tessiture</string>
+    <string name="lv_scale_1">Gammes majeures, jusqu\'à 1 dièse ou bémol</string>
+    <string name="lv_scale_2">Gammes majeures, jusqu\'à 2</string>
+    <string name="lv_scale_3">Gammes majeures, jusqu\'à 4</string>
+    <string name="lv_scale_4">Majeures et mineures, jusqu\'à 2</string>
+    <string name="lv_scale_5">Majeures et mineures, jusqu\'à 4</string>
+    <string name="lv_scale_6">Majeures et mineures, toutes les tonalités</string>
+    <string name="lv_scale_7">Ajoute dorien et mixolydien</string>
+    <string name="lv_scale_8">Tous les modes</string>
+    <string name="lv_fing_1">Main gauche : Sol La Si Do</string>
+    <string name="lv_fing_2">Les deux mains : Ré à Do</string>
+    <string name="lv_fing_3">Avec la clé d\'octave : Ré à Ré aigu</string>
+    <string name="lv_fing_4">Dièses et bémols, Ré à Ré aigu</string>
+    <string name="lv_fing_5">Toute la tessiture : Si♭ grave à Fa♯ aigu</string>
+    <string name="feedback_right">Bravo !</string>
+    <string name="level_unlocked_next">Niveau suivant débloqué !</string>
+    <string name="level_mastered">Maîtrisé : 3 étoiles.</string>
+    <string name="level_all_mastered">Maîtrisé : tu as fini tous les niveaux !</string>
+    <string name="level_need_two">Obtiens 2 étoiles (80 %) pour ouvrir le niveau suivant.</string>
+    <string name="level_try_three">Vise 3 étoiles : toutes les réponses justes.</string>
+    <string name="level_next">Niveau suivant</string>
+    <string name="level_retry">Réessayer</string>
+    <string name="level_back">Tous les niveaux</string>
+    <string name="daily_title">Exercice du jour</string>
+    <string name="daily_sub">5 minutes : notes, gammes, doigtés et théorie</string>
+    <string name="daily_go">C\'est parti</string>
+    <string name="daily_done_today">Fait pour aujourd\'hui. Reviens demain !</string>
+    <string name="daily_done_body">Reviens demain pour garder ta série.</string>
+    <string name="daily_finish">Terminer</string>
+    <string name="daily_reminder">Rappel de l\'exercice du jour</string>
+    <string name="daily_reminder_hint">Une notification à cette heure, seulement si tu ne l\'as pas encore fait ce jour-là.</string>
+    <string name="daily_reminder_text">Ton exercice de 5 minutes t\'attend.</string>
+    <plurals name="streak_days">
+        <item quantity="one">%1$d jour d\'affilée</item>
+        <item quantity="many">%1$d jours d\'affilée</item>
+        <item quantity="other">%1$d jours d\'affilée</item>
+    </plurals>
+    <plurals name="daily_reminder_streak">
+        <item quantity="one">Garde ta série de %1$d jour : 5 minutes aujourd\'hui.</item>
+        <item quantity="many">Garde ta série de %1$d jours : 5 minutes aujourd\'hui.</item>
+        <item quantity="other">Garde ta série de %1$d jours : 5 minutes aujourd\'hui.</item>
+    </plurals>
 </resources>

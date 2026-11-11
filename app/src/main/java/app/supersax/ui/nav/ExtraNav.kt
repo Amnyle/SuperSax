@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.compose.material.icons.rounded.Leaderboard
+import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Inventory2
 import app.supersax.ui.library.LibraryScreen
@@ -24,8 +25,12 @@ import app.supersax.ui.media.GearScreen
 import app.supersax.ui.rank.RankScreen
 import app.supersax.ui.learn.LessonsScreen
 import app.supersax.ui.learn.LessonScreen
-import app.supersax.ui.learn.ScaleRecognitionScreen
-import app.supersax.ui.learn.FingeringScreen
+import app.supersax.ui.learn.FingeringChartScreen
+import app.supersax.domain.common.DrillKind
+import app.supersax.ui.practice.ChartAction
+import app.supersax.ui.practice.DailyScreen
+import app.supersax.ui.practice.LevelsScreen
+import app.supersax.ui.practice.PlayLevelScreen
 import app.supersax.ui.advanced.OvertoneScreen
 import app.supersax.ui.advanced.AltissimoScreen
 import app.supersax.ui.advanced.SlowDownScreen
@@ -43,7 +48,6 @@ import app.supersax.ui.audio.MetronomeScreen
 import app.supersax.ui.audio.TunerHistoryScreen
 import app.supersax.ui.audio.TunerScreen
 import app.supersax.ui.drills.MatchNoteScreen
-import app.supersax.ui.drills.ReadingDrillScreen
 import app.supersax.ui.hub.HubEntry
 import app.supersax.ui.review.WeeklyReviewScreen
 
@@ -64,6 +68,10 @@ object ExtraRoutes {
     const val LESSON = "lesson/{id}"
     const val SCALE_REC = "scale_recognition"
     const val FINGERING = "fingering"
+    const val FINGERING_CHART = "fingering_chart"
+    const val DAILY = "daily"
+    const val PLAY = "play/{kind}/{level}"
+    fun play(kind: DrillKind, level: Int) = "play/${kind.name}/$level"
     fun lesson(id: String) = "lesson/$id"
     const val OVERTONES = "overtones"
     const val ALTISSIMO = "altissimo"
@@ -80,7 +88,16 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.TUNER_HISTORY) { TunerHistoryScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.METRONOME) { MetronomeScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.MATCH) { MatchNoteScreen(onBack = { nav.popBackStack() }) }
-    composable(ExtraRoutes.READING) { ReadingDrillScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.READING) { LevelsScreen(DrillKind.READING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.READING, it)) }) }
+    composable(ExtraRoutes.PLAY, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType })) { e ->
+        val kind = DrillKind.valueOf(e.arguments!!.getString("kind")!!)
+        val level = e.arguments!!.getInt("level")
+        PlayLevelScreen(kind, level, onClose = { nav.popBackStack() }, onLevel = { l ->
+            nav.navigate(ExtraRoutes.play(kind, l)) { popUpTo(e.destination.id) { inclusive = true } }
+        })
+    }
+    composable(ExtraRoutes.DAILY) { DailyScreen(onClose = { nav.popBackStack() }) }
+    composable(ExtraRoutes.FINGERING_CHART) { FingeringChartScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.REVIEW) { WeeklyReviewScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.LIBRARY) { LibraryScreen(onPiece = { nav.navigate(ExtraRoutes.piece(it)) }, onPdf = { nav.navigate(ExtraRoutes.pdf(it)) }) }
     composable(ExtraRoutes.PIECE, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
@@ -97,10 +114,17 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.RANK) { RankScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.LESSONS) { LessonsScreen(onBack = { nav.popBackStack() }, onLesson = { nav.navigate(ExtraRoutes.lesson(it)) }) }
     composable(ExtraRoutes.LESSON, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
-        LessonScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() })
+        LessonScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() }, onLesson = { id ->
+            nav.navigate(ExtraRoutes.lesson(id)) { popUpTo(e.destination.id) { inclusive = true } }
+        })
     }
-    composable(ExtraRoutes.SCALE_REC) { ScaleRecognitionScreen(onBack = { nav.popBackStack() }) }
-    composable(ExtraRoutes.FINGERING) { FingeringScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.SCALE_REC) {
+        LevelsScreen(DrillKind.SCALE_RECOGNITION, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_RECOGNITION, it)) })
+    }
+    composable(ExtraRoutes.FINGERING) {
+        LevelsScreen(DrillKind.FINGERING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.FINGERING, it)) },
+            actions = { ChartAction { nav.navigate(ExtraRoutes.FINGERING_CHART) } })
+    }
     composable(ExtraRoutes.OVERTONES) { OvertoneScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.ALTISSIMO) { AltissimoScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.SLOW_DOWN) { SlowDownScreen(onBack = { nav.popBackStack() }) }
@@ -146,6 +170,9 @@ fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
 fun phoneTrainingEntries(nav: NavHostController): List<HubEntry> {
     val blue = app.supersax.ui.theme.PhoneBlue
     return listOf(
+        HubEntry(stringResource(R.string.daily_title), stringResource(R.string.daily_sub), Icons.Rounded.LocalFireDepartment, app.supersax.ui.theme.Sax.colors.warn) {
+            nav.navigate(ExtraRoutes.DAILY)
+        },
         HubEntry(stringResource(R.string.ex_reading), stringResource(R.string.reading_sub), Icons.AutoMirrored.Rounded.MenuBook, blue) { nav.navigate(ExtraRoutes.READING) },
         HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Rounded.Piano, blue) { nav.navigate(ExtraRoutes.SCALE_REC) },
         HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Rounded.School, blue) { nav.navigate(ExtraRoutes.LESSONS) },

@@ -624,4 +624,53 @@
     <string name="onb_naming_q">How do you name the notes?</string>
     <string name="onb_naming_letters">A B C D E F G</string>
     <string name="onb_naming_solfege">Do Ré Mi Fa Sol La Si</string>
+    <string name="levels_hint">Get 2 stars on a level to open the next one. 3 stars = mastered.</string>
+    <string name="level_locked">locked</string>
+    <string name="stars_total">%1$d of %2$d stars</string>
+    <string name="stars_n">%1$d of 3 stars</string>
+    <string name="q_reading">Which note is this?</string>
+    <string name="lv_read_1">Notes on the staff (E to F)</string>
+    <string name="lv_read_2">One ledger line (low C to high A)</string>
+    <string name="lv_read_3">The whole range (low B♭ to high F♯)</string>
+    <string name="lv_read_4">Sharps and flats, low C to high A</string>
+    <string name="lv_read_5">Sharps and flats, the whole range</string>
+    <string name="lv_scale_1">Major scales, up to 1 sharp or flat</string>
+    <string name="lv_scale_2">Major scales, up to 2</string>
+    <string name="lv_scale_3">Major scales, up to 4</string>
+    <string name="lv_scale_4">Major and minor, up to 2</string>
+    <string name="lv_scale_5">Major and minor, up to 4</string>
+    <string name="lv_scale_6">Major and minor, every key</string>
+    <string name="lv_scale_7">Adds Dorian and Mixolydian</string>
+    <string name="lv_scale_8">All modes</string>
+    <string name="lv_fing_1">Left hand: G A B C</string>
+    <string name="lv_fing_2">Both hands: D to C</string>
+    <string name="lv_fing_3">With the octave key: D to high D</string>
+    <string name="lv_fing_4">Sharps and flats, D to high D</string>
+    <string name="lv_fing_5">Full range: low B♭ to high F♯</string>
+    <string name="feedback_right">Right!</string>
+    <string name="level_unlocked_next">Next level unlocked!</string>
+    <string name="level_mastered">Mastered: 3 stars.</string>
+    <string name="level_all_mastered">Mastered: you finished every level!</string>
+    <string name="level_need_two">Get 2 stars (80 percent) to open the next level.</string>
+    <string name="level_try_three">Try for 3 stars: every answer right.</string>
+    <string name="level_next">Next level</string>
+    <string name="level_retry">Try again</string>
+    <string name="level_back">All levels</string>
+    <string name="daily_title">Daily exercise</string>
+    <string name="daily_sub">5 minutes: notes, scales, fingerings and theory</string>
+    <string name="daily_go">Go</string>
+    <string name="daily_done_today">Done for today. Come back tomorrow!</string>
+    <string name="daily_done_body">Come back tomorrow to keep your streak.</string>
+    <string name="daily_finish">Finish</string>
+    <string name="daily_reminder">Daily exercise reminder</string>
+    <string name="daily_reminder_hint">One notification at this time, only if you have not done it yet that day.</string>
+    <string name="daily_reminder_text">Your 5-minute exercise is waiting.</string>
+    <plurals name="streak_days">
+        <item quantity="one">%1$d day in a row</item>
+        <item quantity="other">%1$d days in a row</item>
+    </plurals>
+    <plurals name="daily_reminder_streak">
+        <item quantity="one">Keep your %1$d-day streak: 5 minutes today.</item>
+        <item quantity="other">Keep your %1$d-day streak: 5 minutes today.</item>
+    </plurals>
 </resources>

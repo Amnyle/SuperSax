@@ -52,6 +52,7 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
     ScreenScaffold(stringResource(R.string.settings), onBack = onBack) { padding ->
         ScrollColumn(padding) {
             SectionCard(stringResource(R.string.updates)) { UpdatesSection(s, vm::update) }
+            SectionCard(stringResource(R.string.daily_title)) { DailyReminderSection(s, vm::update) }
             SectionCard(stringResource(R.string.settings_display)) {
                 LanguageNamingTheme(s.language, s.noteNaming, s.theme, vm::update)
             }

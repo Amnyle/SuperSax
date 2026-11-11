@@ -35,3 +35,24 @@ fun RemindersSection(s: SettingsRecord, update: ((SettingsRecord) -> SettingsRec
         if (!Reminders.canNotify(context)) Text(stringResource(R.string.reminders_no_permission), color = MaterialTheme.colorScheme.error)
     }
 }
+
+/** Reminder for the daily 5-minute exercise: off by default, at a chosen time, only if not done yet that day. */
+@Composable
+fun DailyReminderSection(s: SettingsRecord, update: ((SettingsRecord) -> SettingsRecord) -> Unit) {
+    val context = LocalContext.current
+    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (!granted) update { it.copy(dailyReminder = false) }
+    }
+    LaunchedEffect(s.dailyReminder, s.dailyReminderHour, s.dailyReminderMinute) {
+        runCatching { Reminders.syncDaily(context, s.dailyReminder, s.dailyReminderHour, s.dailyReminderMinute) }
+    }
+    ToggleRow(stringResource(R.string.daily_reminder), stringResource(R.string.daily_reminder_hint), s.dailyReminder) { on ->
+        update { it.copy(dailyReminder = on) }
+        if (on && Build.VERSION.SDK_INT >= 33 && !Reminders.canNotify(context)) permission.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+    if (s.dailyReminder) {
+        Stepper(stringResource(R.string.reminder_hour), s.dailyReminderHour, { v -> update { it.copy(dailyReminderHour = v) } }, 0..23) { "%02d".format(it) }
+        Stepper(stringResource(R.string.reminder_minute), s.dailyReminderMinute, { v -> update { it.copy(dailyReminderMinute = v) } }, 0..55, 5) { "%02d".format(it) }
+        if (!Reminders.canNotify(context)) Text(stringResource(R.string.reminders_no_permission), color = MaterialTheme.colorScheme.error)
+    }
+}

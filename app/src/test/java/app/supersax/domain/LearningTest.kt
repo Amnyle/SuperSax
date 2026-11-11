@@ -54,7 +54,7 @@ class LearningTest {
     }
 
     @Test fun scaleRecognitionQuestionsAreConsistent() {
-        for (level in 1..5) {
+        for (level in 1..ScaleRecognition.LEVELS) {
             val pool = ScaleRecognition.pool(level)
             assertTrue(pool.isNotEmpty())
             pool.forEach { s ->
@@ -71,7 +71,8 @@ class LearningTest {
         val q = ScaleRecognition.Question(ScaleRecognition.Kind.BUILD, dMajor, dMajor.keySignature)
         assertTrue(ScaleRecognition.checkBuild(q, "D E F# G A B C# D".split(" ").map { PitchClass.parse(it) }))
         assertFalse(ScaleRecognition.checkBuild(q, "D E Gb G A B Db D".split(" ").map { PitchClass.parse(it) }), "enharmonic spelling is wrong")
-        assertTrue(ScaleRecognition.pool(5).any { it.type == ScaleType.DORIAN })
+        assertTrue(ScaleRecognition.pool(7).any { it.type == ScaleType.DORIAN })
+        assertTrue(ScaleRecognition.pool(6).none { it.type == ScaleType.DORIAN })
     }
 
     @Test fun fingeringChartCoversTheStandardRange() {

@@ -46,11 +46,20 @@ class ScreenTour {
         click("Get started"); waitFor("Which language?"); shot("02-language")
         click("Next"); waitFor("How do you name the notes?"); shot("03-note-names")
         click("Next"); shot("04-days")
-        repeat(6) { click("Next") }
+        repeat(5) { click("Next") }
         waitFor("Your program"); shot("05-program")
         click("Use this program")
         waitFor("Start ·", substring = true); waitFor("This week"); shot("06-home")
         click("Training"); waitFor("On the phone"); shot("07-training")
+        click("Note reading"); waitFor("Notes on the staff (E to F)"); shot("09-levels")
+        click("Level 1"); waitFor("Which note is this?"); shot("10-question")
+        click("C"); waitFor("Continue"); shot("11-feedback")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Daily exercise"); waitFor("1/", substring = true); shot("12-daily")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Theory lessons", substring = true); shot("13-lessons")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Progress"); waitFor("Rank"); shot("08-progress")
         click("Home"); waitFor("Start ·", substring = true)
         rule.onAllNodesWithText("Settings").fetchSemanticsNodes()

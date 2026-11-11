@@ -37,13 +37,29 @@ public final class ScaleRecognition {
         public List<SpelledPitch> getNotes() { return ScaleGenerator.oneOctave(scale, 4); }
     }
 
+    /** Number of levels: each one adds keys or scale types to the mix. */
+    public static final int LEVELS = 8;
+
+    /**
+     * Most sharps or flats in the key signature at a level. Levels: 1–3 major (1, 2, then 4 accidentals),
+     * 4–6 major and minor (2, 4, then all keys), 7 adds Dorian and Mixolydian, 8 all modes.
+     */
     public static int maxAccidentals(int level) {
-        switch (level) { case 1: return 1; case 2: return 2; case 3: return 4; default: return 6; }
+        switch (level) {
+            case 1: return 1;
+            case 2: return 2;
+            case 3: return 4;
+            case 4: return 2;
+            case 5: return 4;
+            case 7: return 4;
+            default: return 6;
+        }
     }
 
     public static List<ScaleType> types(int level) {
-        if (level >= 5) return Arrays.asList(ScaleType.MAJOR, ScaleType.NATURAL_MINOR, ScaleType.DORIAN, ScaleType.MIXOLYDIAN, ScaleType.LYDIAN, ScaleType.PHRYGIAN);
-        if (level >= 3) return Arrays.asList(ScaleType.MAJOR, ScaleType.NATURAL_MINOR);
+        if (level >= 8) return Arrays.asList(ScaleType.MAJOR, ScaleType.NATURAL_MINOR, ScaleType.DORIAN, ScaleType.MIXOLYDIAN, ScaleType.LYDIAN, ScaleType.PHRYGIAN);
+        if (level == 7) return Arrays.asList(ScaleType.MAJOR, ScaleType.NATURAL_MINOR, ScaleType.DORIAN, ScaleType.MIXOLYDIAN);
+        if (level >= 4) return Arrays.asList(ScaleType.MAJOR, ScaleType.NATURAL_MINOR);
         return Arrays.asList(ScaleType.MAJOR);
     }
 

@@ -171,3 +171,12 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Look modelled on SuperHealth**: cool grey background, white borderless cards (24 dp radius), Google Sans Flex, floating pill bottom bar, saxophone amber as the one accent (deep gold for text on white, blue for phone-only training).
 - **App updates at the top of Settings**, with a full-width "Check for updates" button (it was at the bottom and easy to miss).
 
+## Round 2: levels, daily exercise, logo (owner's requests)
+
+- **Onboarding**: the registers page added in round 1 is removed (the owner asked only for removals); registers default to the middle register.
+- **Star levels for the phone drills** (owner's choice "stars like a game"): a round scores 1 star at 60 %, 2 at 80 %, 3 at 100 %; the best round counts; level 1 is open and each next level opens at 2 stars. Note reading 5 levels (range, then accidentals), scale recognition 8 levels (major by number of accidentals, then major and minor, then Dorian and Mixolydian, then all modes), fingering 5 levels (left hand, both hands, octave key, accidentals, full range), theory: each lesson is a level. The old automatic level changes are gone: the player chooses an open level.
+- **Rank thresholds follow the new scale levels**: tiers that asked for scale level 3, 4, 5 now ask 4, 5, 7, and Master asks the last level (8), so each tier still asks the same kind of scales.
+- **Daily exercise** (owner's choices: a mix of all phone drills, streak, reminder): about 12 to 14 questions, 4 notes, 3 scales, 3 fingerings and 2 theory questions from passed lessons, each at the highest open level; the drill with the lowest recent accuracy gets 2 more; the same drill never twice in a row. Stored as a `DAILY` drill result (it never counts for a ladder). The streak counts days in a row and stays alive until the end of today. An opt-in reminder (Settings, default 19:00) fires only if today's exercise is not done.
+- **One question runner** for level rounds and the daily mix (`ui/practice`), Duolingo-like: progress bar, one question, green or red feedback with Continue.
+- **Logo**: a dark alto saxophone (neck, conical body, bow, flared bell, pads) on amber, as an adaptive icon kept inside the safe zone.
+

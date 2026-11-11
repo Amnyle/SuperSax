@@ -14,6 +14,8 @@ import java.util.Random;
  * 5 everything with accidentals.
  */
 public final class ReadingDrill {
+    /** Number of levels (range first, then accidentals). */
+    public static final int LEVELS = DrillRules.MAX_LEVEL;
     private ReadingDrill() {}
 
     public static final class Level {

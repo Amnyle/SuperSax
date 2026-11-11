@@ -41,26 +41,30 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 class LessonsViewModel(private val c: AppContainer) : ViewModel() {
-    val lessons: List<Lesson> get() = c.content.lessons
-    val progress = c.progress.lessons.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val lessons: List<Lesson> get() = c.content.lessons.sortedBy { it.order }
+    val results = c.progress.drills.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+}
+
+/** Lesson [order] is open when it is the first, or the lesson before it has at least 2 stars. */
+fun lessonOpen(lessons: List<Lesson>, results: List<app.supersax.domain.common.DrillResultRecord>, lesson: Lesson): Boolean {
+    val i = lessons.indexOfFirst { it.id == lesson.id }
+    return i <= 0 || app.supersax.domain.drills.Levels.best(results, DrillKind.THEORY_QUIZ, lessons[i - 1].order) >= app.supersax.domain.drills.Levels.STARS_TO_UNLOCK
 }
 
 /** The list of theory lessons with completion and best quiz score. */
 @Composable
 fun LessonsScreen(onBack: () -> Unit, onLesson: (String) -> Unit) {
     val vm = appViewModel { LessonsViewModel(it) }
-    val progress by vm.progress.collectAsStateWithLifecycle()
+    val results by vm.results.collectAsStateWithLifecycle()
     val language = LocaleHelper.effective(LocalContext.current)
     ScreenScaffold(stringResource(R.string.lessons), onBack = onBack) { padding ->
         ScrollColumn(padding) {
+            val r = results ?: return@ScrollColumn
+            Text(stringResource(R.string.levels_hint), style = MaterialTheme.typography.bodyMedium, color = app.supersax.ui.theme.Sax.colors.textSecondary)
             vm.lessons.forEach { l ->
-                val p = progress.firstOrNull { it.lessonId == l.id }
-                SectionCard(modifier = Modifier.clickable { onLesson(l.id) }) {
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.heightIn(min = 48.dp)) {
-                        Text("${l.order}. ${l.title.get(language)}", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
-                        Text(p?.let { stringResource(R.string.lesson_score, (it.quizScore * 100).roundToInt()) } ?: stringResource(R.string.minutes_short, l.minutes))
-                    }
-                }
+                app.supersax.ui.practice.LevelRow(l.order, stringResource(R.string.minutes_short, l.minutes),
+                    app.supersax.domain.drills.Levels.best(r, DrillKind.THEORY_QUIZ, l.order), lessonOpen(vm.lessons, r, l),
+                    title = "${l.order}. ${l.title.get(language)}") { onLesson(l.id) }
             }
         }
     }
@@ -70,6 +74,11 @@ data class LessonUi(val reading: Boolean = true, val index: Int = 0, val correct
 
 class LessonViewModel(private val c: AppContainer, val lessonId: String) : ViewModel() {
     val lesson: Lesson? = c.content.lessons.firstOrNull { it.id == lessonId }
+    private val ordered = c.content.lessons.sortedBy { it.order }
+    /** The lesson after this one, and whether this attempt opened it (2 stars for the first time). */
+    val nextLesson: Lesson? = ordered.getOrNull(ordered.indexOfFirst { it.id == lessonId } + 1)
+    private val _unlockedNext = MutableStateFlow(false)
+    val unlockedNext = _unlockedNext.asStateFlow()
     private val _ui = MutableStateFlow(LessonUi())
     val ui = _ui.asStateFlow()
     private val startedAt = c.clock.nowMs()
@@ -93,6 +102,8 @@ class LessonViewModel(private val c: AppContainer, val lessonId: String) : ViewM
         viewModelScope.launch {
             val previous = c.progress.lessons.first().firstOrNull { it.lessonId == l.id }
             // Keep the best score; count attempts.
+            val bestBefore = app.supersax.domain.drills.Levels.best(c.progress.drills.first(), DrillKind.THEORY_QUIZ, l.order)
+            _unlockedNext.value = nextLesson != null && bestBefore < 2 && app.supersax.domain.drills.Levels.stars(u.correct, l.quiz.size) >= 2
             c.progress.saveLesson(LessonProgressRecord(l.id, c.clock.nowMs(), maxOf(score, previous?.quizScore ?: 0.0), (previous?.attempts ?: 0) + 1))
             c.savePhoneDrill(DrillKind.THEORY_QUIZ, l.order, l.quiz.size, u.correct, 0, startedAt, "lesson=${l.id}")
         }
@@ -101,7 +112,7 @@ class LessonViewModel(private val c: AppContainer, val lessonId: String) : ViewM
 
 /** Reading (2–3 minutes), then one question at a time with free-form answers. */
 @Composable
-fun LessonScreen(lessonId: String, onBack: () -> Unit) {
+fun LessonScreen(lessonId: String, onBack: () -> Unit, onLesson: (String) -> Unit = {}) {
     val vm = appViewModel(key = "lesson-$lessonId") { LessonViewModel(it, lessonId) }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val language = LocaleHelper.effective(LocalContext.current)
@@ -110,7 +121,16 @@ fun LessonScreen(lessonId: String, onBack: () -> Unit) {
     ScreenScaffold(l.title.get(language), onBack = onBack) { padding ->
         ScrollColumn(padding) {
             when {
-                ui.done -> DoneForToday(ui.correct, l.quiz.size, null, null, null, onBack)
+                ui.done -> {
+                    val unlocked by vm.unlockedNext.collectAsStateWithLifecycle()
+                    val stars = app.supersax.domain.drills.Levels.stars(ui.correct, l.quiz.size)
+                    val next = vm.nextLesson
+                    app.supersax.ui.practice.LevelResult(
+                        l.title.get(language), stars, ui.correct, l.quiz.size, unlocked, isLast = next == null,
+                        nextOpen = next != null && (unlocked || stars >= 2),
+                        onNext = { next?.let { onLesson(it.id) } }, onRetry = vm::startQuiz, onLevels = onBack,
+                    )
+                }
                 ui.reading -> {
                     l.sections.forEach { s ->
                         Text(s.heading.get(language), style = MaterialTheme.typography.titleLarge)

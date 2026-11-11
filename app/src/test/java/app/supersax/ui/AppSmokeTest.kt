@@ -36,10 +36,10 @@ class AppSmokeTest {
     }
 
     @Test fun onboardingThenTwoTapsToARunningSession() {
-        waitFor("Step 1 of 10")
+        waitFor("Step 1 of 9")
         waitFor("Welcome to Super Sax")
         click("Get started")
-        repeat(8) { click("Next") }
+        repeat(7) { click("Next") }
         waitFor("Your program")
         click("Use this program")
         // Today: one big Start button.
@@ -58,6 +58,13 @@ class AppSmokeTest {
         // Home dashboard: the week and the rank.
         waitFor("This week"); waitFor("Coming up")
         click("Training"); waitFor("Tuner"); waitFor("On the phone")
+        // Phone drills open on their level ladder; level 1 is open, level 2 locked.
+        click("Note reading"); waitFor("Notes on the staff (E to F)")
+        click("Level 1"); waitFor("Which note is this?")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Daily exercise"); waitFor("1/", substring = true)
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.onAllNodesWithText("Library").assertCountEquals(0)
         click("Progress"); waitFor("Rank")
         click("Rank"); waitFor("Weakest pillar", substring = true)

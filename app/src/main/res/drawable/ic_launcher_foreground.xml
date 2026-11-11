@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- A simple eighth note on a staff line, drawn for this app. -->
+<!-- Super Sax logo: an alto saxophone (neck, conical body, bow, flared bell, key pads), drawn for the 108 dp adaptive icon. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-    <path android:fillColor="#E4C98A" android:pathData="M60,30 L64,30 L64,68 A10,8 0 1,1 60,64 Z" />
-    <path android:fillColor="#E4C98A" android:pathData="M64,30 C72,34 78,40 76,52 C74,44 70,40 64,38 Z" />
-    <path android:fillColor="#8A6D2F" android:pathData="M30,74 L78,74 L78,76 L30,76 Z" />
+    <group android:pivotX="52.5" android:pivotY="55" android:scaleX="0.8" android:scaleY="0.8" android:translateX="1.5" android:translateY="-1">
+        <path android:pathData="M45,36 C45,29 42,25.5 36,24.2 L31.5,23.4" android:strokeColor="#FF1C1607" android:strokeWidth="4.2" android:strokeLineCap="round" />
+        <path android:pathData="M32,23.5 L26.5,22.4" android:strokeColor="#FF1C1607" android:strokeWidth="5.4" android:strokeLineCap="round" />
+        <path android:pathData="M40.6,28 L38.4,31.4" android:strokeColor="#FF1C1607" android:strokeWidth="1.6" android:strokeLineCap="round" />
+        <path android:fillColor="#FF1C1607" android:pathData="M41.6,33 Q45,31.4 48.4,33 L50.9,60 L51.8,70.5 C51.8,76.8 53.9,79.6 57.2,79.6 C60.5,79.6 62.3,77 62.3,72 L62.3,61 L73.3,61 L73.3,72 C73.3,84 67,90.5 57.2,90.5 C47.5,90.5 40.8,83.5 40.8,70 L41.1,60 Z" />
+        <path android:fillColor="#FF1C1607" android:pathData="M62.3,62 L73.3,62 L78.6,47.3 C70.5,44.4 61,44.4 57,47.3 Z" />
+        <path android:fillColor="#FF1C1607" android:pathData="M56.599999999999994,46.4 a11.2,3.4 0 1,0 22.4,0 a11.2,3.4 0 1,0 -22.4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M59.3,46.1 a8.5,1.9 0 1,0 17.0,0 a8.5,1.9 0 1,0 -17.0,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M43.699999999999996,40 a1.7,1.7 0 1,0 3.4,0 a1.7,1.7 0 1,0 -3.4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M44.0,46 a1.7,1.7 0 1,0 3.4,0 a1.7,1.7 0 1,0 -3.4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M44.3,52 a1.7,1.7 0 1,0 3.4,0 a1.7,1.7 0 1,0 -3.4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M44.2,62.5 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M44.4,69 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M65.89999999999999,70 a1.9,1.9 0 1,0 3.8,0 a1.9,1.9 0 1,0 -3.8,0 Z" />
+    </group>
 </vector>

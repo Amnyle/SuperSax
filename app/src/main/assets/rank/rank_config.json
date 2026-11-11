@@ -51,9 +51,9 @@
     { "tier": 2, "readingLevel": 2, "readingAccuracy": 0.80, "lessons": 2, "lessonMinScore": 0.6 },
     { "tier": 3, "readingLevel": 3, "readingAccuracy": 0.80, "scaleLevel": 1, "scaleAccuracy": 0.70, "lessons": 4, "lessonMinScore": 0.7 },
     { "tier": 4, "readingLevel": 4, "readingAccuracy": 0.85, "readingMeanMs": 4000, "scaleLevel": 2, "scaleAccuracy": 0.80, "lessons": 6, "lessonMinScore": 0.7 },
-    { "tier": 5, "readingLevel": 5, "readingAccuracy": 0.85, "readingMeanMs": 3500, "scaleLevel": 3, "scaleAccuracy": 0.85, "lessons": 8, "lessonMinScore": 0.75 },
-    { "tier": 6, "readingLevel": 5, "readingAccuracy": 0.90, "readingMeanMs": 3000, "scaleLevel": 4, "scaleAccuracy": 0.90, "lessons": 10, "lessonMinScore": 0.8 },
-    { "tier": 7, "readingLevel": 5, "readingAccuracy": 0.95, "readingMeanMs": 2500, "scaleLevel": 5, "scaleAccuracy": 0.95, "lessons": 12, "lessonMinScore": 0.85 },
-    { "tier": 8, "readingLevel": 5, "readingAccuracy": 1.0, "readingMeanMs": 2000, "scaleLevel": 5, "scaleAccuracy": 1.0, "lessons": 13, "lessonMinScore": 0.9 }
+    { "tier": 5, "readingLevel": 5, "readingAccuracy": 0.85, "readingMeanMs": 3500, "scaleLevel": 4, "scaleAccuracy": 0.85, "lessons": 8, "lessonMinScore": 0.75 },
+    { "tier": 6, "readingLevel": 5, "readingAccuracy": 0.90, "readingMeanMs": 3000, "scaleLevel": 5, "scaleAccuracy": 0.90, "lessons": 10, "lessonMinScore": 0.8 },
+    { "tier": 7, "readingLevel": 5, "readingAccuracy": 0.95, "readingMeanMs": 2500, "scaleLevel": 7, "scaleAccuracy": 0.95, "lessons": 12, "lessonMinScore": 0.85 },
+    { "tier": 8, "readingLevel": 5, "readingAccuracy": 1.0, "readingMeanMs": 2000, "scaleLevel": 8, "scaleAccuracy": 1.0, "lessons": 13, "lessonMinScore": 0.9 }
   ]
 }

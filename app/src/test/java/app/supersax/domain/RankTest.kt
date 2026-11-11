@@ -2,6 +2,7 @@ package app.supersax.domain
 
 import app.supersax.TestAssets
 import app.supersax.domain.common.DrillKind
+import app.supersax.domain.drills.ScaleRecognition
 import app.supersax.domain.common.DrillResultRecord
 import app.supersax.domain.common.LessonProgressRecord
 import app.supersax.domain.common.PieceProgressRecord
@@ -134,7 +135,7 @@ class RankTest {
     @Test fun musicianshipAndCap() {
         val drills = listOf(
             DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 1500),
-            DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, 5, 10, 10, 3000),
+            DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, ScaleRecognition.LEVELS, 10, 10, 3000),
         )
         val lessons = (1..13).map { LessonProgressRecord("l$it", 0, 1.0) }
         val e = RankEvents(drills = drills, lessons = lessons)
@@ -168,7 +169,7 @@ class RankTest {
             holds = listOf(52, 66, 78).map { hold(it, 40.0, steady(2f)) },
             sessions = (0 until 56).map { today.minusDays(it.toLong()) }.map { session(it) }, plannedDays = (1..7).toSet(),
             pieceProgress = listOf(PieceProgressRecord("x", "", PieceStage.CLEAN_AT_TEMPO, 0)), pieceDifficulty = mapOf("x" to 10),
-            drills = listOf(DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 1500), DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, 5, 10, 10, 3000)),
+            drills = listOf(DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 1500), DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, ScaleRecognition.LEVELS, 10, 10, 3000)),
             lessons = (1..13).map { LessonProgressRecord("l$it", 0, 1.0) },
         )
         val m = rank(max)

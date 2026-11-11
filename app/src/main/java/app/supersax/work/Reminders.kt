@@ -45,6 +45,20 @@ object Reminders {
         wm.enqueueUniquePeriodicWork(WORK, ExistingPeriodicWorkPolicy.UPDATE, request)
     }
 
+    private const val DAILY_WORK = "daily-exercise-reminder"
+
+    /** Schedules (or cancels) the daily-exercise reminder at [hour]:[minute]. */
+    fun syncDaily(context: Context, enabled: Boolean, hour: Int, minute: Int) {
+        val wm = WorkManager.getInstance(context)
+        if (!enabled) { wm.cancelUniqueWork(DAILY_WORK); return }
+        val now = LocalDateTime.now()
+        var next = now.toLocalDate().atTime(hour, minute)
+        if (!next.isAfter(now)) next = next.plusDays(1)
+        val delay = Duration.between(now, next).toMinutes()
+        val request = PeriodicWorkRequestBuilder<DailyReminderWorker>(1, TimeUnit.DAYS).setInitialDelay(delay, TimeUnit.MINUTES).build()
+        wm.enqueueUniquePeriodicWork(DAILY_WORK, ExistingPeriodicWorkPolicy.UPDATE, request)
+    }
+
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= 26) {
             val nm = context.getSystemService(NotificationManager::class.java)
@@ -78,6 +92,34 @@ class ReminderWorker(context: Context, params: WorkerParameters) : CoroutineWork
             .build()
         @Suppress("MissingPermission")
         NotificationManagerCompat.from(applicationContext).notify(1, n)
+        return Result.success()
+    }
+}
+
+/** Reminds about the daily exercise only if it is not done yet today; mentions the streak at stake. */
+class DailyReminderWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val c = (applicationContext as SaxApp).container
+        if (!c.settings.current().dailyReminder || !Reminders.canNotify(applicationContext)) return Result.success()
+        val zone = ZoneId.systemDefault()
+        val today = LocalDate.now(zone).toEpochDay()
+        val days = app.supersax.ui.practice.dailyDays(c.progress.drills.first(), zone)
+        if (today in days) return Result.success()
+        val streak = app.supersax.domain.drills.DailyMix.streak(days, today)
+        Reminders.ensureChannel(applicationContext)
+        val intent = Intent(applicationContext, MainActivity::class.java).putExtra(MainActivity.EXTRA_OPEN_DAILY, true)
+        val open = PendingIntent.getActivity(applicationContext, 2, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+        val text = if (streak > 0) applicationContext.resources.getQuantityString(R.plurals.daily_reminder_streak, streak, streak)
+            else applicationContext.getString(R.string.daily_reminder_text)
+        val n = NotificationCompat.Builder(applicationContext, Reminders.CHANNEL)
+            .setSmallIcon(R.drawable.ic_stat_note)
+            .setContentTitle(applicationContext.getString(R.string.daily_title))
+            .setContentText(text)
+            .setContentIntent(open)
+            .setAutoCancel(true)
+            .build()
+        @Suppress("MissingPermission")
+        NotificationManagerCompat.from(applicationContext).notify(2, n)
         return Result.success()
     }
 }

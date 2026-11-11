@@ -74,3 +74,8 @@ Verified: after every group, `assembleDebug` green and `testDebugUnitTest` **96 
 Built: Home dashboard, Training split (saxophone / phone), Progress regrouped, library hidden, welcome + language + note names first in onboarding (three questions removed), technique-only sessions with a breathing warm-up, new look (SuperHealth style, amber accent), update check at the top of Settings.
 Verified: `testDebugUnitTest` **101 tests, 0 failures** (new: technique-only generator tests, onboarding and tabs in the UI tests, a screen tour that saves screenshots to `app/build/screens`); lint 0 errors.
 
+## Round 2: levels, daily exercise, logo
+
+Built: star levels and unlocking for note reading, scales, fingerings and theory lessons; daily 5-minute mix with streak (Home card, Training entry) and reminder; alto sax logo; registers question removed.
+Verified: `testDebugUnitTest` **106 tests, 0 failures** (new: stars and unlocking, fingering levels, daily mix, streak; smoke test opens a level and the daily exercise); lint 0 errors; screenshots checked (`app/build/screens`).
+

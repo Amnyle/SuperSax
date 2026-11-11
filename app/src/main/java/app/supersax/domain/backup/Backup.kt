@@ -44,6 +44,10 @@ data class SettingsRecord(
     val remindersEnabled: Boolean = false,
     val reminderHour: Int = 18,
     val reminderMinute: Int = 0,
+    /** Reminder for the daily 5-minute phone exercise (off by default). */
+    val dailyReminder: Boolean = false,
+    val dailyReminderHour: Int = 19,
+    val dailyReminderMinute: Int = 0,
     val restSec: Int = 60,
     val experimental: Boolean = false,
     val onboardingDone: Boolean = false,

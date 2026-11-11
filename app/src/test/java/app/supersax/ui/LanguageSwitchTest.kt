@@ -38,7 +38,7 @@ class LanguageSwitchTest {
 
     /** Acceptance: switching language changes the strings; switching note names changes note labels. */
     @Test fun languageAndNoteNamesSwitch() {
-        waitFor("Step 1 of 10")
+        waitFor("Step 1 of 9")
         click("Get started")
         // Language first, then note names.
         waitFor("Which language?")
@@ -48,7 +48,7 @@ class LanguageSwitchTest {
         click("Suivant")
         waitFor("Comment nommes-tu les notes ?")
         click("Do Ré Mi Fa Sol La Si")
-        repeat(7) { click("Suivant") }
+        repeat(6) { click("Suivant") }
         waitFor("Ton programme")
         click("Utiliser ce programme")
         runCatching { waitFor("Démarrer ·", substring = true) }.onFailure {
