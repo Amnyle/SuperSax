@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.compose.material.icons.rounded.Leaderboard
+import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Mic
@@ -32,6 +33,9 @@ import app.supersax.ui.practice.ChartAction
 import app.supersax.ui.practice.DailyScreen
 import app.supersax.ui.practice.LevelsScreen
 import app.supersax.ui.practice.PlayLevelScreen
+import app.supersax.ui.practice.SpeedChallengeCard
+import app.supersax.ui.practice.SpeedReadingScreen
+import app.supersax.ui.solo.SoloScreen
 import app.supersax.ui.advanced.OvertoneScreen
 import app.supersax.ui.advanced.AltissimoScreen
 import app.supersax.ui.songs.SongPlayerScreen
@@ -73,6 +77,9 @@ object ExtraRoutes {
     const val FINGERING = "fingering"
     const val FINGERING_CHART = "fingering_chart"
     const val DAILY = "daily"
+    const val SPEED = "reading_speed/{level}"
+    fun speed(level: Int) = "reading_speed/$level"
+    const val SOLO = "solo"
     const val PLAY = "play/{kind}/{level}"
     fun play(kind: DrillKind, level: Int) = "play/${kind.name}/$level"
     fun lesson(id: String) = "lesson/$id"
@@ -94,7 +101,17 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.TUNER_HISTORY) { TunerHistoryScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.METRONOME) { MetronomeScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.MATCH) { MatchNoteScreen(onBack = { nav.popBackStack() }) }
-    composable(ExtraRoutes.READING) { LevelsScreen(DrillKind.READING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.READING, it)) }) }
+    composable(ExtraRoutes.READING) {
+        LevelsScreen(DrillKind.READING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.READING, it)) },
+            extra = { r, open -> SpeedChallengeCard(r, open) { l -> nav.navigate(ExtraRoutes.speed(l)) } })
+    }
+    composable(ExtraRoutes.SPEED, arguments = listOf(navArgument("level") { type = NavType.IntType })) { e ->
+        val level = e.arguments!!.getInt("level")
+        SpeedReadingScreen(level, onClose = { nav.popBackStack() }, onAgain = {
+            nav.navigate(ExtraRoutes.speed(level)) { popUpTo(e.destination.id) { inclusive = true } }
+        })
+    }
+    composable(ExtraRoutes.SOLO) { SoloScreen(onBack = { nav.popBackStack() }, onSongPlayer = { nav.navigate(ExtraRoutes.SLOW_DOWN) }) }
     composable(ExtraRoutes.PLAY, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType })) { e ->
         val kind = DrillKind.valueOf(e.arguments!!.getString("kind")!!)
         val level = e.arguments!!.getInt("level")
@@ -169,6 +186,7 @@ fun extraLogEntries(nav: NavHostController): List<HubEntry> = listOf(
 /** Training that needs the saxophone in hand. */
 @Composable
 fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
+    HubEntry(stringResource(R.string.solo_title), stringResource(R.string.solo_sub), Icons.Rounded.MusicNote) { nav.navigate(ExtraRoutes.SOLO) },
     HubEntry(stringResource(R.string.tuner), stringResource(R.string.tuner_sub), Icons.Rounded.GraphicEq) { nav.navigate(ExtraRoutes.TUNER) },
     HubEntry(stringResource(R.string.metronome_drone), stringResource(R.string.metronome_sub), Icons.Rounded.Timer) { nav.navigate(ExtraRoutes.METRONOME) },
     HubEntry(stringResource(R.string.match_note), stringResource(R.string.match_sub), Icons.Rounded.Hearing) { nav.navigate(ExtraRoutes.MATCH) },

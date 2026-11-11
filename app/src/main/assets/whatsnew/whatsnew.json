@@ -62,5 +62,16 @@
       "Nouveau logo : un saxophone doré sur fond noir.",
       "Sauvegarde automatique sur Google Drive (ou dans un dossier), chaque jour ou chaque semaine : Réglages → Sauvegarde."
     ]
+  },
+  {
+    "id": 5,
+    "en": [
+      "Solo practice (Training → With the saxophone): a blues backing track in your key and tempo, the chords written for alto, and 8 steps to learn to improvise: few notes, call and response, play and rest, target notes, motifs, learning solos by ear.",
+      "Note reading speed challenge: name as many notes as you can in 60 seconds, with your best score per level."
+    ],
+    "fr": [
+      "Travail du solo (Entraînement → Avec le saxophone) : un accompagnement blues dans ta tonalité et ton tempo, les accords écrits pour l'alto, et 8 étapes pour apprendre à improviser : peu de notes, appel et réponse, jouer et se taire, notes cibles, motifs, apprendre des solos à l'oreille.",
+      "Défi vitesse en lecture de notes : nomme le plus de notes possible en 60 secondes, avec ton record par niveau."
+    ]
   }
 ]

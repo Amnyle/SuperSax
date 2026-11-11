@@ -74,7 +74,10 @@ fun levelDescription(kind: DrillKind, level: Int): String {
 
 /** The ladder of a drill: each level with its stars; locked levels open at 2 stars on the one before. */
 @Composable
-fun LevelsScreen(kind: DrillKind, onBack: () -> Unit, onPlay: (Int) -> Unit, actions: @Composable () -> Unit = {}) {
+fun LevelsScreen(
+    kind: DrillKind, onBack: () -> Unit, onPlay: (Int) -> Unit, actions: @Composable () -> Unit = {},
+    extra: @Composable (results: List<app.supersax.domain.common.DrillResultRecord>, openLevel: Int) -> Unit = { _, _ -> },
+) {
     val vm = appViewModel(key = "levels-$kind") { LevelsViewModel(it) }
     val results by vm.results.collectAsStateWithLifecycle()
     val max = Levels.count(kind, 0)
@@ -83,6 +86,7 @@ fun LevelsScreen(kind: DrillKind, onBack: () -> Unit, onPlay: (Int) -> Unit, act
             val r = results ?: return@ScrollColumn
             val open = Levels.unlocked(r, kind, max)
             val total = Levels.totalStars(r, kind, max)
+            extra(r, open)
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 4.dp)) {
                 Icon(Icons.Rounded.Star, null, tint = Sax.colors.accent, modifier = Modifier.size(22.dp))
                 Spacer(Modifier.width(6.dp))

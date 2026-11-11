@@ -210,3 +210,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Destinations through the Storage Access Framework, no account login in the app**: Google Drive = one file created once in the Drive app's picker (only the Drive provider is accepted), replaced at each backup, uploaded by Drive; or a folder (dated files, the 7 newest kept). Persistable URI permissions keep access.
 - **Schedule**: WorkManager every 6 hours with a network constraint; a backup is written when the last one is older than the chosen period (every day by default, or every week) minus 2 hours of slack. Last time or error shown in Settings; "Back up now" button. Recordings are optional (off by default, larger files).
 
+## Solo practice and the reading speed challenge (owner's requests)
+
+- **Solo practice follows the common teaching path** found in saxophone and jazz teaching material (Musical U, Bettersax, Berklee, Tonebase, blues lessons): the 12-bar blues first, one key at a time, the blues scale learned by heart, very few notes and rhythm before pitch, call and response, playing with space, targeting the chord's 3rd on changes, developing one motif, and learning solos by ear. The 8 steps and their texts are written for this app.
+- **Backing track synthesised in the app** (`BluesBacking`): one shuffle chorus (kick, snare, swung hi-hat, boogie bass root-3-5-6, off-beat chord stabs), looped by a static AudioTrack; call-and-response adds a lead voice playing generated 2-bar phrases on the blues scale in bars 1–2, 5–6 and 9–10. Keys: concert B♭, F, E♭, C, G; chords, target notes and scales are spelled and shown written for alto (a major sixth up).
+- **Speed challenge**: 60 seconds of note reading at any open level; each answer moves straight to the next note; the score is the number of right answers, best per level, stored as its own drill kind (it never counts for the level stars).
+

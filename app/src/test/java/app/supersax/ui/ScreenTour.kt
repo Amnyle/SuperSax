@@ -51,7 +51,13 @@ class ScreenTour {
         click("Use this program")
         waitFor("Start ·", substring = true); waitFor("This week"); shot("06-home")
         click("Training"); waitFor("On the phone"); shot("07-training")
+        click("Solo practice"); waitFor("Learn the form"); shot("21-solo")
+        click("Target the 3rd"); click("Play the backing"); waitFor("Aim for", substring = true); shot("22-solo-playing")
+        click("Stop")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Note reading"); waitFor("Notes on the staff (E to F)"); shot("09-levels")
+        click("Start"); waitFor("0 right"); click("C"); shot("23-speed")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Level 1"); waitFor("Which note is this?"); shot("10-question")
         click("C"); waitFor("Continue"); shot("11-feedback")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
