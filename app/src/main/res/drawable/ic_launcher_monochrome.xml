@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Super Sax logo: a thick, flat alto saxophone (curved neck and mouthpiece, conical body, bow, flared bell with rim, key pads), tilted, single colour for themed icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <group android:pivotX="57" android:pivotY="57" android:rotation="-14" android:scaleX="0.82" android:scaleY="0.82" android:translateX="-3" android:translateY="-2">
+        <path android:pathData="M46,33.5 C46,26.5 42.8,22.8 36.5,21.6 L31,20.8" android:strokeColor="#FFF7B500" android:strokeWidth="5.6" android:strokeLineCap="round" />
+        <path android:pathData="M31.5,20.9 L23.5,19.6" android:strokeColor="#FFF7B500" android:strokeWidth="7" android:strokeLineCap="round" />
+        <path android:pathData="M40.3,25.8 L37.4,30.4" android:strokeColor="#FFF7B500" android:strokeWidth="2.2" android:strokeLineCap="round" />
+        <path android:fillColor="#FFF7B500" android:pathData="M40.6,32.5 Q46,29.6 51.4,32.5 L54.2,72 C54.2,76.2 55.2,78.2 57.2,78.2 C59.1,78.2 60.6,76.2 60.6,73 L64.6,57 C64.6,53 63.2,50 60.4,46.4 L89.2,42.8 C83.4,46.5 79.2,51.5 77.8,57 L74.8,74 C74.8,85.8 67.2,92.5 57.2,92.5 C47.2,92.5 40.2,84.8 40.2,72 Z" />
+        <group android:pivotX="74.8" android:pivotY="44.6" android:rotation="-7">
+            <path android:fillColor="#FFF7B500" android:pathData="M60.199999999999996,44.6 a14.6,4.4 0 1,0 29.2,0 a14.6,4.4 0 1,0 -29.2,0 Z" />
+        </group>
+        <path android:fillColor="#FFF7B500" android:pathData="M34.7,61.5 a2.9,2.9 0 1,0 5.8,0 a2.9,2.9 0 1,0 -5.8,0 Z" />
+        <path android:fillColor="#FFF7B500" android:pathData="M34.5,68.6 a2.9,2.9 0 1,0 5.8,0 a2.9,2.9 0 1,0 -5.8,0 Z" />
+    </group>
+</vector>

@@ -203,5 +203,4 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Never the same scale twice in a session**: when there are more scale exercises than unlocked scales, the extra ones introduce the next scales of the unlock order.
 - **Range rank from real notes only**: onboarding no longer stores the registers answer as self-reported range notes, and those stored before are removed once (they were saved in pairs at the same instant); notes claimed on the Rank screen and verified notes are kept.
 - **Fingering chart** as its own Training entry: a sheet per register (low, middle, high, altissimo) with every note's fingering; tap for the large view, the staff position and the alternates.
-- **Logo**: a minimal single-shape alto saxophone (constant-width tube, bow, wedge bell).
-
+- **Logo** (owner's choice after two rounds of options): a thick, flat, tilted alto saxophone (curved neck and mouthpiece, conical body, bow, flared bell with rim, key pads) in gold on near-black; a separate single-colour layer for themed icons.

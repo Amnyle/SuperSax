@@ -175,7 +175,7 @@ private fun RadioPage(question: String, options: List<String>, selected: Int, on
 /** First page: what the app is for, before any question. */
 @Composable
 private fun WelcomePage() {
-    Box(Modifier.size(84.dp).clip(RoundedCornerShape(24.dp)).background(Sax.colors.accent), contentAlignment = Alignment.Center) {
+    Box(Modifier.size(84.dp).clip(RoundedCornerShape(24.dp)).background(androidx.compose.ui.graphics.Color(0xFF15171C)), contentAlignment = Alignment.Center) {
         androidx.compose.foundation.Image(androidx.compose.ui.res.painterResource(R.drawable.ic_launcher_foreground), null, modifier = Modifier.size(84.dp))
     }
     Text(stringResource(R.string.onb_welcome_title), style = MaterialTheme.typography.headlineLarge)
