@@ -46,9 +46,9 @@ class MetronomeViewModel(private val c: AppContainer) : ViewModel() {
 
     fun toggle() { val s = state.value; c.audio.setMetronome(!s.metronomeOn, s.bpm) }
     fun setBpm(bpm: Int) = c.audio.setMetronome(state.value.metronomeOn, bpm)
-    fun setBeats(n: Int) = c.audio.setMetronome(state.value.metronomeOn, beatsPerBar = n)
-    fun setSubdivision(n: Int) = c.audio.setMetronome(state.value.metronomeOn, subdivision = n)
-    fun setAccent(on: Boolean) = c.audio.setMetronome(state.value.metronomeOn, accent = on)
+    fun setBeats(n: Int) = c.audio.setBeatsPerBar(n)
+    fun setSubdivision(n: Int) = c.audio.setSubdivision(n)
+    fun setAccent(on: Boolean) = c.audio.setAccent(on)
 
     fun run(clean: Boolean) {
         val t = _trainer.value

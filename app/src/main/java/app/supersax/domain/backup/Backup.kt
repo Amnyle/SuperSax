@@ -25,11 +25,6 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import java.io.InputStream
-import java.io.OutputStream
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-import java.util.zip.ZipOutputStream
 
 @Serializable
 enum class ThemeMode { SYSTEM, LIGHT, DARK }
@@ -131,51 +126,5 @@ object BackupCodec {
             o = JsonObject(o + ("schemaVersion" to JsonPrimitive(v + 1)))
         }
         return o
-    }
-}
-
-/**
- * The backup `.zip`: `backup.json`, optional `recordings/` and `imports/` folders.
- */
-object BackupZip {
-    const val JSON_ENTRY = "backup.json"
-    const val RECORDINGS_DIR = "recordings/"
-    const val IMPORTS_DIR = "imports/"
-
-    /** Writes the zip. [files] maps entry names (with folder prefix) to stream openers. */
-    fun write(out: OutputStream, data: BackupData, files: Map<String, () -> InputStream>) {
-        ZipOutputStream(out).use { zip ->
-            zip.putNextEntry(ZipEntry(JSON_ENTRY))
-            zip.write(BackupCodec.encode(data).toByteArray(Charsets.UTF_8))
-            zip.closeEntry()
-            files.forEach { (name, open) ->
-                require(name.startsWith(RECORDINGS_DIR) || name.startsWith(IMPORTS_DIR)) { "Unexpected entry $name" }
-                zip.putNextEntry(ZipEntry(name))
-                open().use { it.copyTo(zip) }
-                zip.closeEntry()
-            }
-        }
-    }
-
-    /**
-     * Reads and validates the zip. File entries are passed to [onFile] (name, stream) as they come;
-     * the data is decoded (and its version checked) at the end. Path traversal entries are refused.
-     */
-    fun read(input: InputStream, onFile: (String, InputStream) -> Unit): BackupData {
-        var text: String? = null
-        ZipInputStream(input).use { zip ->
-            while (true) {
-                val e = zip.nextEntry ?: break
-                val name = e.name
-                require(!name.contains("..") && !name.startsWith("/")) { "Unsafe entry $name" }
-                when {
-                    name == JSON_ENTRY -> text = zip.readBytes().toString(Charsets.UTF_8)
-                    e.isDirectory -> Unit
-                    name.startsWith(RECORDINGS_DIR) || name.startsWith(IMPORTS_DIR) -> onFile(name, zip)
-                }
-                zip.closeEntry()
-            }
-        }
-        return BackupCodec.decode(text ?: throw BackupVersionException(-1, BackupVersionException.Reason.MISSING))
     }
 }
