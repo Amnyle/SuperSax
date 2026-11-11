@@ -1,0 +1,8 @@
+package app.supersax.domain.rank;
+
+/** What a requirement is about; the UI turns it into a sentence. */
+public enum ReqKind {
+    SCALES_AT_BPM, LOWEST_NOTE, HIGHEST_NOTE, HIGHEST_NOTE_VERIFIED, OVERTONE_MILESTONE,
+    LONG_TONE_BLOCKS, HOLD_NOTES, HOLD_REGISTERS, ADHERENCE, SESSIONS_PER_WEEK, PIECE_DIFFICULTY,
+    READING_ROUND, SCALE_ROUND, LESSONS, ANY_ACTIVITY,
+}
