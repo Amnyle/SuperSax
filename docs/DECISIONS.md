@@ -190,4 +190,8 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Checkpoints** are named times; loop from one to the next, or stop at the next.
 - **Song data in the key-value table** (`song:<id>`, JSON) so no database migration was needed; it is not part of the backup (nor are the downloaded files).
 - **What's new**: notes ship in `assets/whatsnew/whatsnew.json` with growing ids; after an update every unseen entry shows once; a fresh install marks them seen at the end of onboarding; Settings → App updates → What's new reopens them.
+- **Bar 1 starts with the music** (analysis version 2): the beat grid is moved to its first beat at or after the moment sound starts (first frame louder than 35 dB below the 95th-percentile level), so leading silence no longer holds bar 1. Songs analysed before are analysed again once; checkpoints are kept.
+- **Tempo in 10 percent steps** of the original (50 to 150 percent), as the owner asked; the BPM is shown with the percentage.
+- **Key signature on a staff**, written for alto by default or in concert pitch, following the transposition.
+- **Metronome over the song**: a separate low-latency stream renders clicks from song time (bar 1 accented, nothing before bar 1), aimed with the output latency measured from AudioTrack timestamps and a continuous song clock (resync only after seeks, pauses or drift above 30 ms). Separate volumes for music and clicks.
 

@@ -734,4 +734,26 @@
     <string name="song_detect_note">La tonalité et le tempo sont détectés automatiquement et peuvent se tromper sur certains morceaux ; la tonalité alto est la tonalité écrite pour ton saxophone en mi♭.</string>
     <string name="whats_new_title">Nouveautés</string>
     <string name="whats_new_ok">Compris</string>
+    <string name="song_tempo_percent">%1$d %% de %2$d BPM</string>
+    <string name="song_show_signature">Afficher l\'armure</string>
+    <string name="song_hide_signature">Masquer l\'armure</string>
+    <string name="song_written_alto">Écrite pour l\'alto</string>
+    <string name="song_concert">Ut (son réel)</string>
+    <string name="song_signature_desc">Armure de %1$s</string>
+    <string name="song_no_accidentals">Ni dièse ni bémol</string>
+    <string name="song_metronome">Métronome</string>
+    <string name="song_clicks">Clics du métronome</string>
+    <string name="song_clicks_hint">Sur les temps du morceau depuis la mesure 1, premier temps accentué ; ils suivent le tempo choisi.</string>
+    <string name="song_music_volume">Musique</string>
+    <string name="song_click_volume">Clics</string>
+    <plurals name="sharps_n">
+        <item quantity="one">%1$d dièse</item>
+        <item quantity="many">%1$d dièses</item>
+        <item quantity="other">%1$d dièses</item>
+    </plurals>
+    <plurals name="flats_n">
+        <item quantity="one">%1$d bémol</item>
+        <item quantity="many">%1$d bémols</item>
+        <item quantity="other">%1$d bémols</item>
+    </plurals>
 </resources>

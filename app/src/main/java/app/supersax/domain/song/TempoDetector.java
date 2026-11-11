@@ -60,6 +60,27 @@ public final class TempoDetector {
         return out;
     }
 
+    /**
+     * When the music starts: the first 1024-sample frame louder than 35 dB below the loud part of the
+     * recording (the 95th percentile of frame levels), so a quiet intro still counts but silence does not.
+     */
+    public static double soundStartSec(float[] x, int sampleRate) {
+        int frames = x.length / FRAME;
+        if (frames == 0) return 0;
+        double[] rms = new double[frames];
+        for (int f = 0; f < frames; f++) {
+            double s = 0;
+            for (int i = f * FRAME; i < (f + 1) * FRAME; i++) s += x[i] * x[i];
+            rms[f] = Math.sqrt(s / FRAME);
+        }
+        double[] sorted = rms.clone();
+        java.util.Arrays.sort(sorted);
+        double loud = sorted[Math.min(frames - 1, (int) (frames * 0.95))];
+        double threshold = loud * Math.pow(10, -35 / 20.0);
+        for (int f = 0; f < frames; f++) if (rms[f] > threshold && rms[f] > 1e-4) return (double) f * FRAME / sampleRate;
+        return 0;
+    }
+
     /** [1 2 1]/4 smoothing: beat peaks between two frames still line up at whole-frame lags. */
     static double[] smooth(double[] e) {
         double[] o = new double[e.length];
@@ -114,6 +135,11 @@ public final class TempoDetector {
         double confidence = total <= 0 ? 0 : Math.min(1, bestScore * (maxLag - minLag + 1) / total / 4);
         // Frame centre time: a frame starting at f*HOP is centred FRAME/2 samples later.
         double firstBeat = (bestOffset * HOP + FRAME / 2.0) / sampleRate;
+        // Bar 1 starts with the music, not in the silence before it: move to the first beat of the grid
+        // at or after the moment sound starts (30 ms tolerance for the attack).
+        double period = bestLag * HOP / sampleRate;
+        double sound = soundStartSec(x, sampleRate);
+        if (sound - 0.03 > firstBeat) firstBeat += Math.ceil((sound - 0.03 - firstBeat) / period) * period;
         return new Result(bpm, firstBeat, confidence);
     }
 }

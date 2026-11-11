@@ -29,6 +29,9 @@ import kotlin.math.roundToLong
 /** A part of the song to practise, in the original recording's time. */
 data class Part(val fromMs: Long, val toMs: Long, val stop: Boolean)
 
+/** Metronome over the song and the two volumes (0..1). */
+data class MixUi(val clicks: Boolean = false, val clickVolume: Float = 0.7f, val musicVolume: Float = 1f)
+
 /** Analysis progress: null when idle, 0..1 while analysing. */
 data class AnalysisUi(val progress: Float? = null, val failed: Boolean = false)
 
@@ -41,15 +44,27 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     val analysis = _analysis.asStateFlow()
     private val _part = MutableStateFlow<Part?>(null)
     val part = _part.asStateFlow()
+    private val overlay = app.supersax.audio.ClickOverlay()
+    private val _mix = MutableStateFlow(MixUi())
+    val mix = _mix.asStateFlow()
 
     init {
         viewModelScope.launch {
             val r = c.media.audioRefs.first().firstOrNull { it.id == songId } ?: return@launch
             _ref.value = r
             player.load(Uri.parse(r.uri))
-            if (!c.songs.get(songId).analyzed) analyse()
+            val saved = c.songs.get(songId)
+            if (!saved.analyzed || saved.analysisVersion < app.supersax.domain.song.CURRENT_ANALYSIS) analyse()
         }
-        viewModelScope.launch { while (isActive) { player.tick(); delay(40) } }
+        viewModelScope.launch {
+            while (isActive) {
+                player.tick()
+                val u = player.ui.value
+                val st = setup.value
+                overlay.sync(u.positionMs, u.speed, u.playing, if (st.analyzed) st.bpm else 0.0, st.firstBeatMs, st.beatsPerBar)
+                delay(40)
+            }
+        }
     }
 
     /** Decodes the audio and detects tempo, first beat and key; keeps the checkpoints and the source. */
@@ -73,6 +88,7 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             c.songs.save(songId, old.copy(
                 analyzed = true, detectedBpm = tempo.bpm, bpm = tempo.bpm, firstBeatMs = (tempo.firstBeatSec * 1000).roundToLong(),
                 keyTonic = key.tonic, keyMinor = key.minor, keyConfidence = key.confidence,
+                analysisVersion = app.supersax.domain.song.CURRENT_ANALYSIS,
             ))
             _analysis.value = AnalysisUi()
         }
@@ -93,6 +109,18 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     }
 
     fun setSemitones(n: Int) = player.setSemitones(n.coerceIn(-6, 6))
+
+    /** Tempo in steps of 10 percent of the original (100 → 90 → 80 …), from 50 to 150 percent. */
+    fun stepTempo(steps: Int) {
+        val tenths = (Math.round(player.ui.value.speed * 10) + steps).coerceIn(5, 15)
+        player.setSpeed(tenths / 10f)
+    }
+
+    // --- metronome and volumes ----------------------------------------------------------------
+
+    fun setClicks(on: Boolean) { _mix.value = _mix.value.copy(clicks = on); overlay.setEnabled(on) }
+    fun setClickVolume(v: Float) { _mix.value = _mix.value.copy(clickVolume = v); overlay.setGain(v) }
+    fun setMusicVolume(v: Float) { _mix.value = _mix.value.copy(musicVolume = v); player.setVolume(v) }
 
     // --- bars ---------------------------------------------------------------------------------
 
@@ -142,5 +170,5 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         playPart(cp.ms, next, stop)
     }
 
-    override fun onCleared() { player.release() }
+    override fun onCleared() { overlay.release(); player.release() }
 }

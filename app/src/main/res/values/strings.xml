@@ -732,4 +732,24 @@
     <string name="song_detect_note">Key and tempo are detected automatically and can be wrong on some songs; the alto key is the written key for your E♭ saxophone.</string>
     <string name="whats_new_title">What\'s new</string>
     <string name="whats_new_ok">Got it</string>
+    <string name="song_tempo_percent">%1$d %% of %2$d BPM</string>
+    <string name="song_show_signature">Show the key signature</string>
+    <string name="song_hide_signature">Hide the key signature</string>
+    <string name="song_written_alto">Written for alto</string>
+    <string name="song_concert">Concert pitch</string>
+    <string name="song_signature_desc">Key signature of %1$s</string>
+    <string name="song_no_accidentals">No sharps or flats</string>
+    <string name="song_metronome">Metronome</string>
+    <string name="song_clicks">Metronome clicks</string>
+    <string name="song_clicks_hint">On the song\'s beats from bar 1, beat 1 accented; they follow the tempo you choose.</string>
+    <string name="song_music_volume">Music</string>
+    <string name="song_click_volume">Clicks</string>
+    <plurals name="sharps_n">
+        <item quantity="one">%1$d sharp</item>
+        <item quantity="other">%1$d sharps</item>
+    </plurals>
+    <plurals name="flats_n">
+        <item quantity="one">%1$d flat</item>
+        <item quantity="other">%1$d flats</item>
+    </plurals>
 </resources>

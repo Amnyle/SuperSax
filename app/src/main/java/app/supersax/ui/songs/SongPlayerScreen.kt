@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,6 +87,7 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit) {
     val ui by vm.player.ui.collectAsStateWithLifecycle()
     val analysis by vm.analysis.collectAsStateWithLifecycle()
     val part by vm.part.collectAsStateWithLifecycle()
+    val mix by vm.mix.collectAsStateWithLifecycle()
     ScreenScaffold(ref?.title ?: "", onBack = onBack) { padding ->
         ScrollColumn(padding) {
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
@@ -97,7 +99,9 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit) {
             }
             if (analysis.failed) ErrorBanner(stringResource(R.string.song_analysis_failed), stringResource(R.string.retry)) { vm.analyse() }
             InfoRow(s, ui.semitones)
+            KeySignatureCard(s, ui.semitones)
             Transport(vm, s, ui.playing, ui.positionMs, ui.durationMs)
+            if (s.analyzed) MixCard(vm, mix)
             if (s.analyzed) {
                 BarStrip(vm, s, ui.positionMs, ui.durationMs, part)
                 PartCard(vm, s, ui.durationMs, part)
@@ -258,14 +262,16 @@ private fun CheckpointsCard(vm: SongPlayerViewModel, s: SongSetup) {
 @Composable
 private fun TempoCard(vm: SongPlayerViewModel, s: SongSetup, speed: Float) {
     SectionCard(stringResource(R.string.song_tempo)) {
-        if (s.analyzed && s.bpm > 0) {
-            val playing = (s.bpm * speed).roundToInt()
-            Text(stringResource(R.string.song_tempo_line, s.bpm.roundToInt(), playing, (speed * 100).roundToInt()), style = MaterialTheme.typography.bodyLarge)
-            Stepper(stringResource(R.string.song_playing_bpm), playing, { vm.setPlayingBpm(it.toDouble()) },
-                (s.bpm * 0.5).roundToInt()..(s.bpm * 1.5).roundToInt())
-        } else {
-            Text(stringResource(R.string.speed_percent, (speed * 100).roundToInt()))
-            Stepper(stringResource(R.string.song_speed), (speed * 100).roundToInt(), { vm.player.setSpeed(it / 100f) }, 50..150, 5) { "$it %" }
+        val percent = (speed * 100).roundToInt()
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedButton(onClick = { vm.stepTempo(-1) }, enabled = percent > 50, modifier = Modifier.heightIn(min = 56.dp)) { Text("−10 %") }
+            Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                if (s.analyzed && s.bpm > 0) {
+                    Text(stringResource(R.string.bpm_value, (s.bpm * speed).roundToInt()), style = MaterialTheme.typography.headlineMedium)
+                    Text(stringResource(R.string.song_tempo_percent, percent, s.bpm.roundToInt()), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+                } else Text("$percent %", style = MaterialTheme.typography.headlineMedium)
+            }
+            OutlinedButton(onClick = { vm.stepTempo(1) }, enabled = percent < 150, modifier = Modifier.heightIn(min = 56.dp)) { Text("+10 %") }
         }
         TextButton(onClick = { vm.player.setSpeed(1f) }) { Text(stringResource(R.string.song_original_tempo)) }
     }
@@ -309,5 +315,69 @@ private fun AdjustCard(vm: SongPlayerViewModel, s: SongSetup) {
             TextButton(onClick = vm::resetBars) { Text(stringResource(R.string.song_reset_tempo)) }
             TextButton(onClick = vm::analyse) { Text(stringResource(R.string.song_analyse_again)) }
         }
+    }
+}
+
+/** The key signature on a treble staff: written for alto (default) or concert; follows the transposition. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun KeySignatureCard(s: SongSetup, semitones: Int) {
+    if (!s.analyzed || s.keyTonic < 0) return
+    var shown by rememberSaveable { mutableStateOf(false) }
+    var concert by rememberSaveable { mutableStateOf(false) }
+    OutlinedButton(onClick = { shown = !shown }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
+        Text(stringResource(if (shown) R.string.song_hide_signature else R.string.song_show_signature))
+    }
+    if (!shown) return
+    val tonic = SongKeys.transpose(s.keyTonic, semitones)
+    val shownTonic = if (concert) tonic else SongKeys.altoWritten(tonic)
+    val fifths = SongKeys.fifths(shownTonic, s.keyMinor)
+    SectionCard {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(selected = !concert, onClick = { concert = false }, label = { Text(stringResource(R.string.song_written_alto)) }, modifier = Modifier.heightIn(min = 48.dp))
+            FilterChip(selected = concert, onClick = { concert = true }, label = { Text(stringResource(R.string.song_concert)) }, modifier = Modifier.heightIn(min = 48.dp))
+        }
+        Text(keyName(shownTonic, s.keyMinor), style = MaterialTheme.typography.headlineSmall)
+        app.supersax.notation.StaffView(
+            app.supersax.domain.library.Score(fifths, 4, 4, 60, listOf(app.supersax.domain.library.Measure(emptyList()))),
+            staffSpace = 16.dp, showTime = false,
+            description = stringResource(R.string.song_signature_desc, keyName(shownTonic, s.keyMinor)),
+        )
+        Text(
+            if (fifths == 0) stringResource(R.string.song_no_accidentals)
+            else androidx.compose.ui.res.pluralStringResource(if (fifths > 0) R.plurals.sharps_n else R.plurals.flats_n, kotlin.math.abs(fifths), kotlin.math.abs(fifths)),
+            style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary,
+        )
+    }
+}
+
+/** Metronome clicks over the song, and the volumes of the music and of the clicks. */
+@Composable
+private fun MixCard(vm: SongPlayerViewModel, mix: MixUi) {
+    SectionCard(stringResource(R.string.song_metronome)) {
+        Row(
+            Modifier.fillMaxWidth().then(Modifier.toggleable(mix.clicks, role = androidx.compose.ui.semantics.Role.Switch, onValueChange = vm::setClicks)),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.song_clicks), style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(R.string.song_clicks_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+            }
+            androidx.compose.material3.Switch(checked = mix.clicks, onCheckedChange = null)
+        }
+        VolumeRow(stringResource(R.string.song_music_volume), mix.musicVolume, vm::setMusicVolume)
+        if (mix.clicks) VolumeRow(stringResource(R.string.song_click_volume), mix.clickVolume, vm::setClickVolume)
+    }
+}
+
+@Composable
+private fun VolumeRow(label: String, value: Float, onChange: (Float) -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(label, Modifier.width(110.dp), style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = value, onValueChange = onChange, modifier = Modifier.weight(1f),
+            colors = SliderDefaults.colors(thumbColor = Sax.colors.accentInk, activeTrackColor = Sax.colors.accent, inactiveTrackColor = Sax.colors.elevated),
+        )
+        Text("${(value * 100).roundToInt()} %", Modifier.width(52.dp), style = MaterialTheme.typography.labelLarge)
     }
 }

@@ -60,7 +60,21 @@ class ScreenTour {
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Theory lessons", substring = true); shot("13-lessons")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        // A song already analysed (B♭ major, 112 BPM), to see the player without an audio file.
+        rule.activityRule.scenario.onActivity { a ->
+            val c = (a.application as app.supersax.SaxApp).container
+            kotlinx.coroutines.runBlocking {
+                c.media.saveAudioRef(app.supersax.domain.common.AudioRefRecord("tour-song", "file:///nonexistent.m4a", "Practice song", 0))
+                c.songs.save("tour-song", app.supersax.domain.song.SongSetup(analyzed = true, detectedBpm = 112.0, bpm = 112.0, firstBeatMs = 1200,
+                    keyTonic = 10, keyMinor = false, analysisVersion = app.supersax.domain.song.CURRENT_ANALYSIS,
+                    checkpoints = listOf(app.supersax.domain.song.Checkpoint("c1", "Chorus", 34000))))
+            }
+        }
         click("Song player"); waitFor("Search YouTube"); shot("14-songs")
+        click("Practice song"); waitFor("Show the key signature"); shot("17-song-player")
+        click("Show the key signature"); waitFor("Written for alto"); shot("18-key-signature")
+        click("Metronome clicks"); shot("19-song-mix")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Search YouTube"); waitFor("Song or artist"); shot("15-youtube-search")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }

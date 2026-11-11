@@ -17,5 +17,20 @@
       "Repères : marque des endroits d'un morceau (« Refrain ») et travaille de l'un au suivant.",
       "Cette fenêtre : après chaque mise à jour, une courte liste des nouveautés."
     ]
+  },
+  {
+    "id": 2,
+    "en": [
+      "Song player: \"Show the key signature\" draws the key on a staff, written for alto or in concert pitch, and follows your transposition.",
+      "Tempo changes in steps of 10 percent: 100, 90, 80 percent…",
+      "Bar 1 now starts when the music starts, not in the silence before it (songs are analysed again once).",
+      "Metronome clicks over the song, following your tempo, with separate volumes for the music and the clicks."
+    ],
+    "fr": [
+      "Lecteur de morceaux : « Afficher l'armure » dessine la tonalité sur une portée, écrite pour l'alto ou en son réel, et suit ta transposition.",
+      "Le tempo change par paliers de 10 % : 100, 90, 80 %…",
+      "La mesure 1 commence maintenant quand la musique commence, pas dans le silence avant (les morceaux sont réanalysés une fois).",
+      "Clics de métronome sur le morceau, au tempo choisi, avec des volumes séparés pour la musique et les clics."
+    ]
   }
 ]

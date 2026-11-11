@@ -10,6 +10,9 @@ data class Checkpoint(val id: String, val name: String, val ms: Long)
  * What the song player knows about one song: the detected tempo, first beat and key, the player's
  * corrections ([bpm], [firstBeatMs], [beatsPerBar] start as detected), and the checkpoints.
  */
+/** 2: bar 1 starts where the music starts (not in leading silence). */
+const val CURRENT_ANALYSIS = 2
+
 @Serializable
 data class SongSetup(
     val analyzed: Boolean = false,
@@ -22,6 +25,8 @@ data class SongSetup(
     val keyMinor: Boolean = false,
     val keyConfidence: Double = 0.0,
     val checkpoints: List<Checkpoint> = emptyList(),
+    /** Version of the analysis that produced the values ([CURRENT_ANALYSIS]); older ones are redone once. */
+    val analysisVersion: Int = 1,
     /** Where the audio came from, e.g. a YouTube page address; null for an imported file. */
     val source: String? = null,
 )

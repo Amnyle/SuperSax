@@ -51,6 +51,18 @@ class SongAnalysisTest {
         }
     }
 
+    /** Silence before the music: bar 1 must start with the first sound, not in the silence. */
+    @Test fun firstBeatIsWhereTheMusicStarts() {
+        val silence = 3.2
+        val music = clicks(100.0, 0.0, 25.0)
+        // No pad during the silence: real silence, then the music (its pad and its first click at once).
+        val x = FloatArray((sr * silence).toInt()) + music
+        val r = TempoDetector.detect(x, sr)
+        assertTrue(abs(r.bpm - 100.0) < 1.0, "bpm ${r.bpm}")
+        assertTrue(abs(r.firstBeatSec - silence) < 0.035, "first beat ${r.firstBeatSec}, music starts at $silence")
+        assertTrue(abs(TempoDetector.soundStartSec(x, sr) - silence) < 0.05)
+    }
+
     /** Very fast tempi are ambiguous from onsets alone: half tempo is an accepted answer (×2 in the player). */
     @Test fun fastTempoIsFoundOrHalved() {
         val r = TempoDetector.detect(clicks(168.0, 0.2, 30.0), sr)
@@ -111,5 +123,21 @@ class SongAnalysisTest {
         assertEquals(30, SongBars.barCount(60_500, 120.0, 500, 4))
         // 3/4 at 90 BPM: 2 s per bar.
         assertEquals(2000.0, SongBars.barMs(90.0, 3), 1e-9)
+    }
+}
+
+class ClickTrackTest {
+    @Test fun clicksFollowTheBarsFromBarOne() {
+        // 120 BPM, bar 1 at 1000 ms, 4 beats: beats every 500 ms, accents at 1000, 3000, 5000...
+        val c = app.supersax.domain.song.ClickTrack.between(0.0, 3200.0, 120.0, 1000, 4)
+        assertEquals(listOf(1000.0, 1500.0, 2000.0, 2500.0, 3000.0), c.map { it.songMs })
+        assertEquals(listOf(true, false, false, false, true), c.map { it.accent })
+        // A window in the middle: no click lost or doubled at the edges.
+        val a = app.supersax.domain.song.ClickTrack.between(1000.0, 2000.0, 120.0, 1000, 4)
+        val b = app.supersax.domain.song.ClickTrack.between(2000.0, 3000.0, 120.0, 1000, 4)
+        assertEquals(listOf(1000.0, 1500.0), a.map { it.songMs })
+        assertEquals(listOf(2000.0, 2500.0), b.map { it.songMs })
+        // 3 beats per bar.
+        assertEquals(listOf(true, false, false, true), app.supersax.domain.song.ClickTrack.between(0.0, 2600.0, 90.0, 0, 3).map { it.accent }.take(4))
     }
 }
