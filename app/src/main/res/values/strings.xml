@@ -831,4 +831,12 @@
     <string name="speed_best">Best: %1$d</string>
     <string name="speed_again">Try again</string>
     <string name="level_short">Lv %1$d</string>
+    <string name="scale_major_pentatonic">major pentatonic</string>
+    <string name="scale_minor_pentatonic">minor pentatonic</string>
+    <string name="scale_major_pentatonic_title">Major pentatonic</string>
+    <string name="scale_minor_pentatonic_title">Minor pentatonic</string>
+    <string name="solo_minor_penta">Minor pentatonic</string>
+    <string name="solo_minor_penta_body">Five notes that always sound right over the blues: the three you know plus two more. Learn them by heart, up and down, then improvise with them using the rhythms and gaps from the earlier steps.</string>
+    <string name="solo_major_penta">Major pentatonic</string>
+    <string name="solo_major_penta_body">A brighter, sweeter sound than the blues scale. Try it over the first four bars, then mix it with the minor pentatonic and hear how the mood changes.</string>
 </resources>

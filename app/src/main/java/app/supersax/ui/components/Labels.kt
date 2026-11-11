@@ -35,6 +35,8 @@ fun scaleTypeLabel(t: ScaleType): String = stringResource(
         ScaleType.LOCRIAN -> R.string.scale_locrian
         ScaleType.MAJOR_ARPEGGIO -> R.string.scale_major_arpeggio
         ScaleType.MINOR_ARPEGGIO -> R.string.scale_minor_arpeggio
+        ScaleType.MAJOR_PENTATONIC -> R.string.scale_major_pentatonic
+        ScaleType.MINOR_PENTATONIC -> R.string.scale_minor_pentatonic
     },
 )
 

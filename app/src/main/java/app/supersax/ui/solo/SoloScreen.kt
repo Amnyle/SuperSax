@@ -70,7 +70,9 @@ enum class SoloStep(val title: Int, val body: Int, val calls: Boolean = false, v
     FORM(R.string.solo_form, R.string.solo_form_body),
     THREE(R.string.solo_three, R.string.solo_three_body),
     CALL(R.string.solo_call, R.string.solo_call_body, calls = true),
+    MINOR_PENTA(R.string.solo_minor_penta, R.string.solo_minor_penta_body),
     SCALE(R.string.solo_scale, R.string.solo_scale_body),
+    MAJOR_PENTA(R.string.solo_major_penta, R.string.solo_major_penta_body),
     SPACE(R.string.solo_space, R.string.solo_space_body, playRest = true),
     TARGET(R.string.solo_target, R.string.solo_target_body),
     MOTIF(R.string.solo_motif, R.string.solo_motif_body),
@@ -276,19 +278,27 @@ private fun LiveCue(ui: SoloUi, written: PitchClass, naming: app.supersax.domain
 private fun NotesCard(step: SoloStep, written: PitchClass, naming: app.supersax.domain.pitch.NoteNaming) {
     val notes = when (step) {
         SoloStep.THREE -> Blues.threeNotes(written)
+        SoloStep.MINOR_PENTA -> Blues.minorPentatonic(written)
+        SoloStep.MAJOR_PENTA -> Blues.majorPentatonic(written)
         SoloStep.FORM, SoloStep.EAR -> emptyList()
         else -> Blues.scale(written)
     }
     if (notes.isEmpty()) return
-    SectionCard(stringResource(if (step == SoloStep.THREE) R.string.solo_notes_three else R.string.solo_notes_scale)) {
+    val blues = step != SoloStep.THREE && step != SoloStep.MINOR_PENTA && step != SoloStep.MAJOR_PENTA
+    SectionCard(stringResource(when (step) {
+        SoloStep.THREE -> R.string.solo_notes_three
+        SoloStep.MINOR_PENTA -> R.string.scale_minor_pentatonic_title
+        SoloStep.MAJOR_PENTA -> R.string.scale_major_pentatonic_title
+        else -> R.string.solo_notes_scale
+    })) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             notes.forEachIndexed { i, n ->
                 Box(Modifier.weight(1f).height(52.dp).clip(RoundedCornerShape(14.dp))
-                    .background(if (step != SoloStep.THREE && i == 3) Sax.colors.elevated else Sax.colors.accentSoft), contentAlignment = Alignment.Center) {
+                    .background(if (blues && i == 3) Sax.colors.elevated else Sax.colors.accentSoft), contentAlignment = Alignment.Center) {
                     Text(naming.format(n), style = MaterialTheme.typography.titleLarge)
                 }
             }
         }
-        if (step != SoloStep.THREE) Text(stringResource(R.string.solo_blue_note), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        if (blues) Text(stringResource(R.string.solo_blue_note), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
     }
 }

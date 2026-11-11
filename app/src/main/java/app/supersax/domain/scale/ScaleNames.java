@@ -18,6 +18,8 @@ public final class ScaleNames {
             case MIXOLYDIAN: return fr ? "mixolydien" : "Mixolydian";
             case LOCRIAN: return fr ? "locrien" : "Locrian";
             case MAJOR_ARPEGGIO: return fr ? "arpège majeur" : "major arpeggio";
+            case MAJOR_PENTATONIC: return fr ? "pentatonique majeure" : "major pentatonic";
+            case MINOR_PENTATONIC: return fr ? "pentatonique mineure" : "minor pentatonic";
             default: return fr ? "arpège mineur" : "minor arpeggio";
         }
     }

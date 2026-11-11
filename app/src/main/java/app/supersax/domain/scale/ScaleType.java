@@ -18,9 +18,13 @@ public enum ScaleType {
     MIXOLYDIAN(steps7(), list(0, 2, 4, 5, 7, 9, 10), -1, Family.MODE),
     LOCRIAN(steps7(), list(0, 1, 3, 5, 6, 8, 10), -5, Family.MODE),
     MAJOR_ARPEGGIO(list(0, 2, 4), list(0, 4, 7), 0, Family.ARPEGGIO),
-    MINOR_ARPEGGIO(list(0, 2, 4), list(0, 3, 7), -3, Family.ARPEGGIO);
+    MINOR_ARPEGGIO(list(0, 2, 4), list(0, 3, 7), -3, Family.ARPEGGIO),
+    /** Five notes: 1 2 3 5 6. */
+    MAJOR_PENTATONIC(list(0, 1, 2, 4, 5), list(0, 2, 4, 7, 9), 0, Family.PENTATONIC),
+    /** Five notes: 1 ♭3 4 5 ♭7, the usual first scale for improvising. */
+    MINOR_PENTATONIC(list(0, 2, 3, 4, 6), list(0, 3, 5, 7, 10), -3, Family.PENTATONIC);
 
-    public enum Family { MAJOR, MINOR, MODE, ARPEGGIO }
+    public enum Family { MAJOR, MINOR, MODE, ARPEGGIO, PENTATONIC }
 
     private final List<Integer> steps;
     private final List<Integer> semitones;
@@ -44,14 +48,14 @@ public enum ScaleType {
 
     public Family getFamily() { return family; }
 
-    /** Whole (W) and half (H) step pattern, e.g. "WWHWWWH" for major. Null for arpeggios. */
+    /** Whole (W), half (H) and minor-third (3) step pattern, e.g. "WWHWWWH" for major, "WW3W3" for major pentatonic. Null for arpeggios. */
     public String getStepPattern() {
         if (family == Family.ARPEGGIO) return null;
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < semitones.size(); i++) {
             int next = i + 1 < semitones.size() ? semitones.get(i + 1) : 12;
             int d = next - semitones.get(i);
-            b.append(d == 2 ? 'W' : d == 1 ? 'H' : '?');
+            b.append(d == 2 ? 'W' : d == 1 ? 'H' : d == 3 ? '3' : '?');
         }
         return b.toString();
     }

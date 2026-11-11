@@ -5,13 +5,14 @@ import kotlinx.serialization.Serializable
 
 /** Scale families counted by the Technique pillar. */
 @Serializable
-enum class ScaleFamily { MAJOR, MINOR, MODE, ARPEGGIO;
+enum class ScaleFamily { MAJOR, MINOR, MODE, ARPEGGIO, PENTATONIC;
     companion object {
         fun of(t: ScaleType): ScaleFamily = when (t.family) {
             ScaleType.Family.MAJOR -> MAJOR
             ScaleType.Family.MINOR -> MINOR
             ScaleType.Family.MODE -> MODE
             ScaleType.Family.ARPEGGIO -> ARPEGGIO
+            ScaleType.Family.PENTATONIC -> PENTATONIC
         }
     }
 }

@@ -82,7 +82,7 @@ public final class ScaleId {
             case PHRYGIAN: degree = 2; break;
             case LYDIAN: degree = 3; break;
             case MIXOLYDIAN: degree = 4; break;
-            case NATURAL_MINOR: case MINOR_ARPEGGIO: degree = 5; break;
+            case NATURAL_MINOR: case MINOR_ARPEGGIO: case MINOR_PENTATONIC: degree = 5; break;
             case LOCRIAN: degree = 6; break;
             default: degree = 0;
         }

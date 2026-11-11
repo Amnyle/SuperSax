@@ -25,6 +25,8 @@ class BluesTest {
         // Written G blues scale: G B♭ C D♭ D F.
         assertEquals(listOf("G", "Bb", "C", "Db", "D", "F"), Blues.scale(p("G")).map { it.toString() })
         assertEquals(listOf("G", "Bb", "C"), Blues.threeNotes(p("G")).map { it.toString() })
+        assertEquals(listOf("G", "Bb", "C", "D", "F"), Blues.minorPentatonic(p("G")).map { it.toString() })
+        assertEquals(listOf("G", "A", "B", "D", "E"), Blues.majorPentatonic(p("G")).map { it.toString() })
     }
 
     @Test fun callPhrasesFitTwoBarsAndStayInTheScale() {
@@ -56,5 +58,16 @@ class SoloCueTest {
         val space = (0 until 12).map { app.supersax.ui.solo.cueOf(app.supersax.ui.solo.SoloStep.SPACE, it) }
         assertEquals(6, space.count { it.name == "PLAY" })
         assertTrue((0 until 12).all { app.supersax.ui.solo.cueOf(app.supersax.ui.solo.SoloStep.TARGET, it).name == "NONE" })
+    }
+}
+
+class PentatonicScaleTest {
+    @Test fun pentatonicsAreFiveNotesSpelledFromTheKey() {
+        val major = app.supersax.domain.scale.ScaleGenerator.oneOctave(app.supersax.domain.scale.ScaleId.parse("MAJOR_PENTATONIC:Eb"), 4)
+        assertEquals(listOf("Eb", "F", "G", "Bb", "C", "Eb"), major.map { it.pitchClass.toString() })
+        val minor = app.supersax.domain.scale.ScaleGenerator.oneOctave(app.supersax.domain.scale.ScaleId.parse("MINOR_PENTATONIC:C"), 4)
+        assertEquals(listOf("C", "Eb", "F", "G", "Bb", "C"), minor.map { it.pitchClass.toString() })
+        assertEquals("WW3W3", app.supersax.domain.scale.ScaleType.MAJOR_PENTATONIC.stepPattern)
+        assertEquals("C minor pentatonic", app.supersax.domain.scale.ScaleNames.typeName(app.supersax.domain.scale.ScaleType.MINOR_PENTATONIC, "en").let { "C $it" })
     }
 }

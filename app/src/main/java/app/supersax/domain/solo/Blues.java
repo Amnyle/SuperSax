@@ -61,6 +61,17 @@ public final class Blues {
         return out;
     }
 
+    /** Minor pentatonic: 1 ♭3 4 5 ♭7 (the blues scale without the blue note). */
+    public static List<PitchClass> minorPentatonic(PitchClass key) {
+        List<PitchClass> s = scale(key);
+        return Arrays.asList(s.get(0), s.get(1), s.get(2), s.get(4), s.get(5));
+    }
+
+    /** Major pentatonic: 1 2 3 5 6, a sweeter sound over the blues. */
+    public static List<PitchClass> majorPentatonic(PitchClass key) {
+        return Arrays.asList(key, above(key, 1, 2), above(key, 2, 4), above(key, 4, 7), above(key, 5, 9));
+    }
+
     /** The first three notes for a beginner's solo: root, ♭3 and 4. */
     public static List<PitchClass> threeNotes(PitchClass key) { return scale(key).subList(0, 3); }
 

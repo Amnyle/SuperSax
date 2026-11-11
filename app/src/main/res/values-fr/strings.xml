@@ -835,4 +835,12 @@
     <string name="speed_best">Record : %1$d</string>
     <string name="speed_again">Recommencer</string>
     <string name="level_short">Niv %1$d</string>
+    <string name="scale_major_pentatonic">pentatonique majeure</string>
+    <string name="scale_minor_pentatonic">pentatonique mineure</string>
+    <string name="scale_major_pentatonic_title">Pentatonique majeure</string>
+    <string name="scale_minor_pentatonic_title">Pentatonique mineure</string>
+    <string name="solo_minor_penta">Pentatonique mineure</string>
+    <string name="solo_minor_penta_body">Cinq notes qui sonnent toujours juste sur le blues : les trois que tu connais plus deux autres. Apprends-les par cœur, en montant et en descendant, puis improvise avec en gardant les rythmes et les silences des étapes précédentes.</string>
+    <string name="solo_major_penta">Pentatonique majeure</string>
+    <string name="solo_major_penta_body">Un son plus clair et plus doux que la gamme blues. Essaie-la sur les quatre premières mesures, puis mélange-la avec la pentatonique mineure et écoute comment l\'ambiance change.</string>
 </resources>
