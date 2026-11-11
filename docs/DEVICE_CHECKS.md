@@ -23,3 +23,12 @@ build container), so **every UI flow below is unverified on a device** until the
 - [ ] Reading drill and match-the-note end after a fixed number of questions with the "done for today" screen.
 - [ ] Widget: add it to the home screen; one tap opens the player with today's session running.
 - [ ] Reminders: enable, set a time a few minutes ahead on a planned day → one neutral notification; nothing on unplanned days or after playing.
+
+## Phases 3 and 4
+- [ ] Rank screen: staircase and radar readable in light and dark mode; tapping a pillar lists the next-tier requirements.
+- [ ] Library: Listen plays every bundled piece at the right pitch with the note highlight following; written/concert toggle redraws correctly (check a double sharp in "caprice-minor").
+- [ ] MusicXML import of a real file exported from MuseScore (alto part with transposition) shows the same written notes as MuseScore.
+- [ ] PDF import and viewing of a multi-page score; the file survives backup export/import.
+- [ ] Recording: start/stop, playback, A/B comparison stays in sync; files under app storage; included in backup when chosen.
+- [ ] Fingering diagram: keys are easy to tap with a finger; key positions make sense to a sax player (owner to judge).
+- [ ] Lesson quizzes: the tap-on-staff input picks the intended line or space at normal and large font sizes.

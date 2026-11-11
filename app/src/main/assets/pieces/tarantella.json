@@ -1,0 +1,94 @@
+{
+  "id": "tarantella",
+  "title": {
+    "en": "Tarantella",
+    "fr": "Tarentelle"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "melody",
+    "staccato"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -4,
+  "mode": "minor",
+  "time": "6/8",
+  "tempo": 252,
+  "pickup": false,
+  "measures": [
+    "F3:1/8 Ab3:1/8 C4:1/8 F4:1/8 C4:1/8 Ab3:1/8",
+    "C4:1/16 F4:1/16 C4:1/8 Ab3:1/8 F3:3/8",
+    "E3:1/8 G3:1/8 Bb3:1/8 C4:1/8 Bb3:1/8 G3:1/8",
+    "C4:1/16 F4:1/16 C4:1/8 Ab3:1/8 F3:3/8",
+    "Bb3:1/4 Db4:1/8 F4:1/4 Bb4:1/8",
+    "C5:1/8 Ab4:1/8 F4:1/8 C4:1/16 B3:1/16 C4:1/8 F4:1/8",
+    "G3:1/8 Ab3:1/8 Bb3:1/8 C4:1/8 Bb3:1/8 Ab3:1/8",
+    "F3:3/8 r:3/8",
+    "Ab3:1/8 C4:1/8 Eb4:1/8 Ab4:1/8 Eb4:1/8 C4:1/8",
+    "Db4:1/16 Eb4:1/16 Db4:1/8 Bb3:1/8 G3:3/8",
+    "C4:1/8 Eb4:1/8 Ab4:1/8 C5:1/8 Ab4:1/8 Eb4:1/8",
+    "Ab4:1/16 Db5:1/16 Ab4:1/8 F4:1/8 Db4:3/8",
+    "Bb4:1/8 F4:1/8 Db4:1/8 Bb3:1/16 A3:1/16 Bb3:1/8 Db4:1/8",
+    "Bb3:1/4 Db4:1/8 Eb4:1/4 G4:1/8",
+    "Eb4:1/8 F4:1/8 G4:1/8 Ab4:1/8 G4:1/8 F4:1/8",
+    "Eb4:3/8 r:3/8",
+    "F4:1/8 Ab4:1/8 C5:1/8 F5:1/8 C5:1/8 Ab4:1/8",
+    "F5:1/8 Db5:1/8 Bb4:1/8 F4:1/16 E4:1/16 F4:1/8 Bb4:1/8",
+    "E4:1/8 G4:1/8 Bb4:1/8 C5:1/8 Bb4:1/8 G4:1/8",
+    "C5:1/16 F5:1/16 C5:1/8 Ab4:1/8 F4:3/8",
+    "Db4:1/4 F4:1/8 Ab4:1/4 Db5:1/8",
+    "Db4:1/8 F4:1/8 Bb4:1/8 Db5:1/8 Bb4:1/8 F4:1/8",
+    "C4:1/8 Bb3:1/8 G3:1/8 E3:1/16 D#3:1/16 E3:1/8 G3:1/8",
+    "F3:3/8 r:3/8",
+    "C4:1/8 Db4:1/8 Eb4:1/8 F4:1/8 Eb4:1/8 Db4:1/8",
+    "Db4:1/8 F4:1/8 Ab4:1/8 Db5:1/8 Ab4:1/8 F4:1/8",
+    "Bb4:1/8 F4:1/8 Db4:1/8 Bb3:1/16 A3:1/16 Bb3:1/8 Db4:1/8",
+    "C4:1/4 E4:1/8 G4:1/4 Bb4:1/8",
+    "F3:1/8 Ab3:1/8 C4:1/8 F4:1/8 C4:1/8 Ab3:1/8",
+    "Db4:1/16 F4:1/16 Db4:1/8 Bb3:1/8 F3:3/8",
+    "E3:1/8 G3:1/8 Bb3:1/8 C4:1/8 Bb3:1/8 G3:1/8",
+    "F3:3/8 r:3/8"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    },
+    {
+      "id": "c",
+      "title": {
+        "en": "Bars 17–24",
+        "fr": "Mesures 17–24"
+      },
+      "from": 17,
+      "to": 24
+    },
+    {
+      "id": "d",
+      "title": {
+        "en": "Bars 25–32",
+        "fr": "Mesures 25–32"
+      },
+      "from": 25,
+      "to": 32
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "arpeggio-study-1",
+  "title": {
+    "en": "Arpeggio Study No. 1",
+    "fr": "Étude d’arpèges n° 1"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "etude",
+    "arpeggio"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -2,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 104,
+  "pickup": false,
+  "measures": [
+    "Bb3:1/8 D4:1/8 F4:1/8 Bb4:1/8 D5:1/8 Bb4:1/8 F4:1/8 D4:1/8",
+    "Bb3:1/8 Eb4:1/8 G4:1/8 Bb4:1/8 Eb5:1/8 Bb4:1/8 G4:1/8 Eb4:1/8",
+    "A3:1/8 C4:1/8 Eb4:1/8 F4:1/8 A4:1/8 F4:1/8 Eb4:1/8 C4:1/8",
+    "Bb3:1/4 D4:1/4 Bb3:1/2",
+    "G3:1/8 Bb3:1/8 D4:1/8 G4:1/8 Bb4:1/8 G4:1/8 D4:1/8 Bb3:1/8",
+    "G3:1/8 C4:1/8 Eb4:1/8 G4:1/8 C5:1/8 G4:1/8 Eb4:1/8 C4:1/8",
+    "F3:1/8 A3:1/8 C4:1/8 F4:1/8 A4:1/8 F4:1/8 C4:1/8 A3:1/8",
+    "C4:1/4 F4:1/4 A4:1/2",
+    "G3:1/8 Bb3:1/8 Eb4:1/8 G4:1/8 Bb4:1/8 G4:1/8 Eb4:1/8 Bb3:1/8",
+    "F3:1/8 Bb3:1/8 D4:1/8 F4:1/8 Bb4:1/8 F4:1/8 D4:1/8 Bb3:1/8",
+    "C4:1/8 Eb4:1/8 G4:1/8 Bb4:1/8 C5:1/8 Bb4:1/8 G4:1/8 Eb4:1/8",
+    "F4:3/8 Eb4:1/8 C4:1/2",
+    "D4:1/8 G4:1/8 Bb4:1/8 D5:1/8 D5:1/8 Bb4:1/8 G4:1/8 D4:1/8",
+    "Eb4:1/8 G4:1/8 Bb4:1/8 Eb5:1/8 Eb5:1/8 Bb4:1/8 G4:1/8 Eb4:1/8",
+    "F4:3/8 A4:1/8 C5:1/8 A4:1/8 F4:1/8 Eb4:1/8",
+    "D4:1/4 F4:1/4 Bb4:1/2"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

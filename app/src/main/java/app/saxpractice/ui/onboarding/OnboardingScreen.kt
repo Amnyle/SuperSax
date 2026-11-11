@@ -181,9 +181,10 @@ private fun SongsPage(now: List<String>, next: List<String>, onNow: (List<String
 private fun SongList(label: String, items: List<String>, onChange: (List<String>) -> Unit) {
     var text by remember { mutableStateOf("") }
     SectionCard(label) {
+        var pick by remember { mutableStateOf(false) }
         items.forEachIndexed { i, s ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(s, Modifier.weight(1f))
+                Text(s.substringBefore(PIECE_SEPARATOR), Modifier.weight(1f))
                 TextButton(onClick = { onChange(items.filterIndexed { j, _ -> j != i }) }) { Text(stringResource(R.string.remove)) }
             }
         }
@@ -191,6 +192,12 @@ private fun SongList(label: String, items: List<String>, onChange: (List<String>
             OutlinedTextField(text, { text = it }, Modifier.weight(1f), label = { Text(stringResource(R.string.onb_song_title)) }, singleLine = true)
             TextButton(onClick = { if (text.isNotBlank()) { onChange(items + text.trim()); text = "" } }) { Text(stringResource(R.string.add)) }
         }
+        val language = app.saxpractice.LocaleHelper.effective(androidx.compose.ui.platform.LocalContext.current)
+        TextButton(onClick = { pick = true }) { Text(stringResource(R.string.onb_from_library)) }
+        if (pick) app.saxpractice.ui.library.PiecePickerDialog(
+            onPick = { p -> onChange(items + (p.file.title.get(language) + PIECE_SEPARATOR + p.id)); pick = false },
+            onDismiss = { pick = false }, withNotesOnly = false,
+        )
     }
 }
 
@@ -288,3 +295,6 @@ fun readingLevels() = listOf(R.string.reading_0, R.string.reading_1, R.string.re
 
 @Composable
 fun theoryLevels() = listOf(R.string.theory_0, R.string.theory_1, R.string.theory_2, R.string.theory_3, R.string.theory_4).map { stringResource(it) }
+
+/** Separates a song title from the library piece id it was picked from (song goals keep the link). */
+const val PIECE_SEPARATOR = "\u001F"

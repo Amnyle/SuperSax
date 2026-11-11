@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -58,6 +59,7 @@ private data class Tab(val route: String, val label: Int, val icon: androidx.com
 private val tabs = listOf(
     Tab(Routes.TODAY, R.string.today, Icons.Default.PlayArrow),
     Tab(Routes.TOOLS, R.string.tools, Icons.Default.Build),
+    Tab(ExtraRoutes.LIBRARY, R.string.library, Icons.Default.LibraryMusic),
     Tab(Routes.PROGRESS, R.string.progress, Icons.Default.Insights),
 )
 

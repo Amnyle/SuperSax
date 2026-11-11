@@ -1,0 +1,157 @@
+{
+  "id": "02-note-values",
+  "order": 2,
+  "minutes": 3,
+  "title": {
+    "en": "Note values and rests",
+    "fr": "Les valeurs de notes et les silences"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "From whole note to sixteenth",
+        "fr": "De la ronde à la double croche"
+      },
+      "body": {
+        "en": "The position of a note tells you its pitch; its shape tells you how long it lasts. In common time, with the quarter note as the beat, the values are:\n\nWhole note (hollow head, no stem): 4 beats. Half note (hollow head with a stem): 2 beats. Quarter note (filled head with a stem): 1 beat. Eighth note (one flag, or one beam joining several): half a beat. Sixteenth note (two flags or two beams): a quarter of a beat.\n\nEach value is exactly half of the one before. So one whole note equals two halves, four quarters, eight eighths or sixteen sixteenths. On the saxophone, holding a note for its full value matters as much as starting it: keep the air moving until the very end.",
+        "fr": "La position d'une note donne sa hauteur ; sa forme donne sa durée. Quand la noire vaut un temps, les valeurs sont :\n\nLa ronde (tête blanche, sans hampe) : 4 temps. La blanche (tête blanche avec hampe) : 2 temps. La noire (tête noire avec hampe) : 1 temps. La croche (un crochet, ou une barre qui en relie plusieurs) : un demi-temps. La double croche (deux crochets ou deux barres) : un quart de temps.\n\nChaque valeur vaut exactement la moitié de la précédente. Une ronde vaut donc deux blanches, quatre noires, huit croches ou seize doubles croches. Au saxophone, tenir une note jusqu'au bout compte autant que bien l'attaquer : garde l'air en mouvement jusqu'à la fin."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/1",
+          "C5:1/2 C5:1/2",
+          "C5:1/4 C5:1/4 C5:1/4 C5:1/4",
+          "C5:1/8 C5:1/8 C5:1/8 C5:1/8 C5:1/16 C5:1/16 C5:1/16 C5:1/16 C5:1/16 C5:1/16 C5:1/16 C5:1/16"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Rests",
+        "fr": "Les silences"
+      },
+      "body": {
+        "en": "Every note value has a matching rest, a sign for silence of the same length: the whole rest hangs below the fourth line, the half rest sits on the third line, the quarter rest looks like a zigzag, and the eighth and sixteenth rests have one or two little flags. A rest is not a pause in counting. Keep the beat going in your head, and use rests to breathe in time.",
+        "fr": "Chaque valeur a son silence de même durée : la pause (suspendue sous la quatrième ligne), la demi-pause (posée sur la troisième ligne), le soupir (en zigzag), le demi-soupir et le quart de soupir (avec un ou deux petits crochets). Un silence n'arrête pas le compte : garde la pulsation dans ta tête, et profite des silences pour respirer en mesure."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/4 r:1/4 G4:1/2",
+          "r:1/2 G4:1/8 r:1/8 G4:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Dots and ties",
+        "fr": "Points et liaisons de prolongation"
+      },
+      "body": {
+        "en": "A dot after a note adds half of that note's value. A dotted half note lasts 2 + 1 = 3 beats; a dotted quarter lasts 1 + ½ = 1½ beats. Rests can be dotted too.\n\nA tie is a curved line joining two notes of the same pitch. You play the first note and hold it through the second without tonguing again: the lengths simply add up. Ties let a note continue across a bar line, which a dot cannot do. Do not confuse a tie with a slur, which joins different pitches; you will meet slurs in a later lesson.",
+        "fr": "Un point placé après une note ajoute la moitié de sa valeur. Une blanche pointée dure 2 + 1 = 3 temps ; une noire pointée dure 1 + ½ = 1 temps et demi. Les silences peuvent aussi être pointés.\n\nLa liaison de prolongation est un arc qui relie deux notes de même hauteur. On joue la première et on la tient pendant la seconde, sans redonner de coup de langue : les durées s'additionnent. Elle permet de prolonger une note au-delà de la barre de mesure, ce qu'un point ne peut pas faire. Ne la confonds pas avec la liaison d'articulation, qui relie des notes différentes ; tu la verras dans une prochaine leçon."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "A4:3/4 B4:1/4~",
+          "B4:1/4 C5:3/8 B4:1/8 A4:1/4"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many sixteenth notes fit in one dotted quarter note?",
+        "fr": "Combien de doubles croches tiennent dans une noire pointée ?"
+      },
+      "answer": 6,
+      "explanation": {
+        "en": "A quarter holds 4 sixteenths; the dot adds half of that, 2 more. 4 + 2 = 6.",
+        "fr": "Une noire contient 4 doubles croches ; le point ajoute la moitié, soit 2 de plus. 4 + 2 = 6."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "A half note is tied to a dotted quarter note. How many eighth notes long is the whole sound?",
+        "fr": "Une blanche est liée à une noire pointée. Combien de croches dure le son en tout ?"
+      },
+      "answer": 7,
+      "explanation": {
+        "en": "A half note is 4 eighths and a dotted quarter is 3 eighths. Tied, they last 4 + 3 = 7 eighths.",
+        "fr": "Une blanche vaut 4 croches et une noire pointée 3 croches. Liées, elles durent 4 + 3 = 7 croches."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "TEXT",
+      "prompt": {
+        "en": "This 4/4 bar is not full yet. Which single rest would complete it?",
+        "fr": "Cette mesure à 4/4 n'est pas complète. Quel silence unique la compléterait ?"
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:3/8 A4:1/8 B4:1/4"
+        ],
+        "free": true
+      },
+      "accept": {
+        "en": [
+          "quarter rest",
+          "a quarter rest",
+          "quarter",
+          "crotchet rest",
+          "a crotchet rest",
+          "crotchet"
+        ],
+        "fr": [
+          "soupir",
+          "un soupir",
+          "le soupir"
+        ]
+      },
+      "explanation": {
+        "en": "Dotted quarter (1½) + eighth (½) + quarter (1) = 3 beats. One beat is missing: a quarter rest.",
+        "fr": "Noire pointée (1½) + croche (½) + noire (1) = 3 temps. Il manque un temps : un soupir."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "TEXT",
+      "prompt": {
+        "en": "A quarter note is tied to an eighth note of the same pitch. Which single note value lasts exactly as long?",
+        "fr": "Une noire est liée à une croche de même hauteur. Quelle valeur unique dure exactement autant ?"
+      },
+      "accept": {
+        "en": [
+          "dotted quarter",
+          "dotted quarter note",
+          "a dotted quarter",
+          "a dotted quarter note",
+          "dotted crotchet",
+          "a dotted crotchet"
+        ],
+        "fr": [
+          "noire pointee",
+          "une noire pointee",
+          "la noire pointee"
+        ]
+      },
+      "explanation": {
+        "en": "1 + ½ = 1½ beats, which is a quarter plus half of itself: a dotted quarter note.",
+        "fr": "1 + ½ = 1 temps et demi, soit une noire plus sa moitié : une noire pointée."
+      }
+    }
+  ]
+}

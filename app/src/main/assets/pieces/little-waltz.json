@@ -1,0 +1,59 @@
+{
+  "id": "little-waltz",
+  "title": {
+    "en": "Little Waltz",
+    "fr": "Petite valse"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "melody"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -2,
+  "mode": "major",
+  "time": "3/4",
+  "tempo": 120,
+  "pickup": false,
+  "measures": [
+    "Bb3:1/4 D4:1/4 F4:1/4",
+    "Bb4:1/2 A4:1/4",
+    "G4:1/4 F4:1/4 Eb4:1/4",
+    "D4:3/4",
+    "C4:1/4 Eb4:1/4 G4:1/4",
+    "Bb4:3/8 A4:1/8 G4:1/4",
+    "F4:1/4 Eb4:1/4 C4:1/4",
+    "F4:3/4",
+    "Bb3:1/4 D4:1/4 F4:1/4",
+    "Bb4:1/2 C5:1/4",
+    "D5:3/8 C5:1/8 Bb4:1/4",
+    "G4:3/4",
+    "Eb4:1/4 G4:1/4 Bb4:1/4",
+    "A4:3/8 G4:1/8 F4:1/4",
+    "F4:1/4 G4:1/4 A4:1/4",
+    "Bb4:3/4"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

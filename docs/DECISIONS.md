@@ -90,3 +90,41 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Reminders**: one WorkManager periodic job per day at the chosen time; it posts only if today is a planned day and nothing was played yet.
 - **Widget**: a Glance widget whose tap opens the app with a start flag; the app starts today's session and opens the player (one tap from the home screen).
 - **App bundle language splits disabled**: the language is chosen inside the app.
+
+## Rank (phase 3)
+
+- **"Highest tier whose requirements are all met"** is taken literally: lower tiers are not required (e.g. Sound can be Gold from tuner holds even without the Iron long-tone block).
+- **Technique**: Platinum = all 12 majors at 90+ and all 12 natural minors at 100+; Diamond adds 12 modes (any mode, any tonic) at 130+; Master adds all 24 arpeggios at 150+. Clean pairs come from the session log (two clean runs in a row), self-reported.
+- **Range** (written MIDI): Iron lowest ≤ E4 and highest ≥ D5 (the middle register); Bronze ≤ B♭3, ≥ G5; Silver ≥ palm D6; Gold ≥ F♯6; Platinum ≥ G6; Emerald ≥ A6; Diamond ≥ C7; Master ≥ D7 ("controlled upper altissimo"). From Platinum only tuner-verified notes count, and the overtone milestone must be done. Onboarding answers become self-reported low/high notes; tuner holds ≥ 1 s become verified notes.
+- **Sound Iron** = one long-tone block completed (actual ≥ 75 percent of planned). Bronze+ re-evaluates stored traces at the tier tolerance, so changing the config re-ranks old holds. Registers for Gold+: low < written D5, middle D5–C♯6, high D6 and up.
+- **Consistency**: planned days of the active program counted day by day over the last 56 days, starting at the first sax session if more recent; today counts only once played; a planned day is "done" if any sax session happened that date. Sessions per week = sax sessions in the window / weeks in the window. Phone sessions do not count.
+- **Repertoire**: whole-piece stage "clean at tempo" only (sections do not count).
+- **Musicianship thresholds**: Iron any drill or lesson; Bronze reading level 2 at 80 percent + 2 lessons ≥ 60 percent; Silver reading 3 at 80 + scale recognition 70 + 4 lessons ≥ 70; Gold reading 4 at 85 under 4 s + scales level 2 at 80 + 6 lessons; Platinum reading 5 at 85 under 3.5 s + scales level 3 at 85 + 8 lessons ≥ 75; Emerald 90 / 3 s, scales level 4 at 90, 10 lessons ≥ 80; Diamond 95 / 2.5 s, scales 95, 12 lessons ≥ 85; Master 100 / 2 s, scales 100, all 13 lessons ≥ 90. A requirement is met by a single round (best round counts).
+- **Musicianship cap** = floor(average of the other five) + 1.
+- **Snapshots**: one rank snapshot stored whenever the rank or any pillar changes (for the weekly review); never notified.
+
+## Library (phase 3)
+
+- **Piece files in compact text measures** (`Eb4:1/4`, `r:1/2`, `~` tie): exact fractions, readable, validated by `tools/validate_pieces.py` and by unit tests.
+- **Difficulty** uses the written score (what the alto player reads): range span, extremes, written key size, accidentals, shortest note, dotted/ties/syncopation, notes per second, length; weights in `Difficulty` KDoc.
+- **Matching**: a scale counts as clean when it has a clean pair (onboarding's "clean scales" seed one at the comfortable tempo). The key's scale or its relative counts. Stretch = exactly one requirement missing, by at most 2 semitones of range or being the next scale to unlock.
+- **"Something new" continues the piece being learned** (most recently touched) before starting another, otherwise new material would change every session; then easiest Available, then easiest Stretch. Section = first section not yet playable. "Something fun" = playable piece played least recently.
+- **MusicXML import**: first part only, first note of chords, grace notes and other voices skipped; `<transpose>` converts written parts to concert. DTD loading and external entities are disabled.
+- **PDFs** are copied into app storage (`imports/`, included in backups) and rendered page by page with `PdfRenderer` at 1400 px width.
+- **Metadata-only pieces** take attached files (PDF or MusicXML) linked by `attachedToPieceId`.
+- **Listen** merges tied notes and uses the score tempo (beats of 1/den) or the chosen tempo.
+
+## Recordings and gear (phase 3)
+
+- **Recorder**: MediaRecorder, MIC source, AAC 128 kb/s 44.1 kHz in .m4a under `files/recordings/`.
+- **A/B comparison**: both takes play in sync, the toggle switches which one is audible (volume 1/0), so the comparison is at the same point in time.
+- **Evidence**: a take tagged with a piece attaches to that piece's stage; a take tagged with a scale attaches to the latest clean pair of that scale.
+- **Hours per reed** from the session log (the current reed is stored with each session).
+
+## Learning (phase 4)
+
+- **Lessons**: 13 lessons written by a content subagent from a format spec (`docs/LESSON_FORMAT.md`), validated by script and by unit tests that check every answer is accepted by the app's checker. French uses "tu" and solfège names with the app's octave codes in brackets.
+- **Quiz answers**: TEXT matching ignores case, accents and punctuation; NOTE/NOTES use the note keypad (spelling matters); STAFF_NOTE uses a tappable staff plus ♭/♮/♯. The best score per lesson is kept, attempts counted.
+- **Scale recognition** levels: accidentals ≤ 1, 2, 4, 6, 6; minors from level 3, modes at level 5; questions rotate between "name from key signature", "name from notes" and "build from root". By-ear questions were not added.
+- **Fingering diagram**: a schematic, not a picture of a real sax; standard fingerings follow common charts; low B♭/B shown without the right-hand pinky.
+- **Phone drills available**: reading, scale recognition, theory lesson, fingering; Today links each planned phone session to its screen.

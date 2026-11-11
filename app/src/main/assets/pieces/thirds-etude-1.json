@@ -1,0 +1,65 @@
+{
+  "id": "thirds-etude-1",
+  "title": {
+    "en": "Scale in Thirds No. 1",
+    "fr": "Gamme en tierces n° 1"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "etude",
+    "scale"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 88,
+  "pickup": false,
+  "measures": [
+    "Eb4:1/8 G4:1/8 F4:1/8 Ab4:1/8 G4:1/8 Bb4:1/8 Ab4:1/8 C5:1/8",
+    "Bb4:1/8 D5:1/8 C5:1/8 Eb5:1/8 D5:1/4 Bb4:1/4",
+    "Eb5:1/8 C5:1/8 D5:1/8 Bb4:1/8 C5:1/8 Ab4:1/8 Bb4:1/8 G4:1/8",
+    "Ab4:1/8 F4:1/8 G4:1/8 Eb4:1/8 F4:1/4 Bb3:1/4",
+    "Bb3:1/8 D4:1/8 C4:1/8 Eb4:1/8 D4:1/8 F4:1/8 Eb4:1/8 G4:1/8",
+    "F4:1/8 Ab4:1/8 G4:1/8 Bb4:1/8 Ab4:1/4 F4:1/4",
+    "G4:1/8 Eb4:1/8 F4:1/8 D4:1/8 Eb4:1/8 C4:1/8 D4:1/8 Bb3:1/8",
+    "C4:1/8 Ab3:1/8 Bb3:1/8 G3:1/8 Ab3:1/4 Bb3:1/4",
+    "G3:1/8 Bb3:1/8 Ab3:1/8 C4:1/8 Bb3:1/8 D4:1/8 C4:1/8 Eb4:1/8",
+    "D4:1/8 F4:1/8 Eb4:1/8 G4:1/8 F4:1/8 Ab4:1/8 G4:1/8 Bb4:1/8",
+    "Ab4:1/8 F4:1/8 G4:1/8 Eb4:1/8 F4:1/8 D4:1/8 Bb3:1/8 D4:1/8",
+    "Eb4:1/1"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 4
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 5,
+      "to": 8
+    },
+    {
+      "id": "c",
+      "title": {
+        "en": "Bars 9–12",
+        "fr": "Mesures 9–12"
+      },
+      "from": 9,
+      "to": 12
+    }
+  ]
+}

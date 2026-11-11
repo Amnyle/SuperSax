@@ -20,6 +20,9 @@ import app.saxpractice.data.repo.ProgressRepository
 import app.saxpractice.data.repo.QuietMode
 import app.saxpractice.data.repo.SessionManager
 import app.saxpractice.data.repo.TodayService
+import app.saxpractice.data.repo.PieceChooser
+import app.saxpractice.data.repo.LibraryService
+import app.saxpractice.data.repo.RankService
 import app.saxpractice.data.settings.SettingsRepository
 import app.saxpractice.domain.program.ExerciseType
 import app.saxpractice.domain.program.Pillar
@@ -48,7 +51,9 @@ class AppContainer(val context: Context) {
     val importsDir: File get() = File(context.filesDir, "imports").apply { mkdirs() }
     val media by lazy { MediaRepository(db, recordingsDir) }
     val backup by lazy { BackupRepository(db, settings, recordingsDir, importsDir) { clock.nowMs() } }
-    val today by lazy { TodayService(practice, content, settings) }
+    val libraryService by lazy { LibraryService(content, library, practice, appScope) }
+    val rank by lazy { RankService(this) }
+    val today by lazy { TodayService(practice, content, settings, PieceChooser { libraryService.choose(it) }) }
 
     val quietMode = object : QuietMode {
         private val nm get() = context.getSystemService(NotificationManager::class.java)
@@ -67,12 +72,20 @@ class AppContainer(val context: Context) {
     val sessions by lazy { SessionManager(appScope, clock, settings, practice, progress, content, quietMode) }
 
     /** Phone drill types that exist in this build (the generator only schedules these). */
-    val availablePhoneDrills: List<ExerciseType> = listOf(ExerciseType.READING)
+    val availablePhoneDrills: List<ExerciseType> = listOf(
+        ExerciseType.READING, ExerciseType.SCALE_RECOGNITION, ExerciseType.THEORY_LESSON, ExerciseType.FINGERING,
+    )
 
     val audio = AudioEngine()
     val mic = MicCapture()
 
     init {
+        // Rank snapshots on every change (used by the weekly review; never notified).
+        appScope.launch { rank.result.collect { runCatching { rank.snapshotIfChanged(it) } } }
+        appScope.launch {
+            // Pieces played in a session become "last played" for the "play for fun" rotation.
+            sessions.afterSave = { s -> s.blocks.mapNotNull { it.pieceId }.distinct().forEach { libraryService.markPlayed(it, s.endedAtMs) } }
+        }
         // Keep the synth's reference pitch and timbre in step with the settings.
         appScope.launch {
             settings.settings.collect { s ->
@@ -92,9 +105,24 @@ class AppContainer(val context: Context) {
         return true
     }
 
-    /** The rank system's weakest pillar, fed to the generator (null until the rank system exists). */
-    suspend fun currentLimiter(): Pillar? = null
+    /** The rank system's weakest pillar, fed to the generator. */
+    suspend fun currentLimiter(): Pillar? = rank.current().limiter
 }
 
-/** The app's content loader (extended in later phases with rank, pieces, lessons and fingerings). */
-class AppContent(assets: android.content.res.AssetManager) : ContentRepository(assets)
+/** The app's content loader: config, exercises, rank thresholds, pieces (lessons and fingerings later). */
+class AppContent(assets: android.content.res.AssetManager) : ContentRepository(assets) {
+    val rankConfig: app.saxpractice.domain.rank.RankConfig by lazy {
+        load("rank/rank_config.json", app.saxpractice.domain.rank.RankConfig.serializer())
+    }
+    val lessons: List<app.saxpractice.domain.drills.Lesson> by lazy {
+        list("lessons").map { load("lessons/$it", app.saxpractice.domain.drills.Lesson.serializer()) }.sortedBy { it.order }
+    }
+    val fingerings: app.saxpractice.domain.drills.FingeringChart by lazy {
+        load("fingerings/alto_fingerings.json", app.saxpractice.domain.drills.FingeringChart.serializer())
+    }
+    val bundledPieces: List<app.saxpractice.domain.library.Piece> by lazy {
+        list("pieces").mapNotNull { f ->
+            runCatching { app.saxpractice.domain.library.Piece.from(load("pieces/$f", app.saxpractice.domain.library.PieceFile.serializer())) }.getOrNull()
+        }
+    }
+}

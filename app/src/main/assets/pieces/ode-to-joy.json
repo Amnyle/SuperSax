@@ -1,0 +1,52 @@
+{
+  "id": "ode-to-joy",
+  "title": {
+    "en": "Ode to Joy (theme)",
+    "fr": "Hymne à la joie (thème)"
+  },
+  "composer": "Ludwig van Beethoven",
+  "source": "Ludwig van Beethoven, Symphony No. 9, 1824 (theme, first eight bars)",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "classical"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -2,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 100,
+  "pickup": false,
+  "measures": [
+    "D4:1/4 D4:1/4 Eb4:1/4 F4:1/4",
+    "F4:1/4 Eb4:1/4 D4:1/4 C4:1/4",
+    "Bb3:1/4 Bb3:1/4 C4:1/4 D4:1/4",
+    "D4:3/8 C4:1/8 C4:1/2",
+    "D4:1/4 D4:1/4 Eb4:1/4 F4:1/4",
+    "F4:1/4 Eb4:1/4 D4:1/4 C4:1/4",
+    "Bb3:1/4 Bb3:1/4 C4:1/4 D4:1/4",
+    "C4:3/8 Bb3:1/8 Bb3:1/2"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 4
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 5,
+      "to": 8
+    }
+  ]
+}

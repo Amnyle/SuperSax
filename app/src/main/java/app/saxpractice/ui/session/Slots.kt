@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -65,10 +66,32 @@ fun TunerSlot(step: PlannedStep) {
     OutlinedButton(onClick = { tuner.stop(); on = false }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.hide_tuner)) }
 }
 
-/** Piece shown in new-material and play-for-fun blocks. */
+/** Piece of a new-material or play-for-fun block: its section on the staff, Listen, and the stage buttons. */
 @Composable
 fun PiecePanel(step: PlannedStep) {
-    if (step.exerciseType == ExerciseType.NEW_MATERIAL || step.exerciseType == ExerciseType.PLAY_FOR_FUN) {
+    if (step.exerciseType != ExerciseType.NEW_MATERIAL && step.exerciseType != ExerciseType.PLAY_FOR_FUN) return
+    val c = LocalContainer.current
+    val language = app.saxpractice.LocaleHelper.effective(LocalContext.current)
+    val piece = c.libraryService.piece(step.target.pieceId)
+    val score = piece?.score
+    if (piece == null || score == null) {
         Text(stringResource(R.string.piece_free_choice), style = MaterialTheme.typography.bodyMedium)
+        return
+    }
+    val section = piece.file.sections.firstOrNull { it.id == step.target.sectionId }
+    val shown = section?.let { s -> score.copy(measures = score.measures.subList((s.from - 1).coerceAtLeast(0), s.to.coerceAtMost(score.measures.size)), pickup = score.pickup && s.from == 1) } ?: score
+    val out by c.audio.state.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+    val instrument = app.saxpractice.ui.nav.LocalSettings.current.instrument
+    Text(piece.file.title.get(language) + (section?.let { " · " + it.title.get(language) } ?: ""), style = MaterialTheme.typography.titleMedium)
+    app.saxpractice.notation.StaffView(shown.toWritten(instrument), staffSpace = 10.dp)
+    OutlinedButton(onClick = {
+        if (out.melodyPlaying) c.audio.stopMelody() else c.audio.playMelody(app.saxpractice.ui.library.melodyOf(shown).first, score.tempo)
+    }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(if (out.melodyPlaying) R.string.stop else R.string.listen)) }
+    val progress by c.library.progress.collectAsStateWithLifecycle(emptyList())
+    val sid = section?.id ?: ""
+    val stage = progress.firstOrNull { it.pieceId == piece.id && it.sectionId == sid }?.stage ?: app.saxpractice.domain.common.PieceStage.NOT_STARTED
+    app.saxpractice.ui.library.StageRow(section?.title?.get(language) ?: stringResource(R.string.whole_piece), stage) { st ->
+        scope.launch { c.libraryService.setStage(piece.id, sid, st, c.clock.nowMs()) }
     }
 }

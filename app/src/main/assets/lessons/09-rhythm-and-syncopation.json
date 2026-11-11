@@ -1,0 +1,131 @@
+{
+  "id": "09-rhythm-and-syncopation",
+  "order": 9,
+  "minutes": 3,
+  "title": {
+    "en": "Rhythm and syncopation",
+    "fr": "Rythme et syncope"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Beats and subdivisions",
+        "fr": "Temps et subdivisions"
+      },
+      "body": {
+        "en": "The beat is the steady pulse you tap your foot to. Most rhythms are built by cutting each beat into smaller, equal parts called subdivisions. In 4/4, split each beat in two and count \"1 & 2 & 3 & 4 &\": the numbers are the downbeats, the \"&\"s the off-beats. Split it in four for sixteenth notes and count \"1 e & a 2 e & a…\".\n\nCounting the subdivisions aloud, even while a long note is held, is the most reliable way to place every note exactly. With a metronome, set the click on the beat and feel the subdivisions between clicks.",
+        "fr": "Le temps est la pulsation régulière que tu marques du pied. La plupart des rythmes découpent chaque temps en parties égales plus petites, les subdivisions. À 4/4, coupe chaque temps en deux et compte « 1 et 2 et 3 et 4 et » : les chiffres sont les temps, les « et » les contretemps. Coupe-le en quatre pour les doubles croches et compte « 1 i et a 2 i et a… ».\n\nCompter les subdivisions à voix haute, même pendant une note tenue, est le moyen le plus sûr de placer chaque note exactement. Avec un métronome, règle le clic sur le temps et ressens les subdivisions entre les clics."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/4 C5:1/8 C5:1/8 C5:1/16 C5:1/16 C5:1/16 C5:1/16 C5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Strong beats, weak beats, accents",
+        "fr": "Temps forts, temps faibles, accents"
+      },
+      "body": {
+        "en": "In 4/4, beat 1 is naturally strongest, beat 3 next, and beats 2 and 4 are weak. Off-beats are weaker still. Music that always follows this order feels steady but can sound square.\n\nAn accent mark (>) above or below a note asks you to give that note more weight. On the saxophone, you do this with a firmer push of air at the start of the note, not by hitting the reed harder with the tongue.",
+        "fr": "À 4/4, le premier temps est naturellement le plus fort, puis le troisième ; les deuxième et quatrième sont faibles. Les contretemps le sont encore plus. Une musique qui suit toujours cet ordre paraît stable, mais peut sembler carrée.\n\nUn accent (>) au-dessus ou au-dessous d'une note demande de lui donner plus de poids. Au saxophone, cela se fait avec une poussée d'air plus franche au début de la note, pas en frappant l'anche plus fort avec la langue."
+      }
+    },
+    {
+      "heading": {
+        "en": "Syncopation",
+        "fr": "La syncope"
+      },
+      "body": {
+        "en": "Syncopation happens when the emphasis lands where the listener does not expect it: on an off-beat or a weak beat, often with nothing new starting on the following strong beat. A classic figure is eighth, quarter, eighth: the quarter note starts on the \"&\" of 1 and rings through beat 2, so beat 2 has no new attack.\n\nTies do the same job across beats and bar lines. A note that starts on the \"&\" of 2 and is tied over beat 3 pushes ahead of the beat, an effect called anticipation, everywhere in jazz, funk, Latin and pop.\n\nTo play syncopations well, keep counting the subdivisions and feel the beat you are not playing. Tongue the off-beat note clearly and hold it for its full length.",
+        "fr": "La syncope apparaît quand l'appui tombe là où l'auditeur ne l'attend pas : sur un contretemps ou un temps faible, souvent sans nouvelle note sur le temps fort suivant. La formule typique est croche, noire, croche : la noire commence sur le « et » du 1 et se prolonge pendant le 2, qui n'a donc pas de nouvelle attaque.\n\nLes liaisons de prolongation font le même travail à travers les temps et les barres de mesure. Une note qui commence sur le « et » du 2 et se prolonge sur le 3 devance le temps : c'est l'anticipation, partout présente en jazz, funk, musiques latines et pop.\n\nPour bien jouer les syncopes, continue à compter les subdivisions et ressens le temps que tu ne joues pas. Attaque nettement la note à contretemps et tiens-la sur toute sa durée."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/8 A4:1/4 B4:1/8 C5:1/4 r:1/4",
+          "C5:1/4 D5:1/8 E5:1/8~ E5:1/8 D5:1/8 C5:1/4"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "Counting \"1 & 2 & 3 & 4 &\", the quarter note D starts on the \"&\" of which beat?",
+        "fr": "En comptant « 1 et 2 et 3 et 4 et », la noire ré commence sur le « et » de quel temps ?"
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/8 D5:1/4 E5:1/8 F5:1/2"
+        ]
+      },
+      "answer": 1,
+      "explanation": {
+        "en": "The first eighth note fills beat 1; the D starts halfway through beat 1, on the \"&\" of 1, and lasts through beat 2: a syncopation.",
+        "fr": "La première croche occupe le début du temps 1 ; le ré commence au milieu du temps 1, sur le « et » du 1, et dure pendant le temps 2 : c'est une syncope."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "In this bar, how many notes begin exactly on a beat (1, 2, 3 or 4)?",
+        "fr": "Dans cette mesure, combien de notes commencent exactement sur un temps (1, 2, 3 ou 4) ?"
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/8 D5:1/4 E5:1/4 F5:1/8 G5:1/4"
+        ]
+      },
+      "answer": 2,
+      "explanation": {
+        "en": "The notes start on 1, \"&\" of 1, \"&\" of 2, \"&\" of 3 and 4. Only the first and the last are on a beat: 2.",
+        "fr": "Les notes commencent sur 1, « et » du 1, « et » du 2, « et » du 3 et 4. Seules la première et la dernière tombent sur un temps : 2."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "In 4/4, counting sixteenths \"1 e & a 2 e & a…\", which sixteenth of the bar (1 to 16) is the \"a\" of beat 2?",
+        "fr": "À 4/4, en comptant les doubles croches « 1 i et a 2 i et a… », quelle double croche de la mesure (de 1 à 16) est le « a » du temps 2 ?"
+      },
+      "answer": 8,
+      "explanation": {
+        "en": "Beat 1 covers sixteenths 1–4, beat 2 covers 5–8 (2 e & a). The \"a\" is the last of these: 8.",
+        "fr": "Le temps 1 occupe les doubles croches 1 à 4, le temps 2 les 5 à 8 (2 i et a). Le « a » est la dernière : 8."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many eighth notes long is the tied A in this bar?",
+        "fr": "Combien de croches dure le la lié dans cette mesure ?"
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/8 A4:1/8~ A4:1/4 B4:1/2"
+        ]
+      },
+      "answer": 3,
+      "explanation": {
+        "en": "An eighth tied to a quarter: 1 + 2 = 3 eighths. It starts on the \"&\" of 1 and holds through beat 2.",
+        "fr": "Une croche liée à une noire : 1 + 2 = 3 croches. Le la commence sur le « et » du 1 et tient pendant le temps 2."
+      }
+    }
+  ]
+}

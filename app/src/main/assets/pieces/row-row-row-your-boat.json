@@ -1,0 +1,52 @@
+{
+  "id": "row-row-row-your-boat",
+  "title": {
+    "en": "Row, Row, Row Your Boat",
+    "fr": "Rame, rame, rame doucement (Row, Row, Row Your Boat)"
+  },
+  "composer": "Traditional",
+  "source": "Traditional American round, 19th century (as published by E. O. Lyte, 1881)",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "folk"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "major",
+  "time": "6/8",
+  "tempo": 144,
+  "pickup": false,
+  "measures": [
+    "Eb4:3/8 Eb4:3/8",
+    "Eb4:1/4 F4:1/8 G4:3/8",
+    "G4:1/4 F4:1/8 G4:1/4 Ab4:1/8",
+    "Bb4:3/4",
+    "Eb5:1/8 Eb5:1/8 Eb5:1/8 Bb4:1/8 Bb4:1/8 Bb4:1/8",
+    "G4:1/8 G4:1/8 G4:1/8 Eb4:1/8 Eb4:1/8 Eb4:1/8",
+    "Bb4:1/4 Ab4:1/8 G4:1/4 F4:1/8",
+    "Eb4:3/4"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 4
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 5,
+      "to": 8
+    }
+  ]
+}

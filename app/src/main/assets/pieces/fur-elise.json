@@ -1,0 +1,53 @@
+{
+  "id": "fur-elise",
+  "title": {
+    "en": "Für Elise (opening theme)",
+    "fr": "La Lettre à Élise (thème du début)"
+  },
+  "composer": "Ludwig van Beethoven",
+  "source": "Ludwig van Beethoven, Bagatelle in A minor WoO 59 'Für Elise', 1810 (opening theme)",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "classical"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -2,
+  "mode": "minor",
+  "time": "3/8",
+  "tempo": 120,
+  "pickup": true,
+  "measures": [
+    "D5:1/16 C#5:1/16",
+    "D5:1/16 C#5:1/16 D5:1/16 A4:1/16 C5:1/16 Bb4:1/16",
+    "G4:1/8 r:1/16 Bb3:1/16 D4:1/16 G4:1/16",
+    "A4:1/8 r:1/16 D4:1/16 F#4:1/16 A4:1/16",
+    "Bb4:1/8 r:1/16 D4:1/16 D5:1/16 C#5:1/16",
+    "D5:1/16 C#5:1/16 D5:1/16 A4:1/16 C5:1/16 Bb4:1/16",
+    "G4:1/8 r:1/16 Bb3:1/16 D4:1/16 G4:1/16",
+    "A4:1/8 r:1/16 D4:1/16 Bb4:1/16 A4:1/16",
+    "G4:1/8 r:1/8"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 5
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 6,
+      "to": 9
+    }
+  ]
+}

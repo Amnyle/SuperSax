@@ -1,0 +1,144 @@
+{
+  "id": "06-major-scale",
+  "order": 6,
+  "minutes": 3,
+  "title": {
+    "en": "The major scale",
+    "fr": "La gamme majeure"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Half steps and whole steps",
+        "fr": "Demi-tons et tons"
+      },
+      "body": {
+        "en": "The smallest distance in Western music is the half step (semitone): from one key to the very next on a piano, black or white. Two half steps make a whole step (tone).\n\nBetween most neighbouring letter names there is a whole step, but two pairs are only a half step apart: E–F and B–C. On the alto you can feel this: going from written B to C, or E to F, is a small move, while C to D or F to G is a larger one.",
+        "fr": "La plus petite distance de la musique occidentale est le demi-ton : d'une touche du piano à la toute suivante, noire ou blanche. Deux demi-tons font un ton.\n\nEntre la plupart des notes voisines il y a un ton, mais deux paires ne sont séparées que d'un demi-ton : mi–fa et si–do. À l'alto, on le sent : passer de si à do, ou de mi à fa (notes écrites), est un petit déplacement, tandis que do–ré ou fa–sol est plus grand."
+      }
+    },
+    {
+      "heading": {
+        "en": "The pattern W-W-H-W-W-W-H",
+        "fr": "Le motif T-T-½-T-T-T-½"
+      },
+      "body": {
+        "en": "A major scale is eight notes from a starting note (the tonic) up to the same note an octave higher, using every letter name once. The steps between them always follow the same pattern: whole, whole, half, whole, whole, whole, half.\n\nC major fits this pattern with no sharps or flats, because its half steps fall naturally on E–F (between notes 3 and 4) and B–C (between notes 7 and 8). Every other major scale needs sharps or flats to bend its letters into the same pattern. That is where key signatures come from.",
+        "fr": "Une gamme majeure compte huit notes, de la note de départ (la tonique) jusqu'à la même note une octave plus haut, en utilisant chaque nom de note une seule fois. Les écarts suivent toujours le même motif : ton, ton, demi-ton, ton, ton, ton, demi-ton.\n\nDo majeur respecte ce motif sans aucune altération, car ses demi-tons tombent naturellement sur mi–fa (entre les notes 3 et 4) et si–do (entre les notes 7 et 8). Toutes les autres gammes majeures ont besoin de dièses ou de bémols pour plier leurs notes au même motif. C'est l'origine des armures."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C4:1/4 D4:1/4 E4:1/4 F4:1/4",
+          "G4:1/4 A4:1/4 B4:1/4 C5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Building a scale yourself",
+        "fr": "Construire une gamme soi-même"
+      },
+      "body": {
+        "en": "Write the eight letters starting from the tonic, then check each step against the pattern. For G major: G A B C D E F G. G–A whole, A–B whole, B–C half, C–D whole, D–E whole, E–F is only a half step but we need a whole, so raise F to F♯. Then F♯–G is a half step, as required. Result: G A B C D E F♯ G, one sharp.\n\nFor F major: F G A B. A–B is a whole step, but the pattern wants a half, so lower B to B♭. Result: F G A B♭ C D E F. Never skip or repeat a letter; that is how you know whether to use a sharp or a flat.",
+        "fr": "Écris les huit noms de notes à partir de la tonique, puis vérifie chaque écart avec le motif. Pour sol majeur : sol la si do ré mi fa sol. Sol–la un ton, la–si un ton, si–do un demi-ton, do–ré un ton, ré–mi un ton, mi–fa ne fait qu'un demi-ton alors qu'il faut un ton : on hausse fa en fa♯. Fa♯–sol fait alors un demi-ton, comme prévu. Résultat : sol la si do ré mi fa♯ sol, un dièse.\n\nPour fa majeur : fa sol la si. La–si fait un ton, mais le motif demande un demi-ton : on baisse si en si♭. Résultat : fa sol la si♭ do ré mi fa. Ne saute jamais un nom de note et n'en répète aucun : c'est ce qui te dit s'il faut un dièse ou un bémol."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/4 A4:1/4 B4:1/4 C5:1/4",
+          "D5:1/4 E5:1/4 F#5:1/4 G5:1/4"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build the written D major scale, from D up to D.",
+        "fr": "Construis la gamme de ré majeur écrite, de ré à ré."
+      },
+      "answer": [
+        "D",
+        "E",
+        "F#",
+        "G",
+        "A",
+        "B",
+        "C#",
+        "D"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "Applying W-W-H-W-W-W-H from D gives D E F♯ G A B C♯ D: two sharps.",
+        "fr": "Le motif T-T-½-T-T-T-½ à partir de ré donne ré mi fa♯ sol la si do♯ ré : deux dièses."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build the written B♭ major scale, from B♭ up to B♭.",
+        "fr": "Construis la gamme de si♭ majeur écrite, de si♭ à si♭."
+      },
+      "answer": [
+        "Bb",
+        "C",
+        "D",
+        "Eb",
+        "F",
+        "G",
+        "A",
+        "Bb"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "B♭–C whole, C–D whole, D–E♭ half, E♭–F whole, F–G whole, G–A whole, A–B♭ half: B♭ C D E♭ F G A B♭.",
+        "fr": "Si♭–do ton, do–ré ton, ré–mi♭ demi-ton, mi♭–fa ton, fa–sol ton, sol–la ton, la–si♭ demi-ton : si♭ do ré mi♭ fa sol la si♭."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NOTE",
+      "prompt": {
+        "en": "What is the seventh note of the A major scale?",
+        "fr": "Quelle est la septième note de la gamme de la majeur ?"
+      },
+      "answer": "G#",
+      "explanation": {
+        "en": "A B C♯ D E F♯ G♯ A: the seventh note is G♯, a half step below the tonic, as in every major scale.",
+        "fr": "La si do♯ ré mi fa♯ sol♯ la : la septième note est sol♯, un demi-ton sous la tonique, comme dans toute gamme majeure."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "In any major scale, how many half steps are there from the 1st note up to the 5th note?",
+        "fr": "Dans toute gamme majeure, combien de demi-tons séparent la 1re note de la 5e (en montant) ?"
+      },
+      "answer": 7,
+      "explanation": {
+        "en": "W + W + H + W = 2 + 2 + 1 + 2 = 7 half steps (a perfect fifth).",
+        "fr": "T + T + ½ + T = 2 + 2 + 1 + 2 = 7 demi-tons (une quinte juste)."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "What is the third note of the E♭ major scale?",
+        "fr": "Quelle est la troisième note de la gamme de mi♭ majeur ?"
+      },
+      "answer": "G",
+      "explanation": {
+        "en": "E♭ F G: two whole steps above E♭ is G (E♭–F whole, F–G whole).",
+        "fr": "Mi♭ fa sol : deux tons au-dessus de mi♭, on trouve sol (mi♭–fa un ton, fa–sol un ton)."
+      }
+    }
+  ]
+}

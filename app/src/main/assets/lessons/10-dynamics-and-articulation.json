@@ -1,0 +1,145 @@
+{
+  "id": "10-dynamics-and-articulation",
+  "order": 10,
+  "minutes": 3,
+  "title": {
+    "en": "Dynamics and articulation",
+    "fr": "Nuances et articulation"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Dynamics: how loud",
+        "fr": "Les nuances : quelle intensité"
+      },
+      "body": {
+        "en": "Dynamics are written with Italian abbreviations. From softest to loudest: pp (pianissimo, very soft), p (piano, soft), mp (mezzo piano, moderately soft), mf (mezzo forte, moderately loud), f (forte, loud), ff (fortissimo, very loud). They are relative, not fixed volumes: a forte in a quiet ballad is not the same as a forte in a big band.\n\nGradual changes use the words crescendo (cresc., getting louder) and diminuendo or decrescendo (dim., decresc., getting softer), or the hairpin signs: an opening angle < for crescendo, a closing angle > for diminuendo.\n\nOn the saxophone, volume comes from the amount and speed of air, supported from the body. Keep the embouchure steady: biting to play softly or loosening too much to play loudly will pull the pitch out of tune. Practise long tones with slow crescendos and diminuendos to gain control.",
+        "fr": "Les nuances s'écrivent avec des abréviations italiennes. De la plus douce à la plus forte : pp (pianissimo, très doux), p (piano, doux), mp (mezzo piano, moyennement doux), mf (mezzo forte, moyennement fort), f (forte, fort), ff (fortissimo, très fort). Elles sont relatives : un forte dans une ballade calme n'est pas celui d'un big band.\n\nLes changements progressifs s'écrivent crescendo (cresc., de plus en plus fort) et diminuendo ou decrescendo (dim., decresc., de plus en plus doux), ou avec les soufflets : un angle qui s'ouvre < pour le crescendo, qui se ferme > pour le diminuendo.\n\nAu saxophone, l'intensité vient de la quantité et de la vitesse de l'air, soutenu par le corps. Garde une embouchure stable : mordre pour jouer doux ou trop relâcher pour jouer fort fausse la justesse. Travaille des sons filés avec de lents crescendos et diminuendos pour gagner en contrôle."
+      }
+    },
+    {
+      "heading": {
+        "en": "Tonguing and slurs",
+        "fr": "Coup de langue et liaisons"
+      },
+      "body": {
+        "en": "Articulation describes how notes start and connect. A normal tongued note starts when the tip of the tongue releases the tip of the reed, as if saying \"ta\" or \"da\", while the air keeps flowing. The tongue starts the note; the air makes it sound.\n\nA slur is a curved line over or under different notes. Only the first note under the slur is tongued; the others are connected by changing fingers while the air continues.\n\nSlurring smoothly is mostly about the fingers moving together and the air never dipping between notes. Practise a scale slurred, then tongued, then two slurred and two tongued, and listen for an even sound in every version.",
+        "fr": "L'articulation décrit la façon dont les notes commencent et s'enchaînent. Une note détachée commence quand le bout de la langue libère le bout de l'anche, comme en disant « ta » ou « da », pendant que l'air continue de circuler. La langue lance la note ; c'est l'air qui la fait sonner.\n\nLa liaison est un arc placé au-dessus ou au-dessous de notes différentes. Seule la première note liée reçoit un coup de langue ; les suivantes s'enchaînent en changeant de doigté sans interrompre l'air.\n\nBien lier dépend surtout de doigts qui bougent ensemble et d'un air qui ne faiblit jamais entre les notes. Travaille une gamme liée, puis détachée, puis deux notes liées et deux détachées, en cherchant un son égal dans chaque version."
+      }
+    },
+    {
+      "heading": {
+        "en": "Staccato, accent and tenuto",
+        "fr": "Staccato, accent et tenuto"
+      },
+      "body": {
+        "en": "A dot above or below a note means staccato: short and separated, but not weak. Keep the air supported and simply make each note shorter, with a light tongue: the silence between notes creates the separation, not a weaker sound. A wedge-shaped > accent asks for a stronger start, then the note relaxes. A short horizontal line is tenuto: hold the note for its full value, with a little weight, with only a soft \"da\" separating it from its neighbours.",
+        "fr": "Un point au-dessus ou au-dessous d'une note indique le staccato : court et détaché, mais pas faible. Garde l'air soutenu et raccourcis simplement chaque note, avec une langue légère : c'est le silence entre les notes qui crée la séparation, pas un son plus faible. L'accent > demande une attaque plus appuyée, puis la note se détend. Un petit trait horizontal indique le tenuto : tiens la note sur toute sa valeur, avec un peu de poids, séparée des voisines par un simple « da » très doux."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "A bar has eight eighth notes. The first four are under one slur, the last four are staccato. How many times does your tongue start a note?",
+        "fr": "Une mesure contient huit croches. Les quatre premières sont sous une liaison, les quatre dernières sont staccato. Combien de coups de langue donnes-tu ?"
+      },
+      "answer": 5,
+      "explanation": {
+        "en": "The slur needs only one attack (its first note); each staccato note is tongued: 1 + 4 = 5.",
+        "fr": "La liaison ne demande qu'une attaque (sa première note) ; chaque note staccato est détachée : 1 + 4 = 5."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "TEXT",
+      "prompt": {
+        "en": "Which dynamic marking is exactly one step louder than mp?",
+        "fr": "Quelle nuance est exactement un cran plus forte que mp ?"
+      },
+      "accept": {
+        "en": [
+          "mf",
+          "mezzo forte",
+          "mezzoforte",
+          "mezzo-forte",
+          "moderately loud"
+        ],
+        "fr": [
+          "mf",
+          "mezzo forte",
+          "mezzoforte",
+          "mezzo-forte",
+          "moyennement fort"
+        ]
+      },
+      "explanation": {
+        "en": "The order is pp, p, mp, mf, f, ff. The step after mp is mf, mezzo forte.",
+        "fr": "L'ordre est pp, p, mp, mf, f, ff. Le cran après mp est mf, mezzo forte."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "TEXT",
+      "prompt": {
+        "en": "Among p, ff, mp, pp and mf, which marking asks for the softest sound?",
+        "fr": "Parmi p, ff, mp, pp et mf, quelle nuance demande le son le plus doux ?"
+      },
+      "accept": {
+        "en": [
+          "pp",
+          "pianissimo",
+          "very soft"
+        ],
+        "fr": [
+          "pp",
+          "pianissimo",
+          "tres doux"
+        ]
+      },
+      "explanation": {
+        "en": "Each extra p means softer: pp (pianissimo) is softer than p and mp.",
+        "fr": "Chaque p supplémentaire signifie plus doux : pp (pianissimo) est plus doux que p et mp."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "Going from pp to ff one marking at a time, how many markings do you play, counting both pp and ff?",
+        "fr": "En allant de pp à ff une nuance à la fois, combien de nuances joues-tu, pp et ff compris ?"
+      },
+      "answer": 6,
+      "explanation": {
+        "en": "pp, p, mp, mf, f, ff: 6 markings.",
+        "fr": "pp, p, mp, mf, f, ff : 6 nuances."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "TEXT",
+      "prompt": {
+        "en": "A hairpin opens wider from left to right under a long note. Which Italian word asks for the same thing?",
+        "fr": "Un soufflet s'ouvre de gauche à droite sous une note longue. Quel mot italien demande la même chose ?"
+      },
+      "accept": {
+        "en": [
+          "crescendo",
+          "cresc",
+          "a crescendo"
+        ],
+        "fr": [
+          "crescendo",
+          "cresc",
+          "un crescendo"
+        ]
+      },
+      "explanation": {
+        "en": "An opening hairpin means getting gradually louder: crescendo.",
+        "fr": "Un soufflet qui s'ouvre signifie de plus en plus fort : crescendo."
+      }
+    }
+  ]
+}

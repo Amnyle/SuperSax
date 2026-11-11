@@ -104,14 +104,23 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
             val a = state.answers
             val now = c.clock.nowMs()
             c.practice.saveOnboarding(a)
-            c.practice.savePlayer(seedPlayer(a, c.practice.playerNow()))
+            val player = seedPlayer(a, c.practice.playerNow())
+            c.practice.savePlayer(player)
+            // The range the player says they can play, flagged as self-reported.
+            listOf(player.writtenLowMidi, player.writtenHighMidi).forEach { w ->
+                c.progress.addRankEvent(app.saxpractice.domain.common.RankEventRecord(UUID.randomUUID().toString(), now,
+                    app.saxpractice.domain.common.RankEventKind.RANGE_NOTE, writtenMidi = w, verified = false))
+            }
             val program = if (useGenerated) (state.preview ?: generate(a)).copy(name = programName)
             else Program(UUID.randomUUID().toString(), programName, ProgramOrigin.MANUAL, emptyList(),
                 enduranceCapSec = c.content.generatorConfig.enduranceCapSec[a.endurance] ?: 300,
                 restSec = state.settings.restSec, createdAtEpochMs = now)
             c.practice.saveProgram(program, makeActive = true, nowMs = now)
-            (a.songsNow + a.songsNext).filter { it.isNotBlank() }.forEach { title ->
-                c.practice.saveGoal(GoalRecord(UUID.randomUUID().toString(), GoalType.SONG_MILESTONE, title.trim(), now))
+            (a.songsNow + a.songsNext).filter { it.isNotBlank() }.forEach { entry ->
+                val title = entry.substringBefore(PIECE_SEPARATOR).trim()
+                val pieceId = entry.substringAfter(PIECE_SEPARATOR, "").ifBlank { null }
+                c.practice.saveGoal(GoalRecord(UUID.randomUUID().toString(), GoalType.SONG_MILESTONE, title, now,
+                    pieceId = pieceId, stage = app.saxpractice.domain.common.PieceStage.CLEAN_AT_TEMPO.name))
             }
             c.settings.update { it.copy(onboardingDone = true) }
             onDone(if (useGenerated) null else program.id)

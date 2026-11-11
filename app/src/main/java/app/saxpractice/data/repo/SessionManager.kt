@@ -53,6 +53,9 @@ class SessionManager(
     private val _run = MutableStateFlow<SessionRun?>(null)
     val run: StateFlow<SessionRun?> = _run.asStateFlow()
 
+    /** Called after a session is saved (e.g. to mark library pieces as played). */
+    var afterSave: suspend (SessionRecord) -> Unit = {}
+
     /** Planned day of week of the running session (for the log's plan adherence). */
     private var plannedDay: Int? = null
 
@@ -128,6 +131,7 @@ class SessionManager(
         )
         practice.saveSession(record)
         applyAdaptation(record, now)
+        afterSave(record)
         if (s.silenceNotifications) settings.dndPrevious()?.let { quiet.restore(it); settings.setDndPrevious(null) }
         set(null)
         return record.id

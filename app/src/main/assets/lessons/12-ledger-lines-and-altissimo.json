@@ -1,0 +1,123 @@
+{
+  "id": "12-ledger-lines-and-altissimo",
+  "order": 12,
+  "minutes": 3,
+  "title": {
+    "en": "Ledger lines and the altissimo",
+    "fr": "Lignes supplémentaires et suraigu"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Ledger lines",
+        "fr": "Les lignes supplémentaires"
+      },
+      "body": {
+        "en": "When notes go beyond the staff, short lines called ledger lines are drawn just for them. They continue the pattern of lines and spaces exactly as if the staff went on. Below the staff: D4 hangs under the bottom line, C4 (middle C) sits on one ledger line, B3 hangs just below that ledger line, and A3 would sit on a second one.\n\nAbove the staff: G5 sits just above the top line, A5 on the first ledger line, B5 above it, C6 on the second ledger line, D6 above it, E6 on the third, F6 above the third, and G6 on the fourth. A useful anchor: notes on ledger lines above the staff go A, C, E, G, every other letter.",
+        "fr": "Quand les notes sortent de la portée, on trace pour elles de petites lignes supplémentaires. Elles prolongent la suite des lignes et des interlignes exactement comme si la portée continuait. Sous la portée : ré (D4) s'accroche sous la première ligne, do (C4, le do central) se pose sur une ligne supplémentaire, si (B3) s'accroche juste sous cette ligne, et la (A3) serait sur une deuxième.\n\nAu-dessus : sol (G5) se pose juste au-dessus de la cinquième ligne, la (A5) sur la première ligne supplémentaire, si (B5) au-dessus, do (C6) sur la deuxième, ré (D6) au-dessus, mi (E6) sur la troisième, fa (F6) au-dessus de la troisième, et sol (G6) sur la quatrième. Un bon repère : les notes posées sur les lignes supplémentaires du haut sont la, do, mi, sol, une lettre sur deux."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "Bb3:1/4 B3:1/4 C4:1/4 D4:1/4",
+          "A5:1/4 C6:1/4 E6:1/4 G6:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "The bottom and top of the alto",
+        "fr": "Le grave et l'aigu de l'alto"
+      },
+      "body": {
+        "en": "The alto's lowest written note is B♭3, under the first ledger line, followed by B3 and C4. These low notes use the little fingers of the left hand and need a relaxed throat and slow, steady air.\n\nAt the top, the regular range goes to written F6, or F♯6 on altos that have the extra side key. Written D6, E♭6 and F6 are played with the palm keys under the left hand. Above that, from written G6 upward, is the altissimo register: notes produced with special fingerings and a well-trained voicing of the throat and tongue. Beginners usually stay below the palm keys and learn the altissimo much later.\n\nBefore playing a new piece, scan it for its lowest and highest notes. Spotting a low B♭ or a palm-key passage in advance lets you prepare the fingering instead of being surprised.",
+        "fr": "La note écrite la plus grave de l'alto est si♭ (B♭3), sous la première ligne supplémentaire, suivie de si (B3) et do (C4). Ces notes graves utilisent les auriculaires de la main gauche et demandent une gorge détendue et un air lent et régulier.\n\nEn haut, l'étendue normale va jusqu'au fa écrit F6, ou F♯6 sur les altos équipés de la clé latérale supplémentaire. Ré (D6), mi♭ (E♭6) et fa (F6) écrits se jouent avec les clés de paume de la main gauche. Au-delà, à partir du sol écrit G6, commence le suraigu : des notes obtenues avec des doigtés spéciaux et un placement de la gorge et de la langue bien travaillé. Les débutants restent généralement sous les clés de paume et abordent le suraigu bien plus tard.\n\nAvant de jouer un nouveau morceau, repère sa note la plus grave et sa note la plus aiguë. Voir à l'avance un si♭ grave ou un passage aux clés de paume permet de préparer le doigté au lieu d'être surpris."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "D6:1/4 Eb6:1/4 F6:1/2"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "8va and loco",
+        "fr": "8va et loco"
+      },
+      "body": {
+        "en": "Very high notes need many ledger lines, which are hard to read. Composers then write the passage an octave lower and add 8va with a dotted line above it: play everything under the line one octave higher than written. The word loco, or the end of the dotted line, means return to normal. In saxophone music, altissimo passages are sometimes written this way.",
+        "fr": "Les notes très aiguës demandent beaucoup de lignes supplémentaires, difficiles à lire. On écrit alors le passage une octave plus bas avec l'indication 8va suivie d'une ligne pointillée : tout ce qui est sous la ligne se joue une octave plus haut que l'écrit. Le mot loco, ou la fin du pointillé, signifie revenir à la normale. Dans la musique pour saxophone, les passages suraigus sont parfois notés ainsi."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many ledger lines does written C6 need?",
+        "fr": "Combien de lignes supplémentaires faut-il pour le do écrit C6 ?"
+      },
+      "answer": 2,
+      "explanation": {
+        "en": "A5 is on the first ledger line above the staff, B5 above it, and C6 on the second: 2 ledger lines.",
+        "fr": "La (A5) est sur la première ligne supplémentaire, si (B5) au-dessus, et do (C6) sur la deuxième : 2 lignes."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the lowest written note of a standard alto saxophone.",
+        "fr": "Touche la note écrite la plus grave d'un saxophone alto standard."
+      },
+      "answer": "Bb3",
+      "explanation": {
+        "en": "The alto goes down to written B♭3, hanging just below the first ledger line, with a flat.",
+        "fr": "L'alto descend jusqu'au si♭ écrit (B♭3), accroché juste sous la première ligne supplémentaire, avec un bémol."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "Written G6 is the first altissimo note. How many ledger lines above the staff are needed to write it?",
+        "fr": "Le sol écrit G6 est la première note du suraigu. Combien de lignes supplémentaires faut-il au-dessus de la portée pour l'écrire ?"
+      },
+      "answer": 4,
+      "explanation": {
+        "en": "The ledger lines above the staff carry A5, C6, E6 and G6: G6 is on the fourth.",
+        "fr": "Les lignes supplémentaires du haut portent la (A5), do (C6), mi (E6) et sol (G6) : G6 est sur la quatrième."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "A note is written as E5 with 8va above it. Tap the note you actually finger (written pitch without the 8va).",
+        "fr": "Une note est écrite mi (E5) avec 8va au-dessus. Touche la note que tu joues réellement (hauteur écrite sans le 8va)."
+      },
+      "answer": "E6",
+      "explanation": {
+        "en": "8va means one octave higher than written: E5 becomes E6, on the third ledger line, fingered with palm keys plus the side key.",
+        "fr": "8va signifie une octave plus haut que l'écrit : E5 devient E6, sur la troisième ligne supplémentaire, joué avec les clés de paume et la clé latérale."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Your lowest note, written B♭3, sounds which concert note?",
+        "fr": "Ta note la plus grave, si♭ écrit (B♭3), sonne quelle note réelle ?"
+      },
+      "answer": "Db",
+      "explanation": {
+        "en": "Written to concert: up a minor third (or down a major sixth). B♭ → D♭. It sounds concert D♭3.",
+        "fr": "De l'écrit au réel : une tierce mineure au-dessus (ou une sixte majeure en dessous). Si♭ → ré♭. On entend un ré♭ réel."
+      }
+    }
+  ]
+}

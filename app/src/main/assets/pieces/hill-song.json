@@ -1,0 +1,60 @@
+{
+  "id": "hill-song",
+  "title": {
+    "en": "Song of the Hills",
+    "fr": "Chanson des collines"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "melody",
+    "folk"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "minor",
+  "time": "6/8",
+  "tempo": 168,
+  "pickup": false,
+  "measures": [
+    "C4:1/4 Eb4:1/8 G4:1/4 C5:1/8",
+    "B4:3/8 G4:3/8",
+    "Ab4:1/4 G4:1/8 F4:1/4 Eb4:1/8",
+    "D4:3/8 G3:3/8",
+    "C4:1/4 D4:1/8 Eb4:1/4 F4:1/8",
+    "G4:1/4 Ab4:1/16 Bb4:1/16 G4:1/4 F4:1/8",
+    "Eb4:1/4 D4:1/8 C4:1/4 B3:1/8",
+    "C4:3/4",
+    "G4:1/4 G4:1/8 C5:1/4 Bb4:1/8",
+    "Ab4:1/4 G4:1/8 F4:3/8",
+    "Eb4:1/4 F4:1/8 G4:1/4 Eb4:1/8",
+    "D4:3/8 B3:3/8",
+    "C4:1/4 Eb4:1/8 G4:1/4 C5:1/8",
+    "B4:1/4 G4:1/8 Ab4:1/16 G4:1/16 F4:1/8 D4:1/8",
+    "Eb4:1/4 D4:1/8 C4:1/4 B3:1/8",
+    "C4:3/4"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

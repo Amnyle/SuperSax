@@ -1,0 +1,60 @@
+{
+  "id": "lightly-row",
+  "title": {
+    "en": "Lightly Row (Hänschen klein)",
+    "fr": "Hänschen klein (Petit Jean)"
+  },
+  "composer": "Traditional",
+  "source": "Traditional German children's song 'Hänschen klein', 19th century",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "folk"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -1,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 100,
+  "pickup": false,
+  "measures": [
+    "C4:1/4 A3:1/4 A3:1/2",
+    "Bb3:1/4 G3:1/4 G3:1/2",
+    "F3:1/4 G3:1/4 A3:1/4 Bb3:1/4",
+    "C4:1/4 C4:1/4 C4:1/2",
+    "C4:1/4 A3:1/4 A3:1/2",
+    "Bb3:1/4 G3:1/4 G3:1/2",
+    "F3:1/4 A3:1/4 C4:1/4 C4:1/4",
+    "F3:1/1",
+    "G3:1/4 G3:1/4 G3:1/4 G3:1/4",
+    "G3:1/4 A3:1/4 Bb3:1/2",
+    "A3:1/4 A3:1/4 A3:1/4 A3:1/4",
+    "A3:1/4 Bb3:1/4 C4:1/2",
+    "C4:1/4 A3:1/4 A3:1/2",
+    "Bb3:1/4 G3:1/4 G3:1/2",
+    "F3:1/4 A3:1/4 C4:1/4 C4:1/4",
+    "F3:1/1"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

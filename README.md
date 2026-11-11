@@ -27,8 +27,8 @@ The APK is at `app/build/outputs/apk/debug/app-debug.apk`. Install it with `adb 
 
 - [x] Phase 1: Core
 - [x] Phase 2: Listening and reading
-- [ ] Phase 3: Progress
-- [ ] Phase 4: Learning content
+- [x] Phase 3: Progress
+- [x] Phase 4: Learning content
 - [ ] Phase 5: Advanced listening and polish
 
 Phase 1 acceptance checks (to verify by hand on a phone, see `docs/DEVICE_CHECKS.md`):

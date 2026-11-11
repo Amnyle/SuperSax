@@ -1,0 +1,17 @@
+{
+  "id": "little-root-town",
+  "title": {
+    "en": "Littleroot Town (Pokémon)",
+    "fr": "Bourg-en-Vol (Pokémon)"
+  },
+  "composer": "GAME FREAK sound team (Pokémon Ruby and Sapphire)",
+  "source": "Pokémon Ruby and Sapphire soundtrack (2002)",
+  "licence": "copyrighted",
+  "credit": "© Nintendo / Creatures / GAME FREAK. Not bundled: attach your own copy.",
+  "tags": [
+    "game",
+    "metadata-only"
+  ],
+  "reviewed": false,
+  "bundled": false
+}

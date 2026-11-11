@@ -1,0 +1,52 @@
+{
+  "id": "long-tones-1",
+  "title": {
+    "en": "Long Tones No. 1 (soft and steady)",
+    "fr": "Notes tenues n° 1 (doux et régulier)"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "etude",
+    "long-tone"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 60,
+  "pickup": false,
+  "measures": [
+    "Eb4:1/1",
+    "F4:1/1",
+    "G4:1/2 F4:1/2",
+    "Eb4:1/1",
+    "G4:1/1",
+    "Ab4:1/2 G4:1/2",
+    "F4:1/2 G4:1/2",
+    "Eb4:1/1"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 4
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 5,
+      "to": 8
+    }
+  ]
+}

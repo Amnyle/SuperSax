@@ -1,0 +1,60 @@
+{
+  "id": "minuet-in-g",
+  "title": {
+    "en": "Minuet (BWV Anh. 114)",
+    "fr": "Menuet (BWV Anh. 114)"
+  },
+  "composer": "Christian Petzold (formerly attributed to J. S. Bach)",
+  "source": "Minuet in G major, BWV Anh. 114, Notebook for Anna Magdalena Bach, 1725 (first half)",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "classical"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "major",
+  "time": "3/4",
+  "tempo": 112,
+  "pickup": false,
+  "measures": [
+    "Bb4:1/4 Eb4:1/8 F4:1/8 G4:1/8 Ab4:1/8",
+    "Bb4:1/4 Eb4:1/4 Eb4:1/4",
+    "C5:1/4 Ab4:1/8 Bb4:1/8 C5:1/8 D5:1/8",
+    "Eb5:1/4 Eb4:1/4 Eb4:1/4",
+    "Ab4:1/4 Bb4:1/8 Ab4:1/8 G4:1/8 F4:1/8",
+    "G4:1/4 Ab4:1/8 G4:1/8 F4:1/8 Eb4:1/8",
+    "D4:1/4 Eb4:1/8 F4:1/8 G4:1/8 Eb4:1/8",
+    "F4:3/4",
+    "Bb4:1/4 Eb4:1/8 F4:1/8 G4:1/8 Ab4:1/8",
+    "Bb4:1/4 Eb4:1/4 Eb4:1/4",
+    "C5:1/4 Ab4:1/8 Bb4:1/8 C5:1/8 D5:1/8",
+    "Eb5:1/4 Eb4:1/4 Eb4:1/4",
+    "Ab4:1/4 Bb4:1/8 Ab4:1/8 G4:1/8 F4:1/8",
+    "G4:1/4 Ab4:1/8 G4:1/8 F4:1/8 Eb4:1/8",
+    "F4:1/4 G4:1/8 F4:1/8 Eb4:1/8 D4:1/8",
+    "Eb4:3/4"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

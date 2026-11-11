@@ -1,0 +1,144 @@
+{
+  "id": "01-staff-and-clef",
+  "order": 1,
+  "minutes": 3,
+  "title": {
+    "en": "The staff and the treble clef",
+    "fr": "La portée et la clé de sol"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Five lines, four spaces",
+        "fr": "Cinq lignes, quatre interlignes"
+      },
+      "body": {
+        "en": "Written music lives on a staff: five horizontal lines with four spaces between them. We always count from the bottom, so the lowest line is the first line and the top line is the fifth. A note head sits either on a line (the line runs through its middle) or in a space (it fits between two lines).\n\nThe higher a note is placed, the higher it sounds. Moving from a line to the next space, or from a space to the next line, is one step up in the musical alphabet: A B C D E F G, then A again. Notes never skip a position, so neighbouring letters always sit on neighbouring line and space positions.",
+        "fr": "La musique écrite se place sur une portée : cinq lignes horizontales séparées par quatre interlignes. On compte toujours depuis le bas : la ligne la plus grave est la première, celle du haut est la cinquième. Une tête de note se pose soit sur une ligne (la ligne la traverse en son milieu), soit dans un interligne (elle tient entre deux lignes).\n\nPlus une note est placée haut, plus elle sonne aigu. Passer d'une ligne à l'interligne suivant, ou d'un interligne à la ligne suivante, fait monter d'un degré dans l'alphabet musical : do ré mi fa sol la si, puis do à nouveau. Aucune position n'est sautée : deux notes voisines occupent toujours deux positions voisines."
+      }
+    },
+    {
+      "heading": {
+        "en": "The treble clef",
+        "fr": "La clé de sol"
+      },
+      "body": {
+        "en": "A staff alone has no fixed notes. The clef at the start of each line decides them. The saxophone reads the treble clef, also called the G clef: its inner curl wraps around the second line and marks it as G above middle C, written G4 in this app (middle C is C4).\n\nOnce you know that one line, every other position follows by counting steps up or down.",
+        "fr": "Une portée seule ne désigne aucune note précise : c'est la clé, au début de chaque ligne, qui les fixe. Le saxophone lit en clé de sol : sa boucle intérieure s'enroule autour de la deuxième ligne et indique que cette ligne est le sol au-dessus du do central.\n\nDans cette appli, les notes avec octave s'écrivent à l'anglaise : C4 est le do central (do3 dans la convention française), et ce sol de la deuxième ligne s'appelle G4. Une fois cette ligne connue, toutes les autres positions se déduisent en comptant les degrés vers le haut ou vers le bas."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/1"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Reading from E4 to F5",
+        "fr": "Lire de E4 à F5"
+      },
+      "body": {
+        "en": "The five lines, from bottom to top, are E4, G4, B4, D5 and F5. The four spaces are F4, A4, C5 and E5, which spell the word FACE. Many players remember the lines with a sentence such as \"Every Good Bird Deserves Fruit\".\n\nMemory tricks help at first, but the real goal is to see a position and know the note at once. Practise by reading short groups: a line note, then the space just above it, then the next line. Soon you will recognise shapes such as \"three lines in a row\" (every other note, like E G B) instead of counting each time.\n\nNotes can also go beyond the five lines. Just below the bottom line, hanging under it, is D4; just above the top line is G5. Further out, short extra lines called ledger lines extend the staff, and you will learn them later.",
+        "fr": "Les cinq lignes, de bas en haut, portent mi (E4), sol (G4), si (B4), ré (D5) et fa (F5). Les quatre interlignes portent fa (F4), la (A4), do (C5) et mi (E5). Réciter ces deux suites à voix haute aide à les mémoriser : « mi sol si ré fa » pour les lignes, « fa la do mi » pour les interlignes.\n\nCes astuces aident au début, mais le vrai but est de voir une position et de connaître la note aussitôt. Entraîne-toi par petits groupes : une note sur une ligne, puis l'interligne juste au-dessus, puis la ligne suivante. Tu reconnaîtras vite des formes comme « trois lignes à la suite » (une note sur deux, comme mi sol si) au lieu de tout recompter.\n\nLes notes peuvent aussi sortir des cinq lignes. Juste sous la première ligne, accroché dessous, se trouve ré (D4) ; juste au-dessus de la cinquième ligne, sol (G5). Plus loin, de petites lignes supplémentaires prolongent la portée : tu les verras plus tard."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "E4:1/4 G4:1/4 B4:1/4 D5:1/4",
+          "F5:1/4 E5:1/4 C5:1/4 A4:1/4",
+          "F4:1/1"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the space directly above the line that the treble clef curls around.",
+        "fr": "Touche l'interligne situé juste au-dessus de la ligne autour de laquelle s'enroule la clé de sol."
+      },
+      "answer": "A4",
+      "explanation": {
+        "en": "The clef curls around the second line, G4. The space just above it is the next letter: A4.",
+        "fr": "La clé s'enroule autour de la deuxième ligne, sol (G4). L'interligne juste au-dessus porte la lettre suivante : la (A4)."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Name this note.",
+        "fr": "Nomme cette note."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "D5:1/1"
+        ]
+      },
+      "answer": "D",
+      "explanation": {
+        "en": "It sits on the fourth line. Counting the lines E, G, B, D, F from the bottom, the fourth is D (D5).",
+        "fr": "Elle est sur la quatrième ligne. En comptant les lignes mi, sol, si, ré, fa depuis le bas, la quatrième est ré (D5)."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Name these four notes, in order.",
+        "fr": "Nomme ces quatre notes, dans l'ordre."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "G4:1/4 B4:1/4 D5:1/4 F5:1/4"
+        ]
+      },
+      "answer": [
+        "G",
+        "B",
+        "D",
+        "F"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "They are the second, third, fourth and fifth lines: G, B, D, F. Each is two letters above the previous one.",
+        "fr": "Ce sont les deuxième, troisième, quatrième et cinquième lignes : sol, si, ré, fa. Chacune est deux lettres au-dessus de la précédente."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "Counting every line and every space from the bottom line to the top line, both included, how many different note positions does the staff have?",
+        "fr": "En comptant toutes les lignes et tous les interlignes, de la première à la cinquième ligne incluses, combien de positions de notes la portée offre-t-elle ?"
+      },
+      "answer": 9,
+      "explanation": {
+        "en": "Five lines plus four spaces make nine positions: E4 F4 G4 A4 B4 C5 D5 E5 F5.",
+        "fr": "Cinq lignes plus quatre interlignes font neuf positions : E4 F4 G4 A4 B4 C5 D5 E5 F5."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the note one step above the top line of the staff.",
+        "fr": "Touche la note située un degré au-dessus de la cinquième ligne."
+      },
+      "answer": "G5",
+      "explanation": {
+        "en": "The top line is F5. One step up is the space just above the staff: G5.",
+        "fr": "La cinquième ligne est fa (F5). Un degré plus haut, on arrive juste au-dessus de la portée : sol (G5)."
+      }
+    }
+  ]
+}

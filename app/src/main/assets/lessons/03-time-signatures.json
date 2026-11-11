@@ -1,0 +1,142 @@
+{
+  "id": "03-time-signatures",
+  "order": 3,
+  "minutes": 3,
+  "title": {
+    "en": "Time signatures and bars",
+    "fr": "Les chiffrages de mesure"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Bars and bar lines",
+        "fr": "Mesures et barres de mesure"
+      },
+      "body": {
+        "en": "Music is divided into bars (also called measures), separated by vertical bar lines. Each bar holds the same total duration, so the beat keeps a regular pattern of strong and weak pulses. A double bar line marks the end of a section, and a thin line followed by a thick one marks the end of the piece.\n\nThe first beat of each bar, the downbeat, usually feels strongest. When you lose your place, look for the next downbeat and join in there.",
+        "fr": "La musique est découpée en mesures, séparées par des barres de mesure verticales. Chaque mesure contient la même durée totale, ce qui donne à la pulsation un cycle régulier de temps forts et de temps faibles. Une double barre marque la fin d'une partie, et une barre fine suivie d'une barre épaisse marque la fin du morceau.\n\nLe premier temps de chaque mesure est généralement le plus fort. Si tu te perds, repère le prochain premier temps et reprends à cet endroit."
+      }
+    },
+    {
+      "heading": {
+        "en": "Reading the two numbers",
+        "fr": "Lire les deux chiffres"
+      },
+      "body": {
+        "en": "The time signature at the start of the music has two numbers. The top one says how many beats are in a bar. The bottom one says which note value gets one beat: 4 means a quarter note, 2 a half note, 8 an eighth note.\n\n4/4 has four quarter-note beats per bar, counted \"1 2 3 4\", with beat 1 strongest and beat 3 slightly strong. It is so common that it is sometimes written as a C. 3/4 has three beats, \"1 2 3\", the feel of a waltz. 2/4 has two beats, \"1 2\", the feel of a march. When eighth notes appear, count the halves of the beat with \"and\": \"1 & 2 & 3 & 4 &\".",
+        "fr": "Le chiffrage, au début de la partition, comporte deux chiffres. Celui du haut indique le nombre de temps par mesure. Celui du bas indique la valeur qui fait un temps : 4 pour la noire, 2 pour la blanche, 8 pour la croche.\n\nÀ 4/4, il y a quatre temps d'une noire, comptés « 1 2 3 4 », le premier étant le plus fort et le troisième un peu appuyé. Cette mesure est si courante qu'on l'écrit parfois avec un C. À 3/4, trois temps, « 1 2 3 », comme une valse. À 2/4, deux temps, « 1 2 », comme une marche. Quand des croches apparaissent, on compte les moitiés de temps avec « et » : « 1 et 2 et 3 et 4 et »."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/2 B4:1/4 A4:1/4",
+          "G4:1/8 A4:1/8 B4:1/8 C5:1/8 D5:1/2"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "6/8: two beats of three",
+        "fr": "Le 6/8 : deux temps de trois"
+      },
+      "body": {
+        "en": "6/8 means six eighth notes per bar. You can count all six, \"1 2 3 4 5 6\", but the music is grouped in two halves: the eighths are beamed in threes and the strong pulses fall on 1 and 4. At any moderate tempo it feels like two beats, each a dotted quarter long, with a lilting, rolling swing. This is called compound time, because each beat divides into three instead of two.\n\nSo 3/4 and 6/8 both contain six eighths, yet they sound different: 3/4 is three groups of two, 6/8 is two groups of three.",
+        "fr": "6/8 signifie six croches par mesure. On peut compter les six, « 1 2 3 4 5 6 », mais la musique est groupée en deux moitiés : les croches sont reliées par trois et les appuis tombent sur 1 et sur 4. À tempo modéré, on sent deux temps d'une noire pointée chacun, avec un balancement souple. On parle de mesure composée, car chaque temps se divise en trois et non en deux.\n\nLe 3/4 et le 6/8 contiennent donc tous deux six croches, mais ils sonnent différemment : le 3/4 fait trois groupes de deux, le 6/8 deux groupes de trois."
+      },
+      "staff": {
+        "key": 0,
+        "time": "6/8",
+        "measures": [
+          "E5:1/8 D5:1/8 C5:1/8 B4:1/8 C5:1/8 D5:1/8",
+          "E5:3/8 C5:3/8"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many sixteenth notes fill one bar of 3/4?",
+        "fr": "Combien de doubles croches remplissent une mesure à 3/4 ?"
+      },
+      "answer": 12,
+      "explanation": {
+        "en": "Three quarter-note beats, each holding 4 sixteenths: 3 × 4 = 12.",
+        "fr": "Trois temps d'une noire, chacun contenant 4 doubles croches : 3 × 4 = 12."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "TEXT",
+      "prompt": {
+        "en": "A full bar contains nothing but one dotted half note. Using a quarter-note beat, what is the time signature?",
+        "fr": "Une mesure complète ne contient qu'une blanche pointée. Si la noire fait le temps, quel est le chiffrage ?"
+      },
+      "accept": {
+        "en": [
+          "3/4",
+          "3 4",
+          "three four",
+          "three-four",
+          "3 over 4",
+          "three quarter time",
+          "3/4 time"
+        ],
+        "fr": [
+          "3/4",
+          "3 4",
+          "trois quatre",
+          "trois-quatre",
+          "trois temps",
+          "3 temps"
+        ]
+      },
+      "explanation": {
+        "en": "A dotted half note lasts three quarter-note beats, so the bar is 3/4.",
+        "fr": "Une blanche pointée dure trois temps d'une noire : la mesure est à 3/4."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "In 6/8, counting every eighth note \"1 2 3 4 5 6\", on which count does the second strong beat fall?",
+        "fr": "À 6/8, en comptant chaque croche « 1 2 3 4 5 6 », sur quel chiffre tombe le deuxième appui ?"
+      },
+      "answer": 4,
+      "explanation": {
+        "en": "6/8 is two groups of three eighths: 1 2 3 | 4 5 6. The second group starts on 4.",
+        "fr": "Le 6/8 forme deux groupes de trois croches : 1 2 3 | 4 5 6. Le second groupe commence sur 4."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "A piece in 3/4 is 16 bars long and has no pickup. How many quarter-note beats does it last in total?",
+        "fr": "Un morceau à 3/4 dure 16 mesures, sans levée. Combien de temps (noires) dure-t-il en tout ?"
+      },
+      "answer": 48,
+      "explanation": {
+        "en": "16 bars × 3 beats = 48 beats.",
+        "fr": "16 mesures × 3 temps = 48 temps."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "In 6/8, how many dotted quarter notes fill three bars?",
+        "fr": "À 6/8, combien de noires pointées remplissent trois mesures ?"
+      },
+      "answer": 6,
+      "explanation": {
+        "en": "A bar of 6/8 holds two dotted quarters (3 + 3 eighths), so three bars hold 2 × 3 = 6.",
+        "fr": "Une mesure à 6/8 contient deux noires pointées (3 + 3 croches) ; trois mesures en contiennent donc 2 × 3 = 6."
+      }
+    }
+  ]
+}

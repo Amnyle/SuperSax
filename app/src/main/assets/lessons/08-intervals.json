@@ -1,0 +1,142 @@
+{
+  "id": "08-intervals",
+  "order": 8,
+  "minutes": 3,
+  "title": {
+    "en": "Intervals",
+    "fr": "Les intervalles"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Counting the number",
+        "fr": "Compter le nombre"
+      },
+      "body": {
+        "en": "An interval is the distance between two notes. Its number comes from counting letter names, including both ends. From C up to E: C, D, E, three letters, so a third. From E up to B: E F G A B, a fifth. The same note twice is a unison, and eight letters apart (C to the next C) is an octave.\n\nOn the staff the count is visual. Line to the next line, or space to the next space, is a third. Line to space next to it is a second. Thirds, fifths and sevenths go line to line or space to space; seconds, fourths and sixths go from a line to a space.",
+        "fr": "Un intervalle est la distance entre deux notes. Son nombre se trouve en comptant les noms de notes, les deux extrémités comprises. De do à mi en montant : do, ré, mi, trois notes, donc une tierce. De mi à si : mi fa sol la si, une quinte. La même note deux fois forme un unisson, et huit notes d'écart (do au do suivant) une octave.\n\nSur la portée, cela se voit. D'une ligne à la ligne suivante, ou d'un interligne au suivant : une tierce. D'une ligne à l'interligne voisin : une seconde. Tierces, quintes et septièmes vont de ligne à ligne ou d'interligne à interligne ; secondes, quartes et sixtes vont d'une ligne à un interligne."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "E4:1/2 G4:1/2",
+          "E4:1/2 B4:1/2",
+          "E4:1/2 E5:1/2"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Quality: major, minor, perfect",
+        "fr": "La qualité : majeur, mineur, juste"
+      },
+      "body": {
+        "en": "The number is only half the name; the exact size in half steps gives the quality. Unisons, fourths, fifths and octaves are called perfect: a perfect fourth has 5 half steps, a perfect fifth 7, an octave 12. Seconds, thirds, sixths and sevenths come in major and minor versions, the minor one being a half step smaller.\n\nMinor second 1, major second 2. Minor third 3, major third 4. Minor sixth 8, major sixth 9. Minor seventh 10, major seventh 11. The interval of 6 half steps, between the fourth and the fifth, is called the tritone (augmented fourth or diminished fifth).\n\nA quick check: from the tonic of a major scale up to any note of that scale, the interval is always major or perfect. C–E major third, C–A major sixth, C–B major seventh.",
+        "fr": "Le nombre ne suffit pas ; la taille exacte en demi-tons donne la qualité. Unissons, quartes, quintes et octaves sont dites justes : la quarte juste a 5 demi-tons, la quinte juste 7, l'octave 12. Secondes, tierces, sixtes et septièmes existent en version majeure et mineure, la mineure étant plus petite d'un demi-ton.\n\nSeconde mineure 1, seconde majeure 2. Tierce mineure 3, tierce majeure 4. Sixte mineure 8, sixte majeure 9. Septième mineure 10, septième majeure 11. L'intervalle de 6 demi-tons, entre la quarte et la quinte, s'appelle le triton (quarte augmentée ou quinte diminuée).\n\nUn repère rapide : de la tonique d'une gamme majeure vers n'importe quelle note de cette gamme, l'intervalle est toujours majeur ou juste. Do–mi tierce majeure, do–la sixte majeure, do–si septième majeure."
+      }
+    },
+    {
+      "heading": {
+        "en": "An interval you carry everywhere",
+        "fr": "Un intervalle que tu portes partout"
+      },
+      "body": {
+        "en": "Your alto itself is built on an interval: it sounds a major sixth lower than written. Written C5 comes out as concert E♭4, nine half steps below. Knowing your intervals makes transposing, tuning chords with other players and learning songs by ear much easier.\n\nTo practise, pick a note on the alto, play it, then sing or play the note a third, a fourth or a fifth above. Checking the result with the half-step count will soon train both your eye and your ear.",
+        "fr": "Ton alto lui-même repose sur un intervalle : il sonne une sixte majeure plus bas que ce qui est écrit. Le do écrit C5 sort en mi♭ réel (E♭4), neuf demi-tons plus bas. Connaître les intervalles facilite la transposition, la justesse des accords à plusieurs et le relevé des morceaux à l'oreille.\n\nPour t'entraîner, choisis une note à l'alto, joue-la, puis chante ou joue la note une tierce, une quarte ou une quinte au-dessus. Vérifier le résultat en comptant les demi-tons éduquera vite ton œil et ton oreille."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the note a major third above written E4.",
+        "fr": "Touche la note située une tierce majeure au-dessus du mi écrit E4."
+      },
+      "answer": "G#4",
+      "explanation": {
+        "en": "A third above E is some kind of G. E–G is only 3 half steps (minor); a major third needs 4, so G♯4.",
+        "fr": "Une tierce au-dessus de mi, c'est un sol. Mi–sol ne fait que 3 demi-tons (mineure) ; la tierce majeure en demande 4 : sol♯ (G♯4)."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the note a perfect fifth above written B♭4.",
+        "fr": "Touche la note située une quinte juste au-dessus du si♭ écrit B♭4."
+      },
+      "answer": "F5",
+      "explanation": {
+        "en": "Five letters up from B is F. B♭ to F is 7 half steps, a perfect fifth: F5.",
+        "fr": "Cinq notes au-dessus de si, c'est fa. De si♭ à fa il y a 7 demi-tons, une quinte juste : fa (F5)."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "TEXT",
+      "prompt": {
+        "en": "Name the interval between these two notes (quality and number).",
+        "fr": "Nomme l'intervalle entre ces deux notes (qualité et nombre)."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "D4:1/2 F4:1/2"
+        ]
+      },
+      "accept": {
+        "en": [
+          "minor third",
+          "minor 3rd",
+          "a minor third",
+          "m3",
+          "min3",
+          "min 3",
+          "minor 3"
+        ],
+        "fr": [
+          "tierce mineure",
+          "une tierce mineure",
+          "3ce mineure",
+          "3e mineure",
+          "3 mineure",
+          "tierce m"
+        ]
+      },
+      "explanation": {
+        "en": "D to F spans three letters, a third, with 3 half steps (D–E♭–E–F): a minor third.",
+        "fr": "De ré à fa : trois notes, donc une tierce, de 3 demi-tons (ré–mi♭–mi–fa) : une tierce mineure."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many half steps are in a minor sixth?",
+        "fr": "Combien de demi-tons compte une sixte mineure ?"
+      },
+      "answer": 8,
+      "explanation": {
+        "en": "A major sixth has 9 half steps; the minor sixth is one smaller: 8.",
+        "fr": "La sixte majeure a 9 demi-tons ; la sixte mineure en a un de moins : 8."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "STAFF_NOTE",
+      "prompt": {
+        "en": "Tap the note a perfect fourth below written C5.",
+        "fr": "Touche la note située une quarte juste sous le do écrit C5."
+      },
+      "answer": "G4",
+      "explanation": {
+        "en": "Counting down four letters: C B A G. G4 to C5 is 5 half steps, a perfect fourth.",
+        "fr": "En descendant de quatre notes : do si la sol. De G4 à C5 il y a 5 demi-tons, une quarte juste."
+      }
+    }
+  ]
+}

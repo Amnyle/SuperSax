@@ -1,0 +1,108 @@
+{
+  "id": "05-circle-of-fifths",
+  "order": 5,
+  "minutes": 3,
+  "title": {
+    "en": "The circle of fifths",
+    "fr": "Le cycle des quintes"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Keys on a clock face",
+        "fr": "Les tonalités sur un cadran"
+      },
+      "body": {
+        "en": "Picture a clock with C major at twelve o'clock. Each step clockwise moves up a perfect fifth (five letter names, counting the starting note): C, G, D, A, E, B, F♯, C♯. Each step adds exactly one sharp to the key signature. G major has one sharp, D major two, A major three, and so on.\n\nThe new sharp is always the seventh note of the new key. Going from C to G, the F becomes F♯; going from G to D, the C becomes C♯. That is why sharps pile up in the order F C G D A E B: the order of sharps is itself a chain of fifths.",
+        "fr": "Imagine une horloge avec do majeur à midi. Chaque pas dans le sens des aiguilles monte d'une quinte juste (cinq noms de notes, en comptant celle de départ) : do, sol, ré, la, mi, si, fa♯, do♯. Chaque pas ajoute exactement un dièse à l'armure. Sol majeur a un dièse, ré majeur deux, la majeur trois, et ainsi de suite.\n\nLe nouveau dièse est toujours la septième note de la nouvelle tonalité. De do à sol, le fa devient fa♯ ; de sol à ré, le do devient do♯. Voilà pourquoi les dièses s'empilent dans l'ordre fa do sol ré la mi si : cet ordre est lui-même une chaîne de quintes."
+      }
+    },
+    {
+      "heading": {
+        "en": "The flat side",
+        "fr": "Le côté des bémols"
+      },
+      "body": {
+        "en": "Going counterclockwise from C, each step moves down a fifth (or up a fourth) and adds one flat: F (1 flat), B♭ (2), E♭ (3), A♭ (4), D♭ (5), G♭ (6), C♭ (7). The new flat is the fourth note of the new key: from C to F, the B becomes B♭.\n\nAt the bottom of the circle the two sides meet. F♯ major (6 sharps) and G♭ major (6 flats) sound exactly the same, they are just spelled differently. Keys that sound alike but are written differently are called enharmonic.",
+        "fr": "Dans le sens inverse, à partir de do, chaque pas descend d'une quinte (ou monte d'une quarte) et ajoute un bémol : fa (1 bémol), si♭ (2), mi♭ (3), la♭ (4), ré♭ (5), sol♭ (6), do♭ (7). Le nouveau bémol est la quatrième note de la nouvelle tonalité : de do à fa, le si devient si♭.\n\nEn bas du cycle, les deux côtés se rejoignent. Fa♯ majeur (6 dièses) et sol♭ majeur (6 bémols) sonnent exactement pareil, seule l'écriture change. Des tonalités qui sonnent de la même façon mais s'écrivent différemment sont dites enharmoniques."
+      }
+    },
+    {
+      "heading": {
+        "en": "Relative minors and why it matters",
+        "fr": "Les relatifs mineurs, et à quoi ça sert"
+      },
+      "body": {
+        "en": "Every major key shares its key signature with a minor key, its relative minor, found on the sixth note of the major scale. On the circle it sits on an inner ring: A minor with C major, E minor with G, B minor with D, D minor with F, G minor with B♭, C minor with E♭.\n\nNeighbours on the circle share six of their seven notes, so music often moves to a neighbouring key. The circle also helps the alto player: your written key is three steps clockwise from the concert key. A band piece in concert E♭ (3 flats) appears to you in written C major, and concert F (1 flat) in written D major (2 sharps).",
+        "fr": "Chaque tonalité majeure partage son armure avec une tonalité mineure, son relatif mineur, construit sur la sixième note de la gamme majeure. Sur le cycle, il se place sur un cercle intérieur : la mineur avec do majeur, mi mineur avec sol, si mineur avec ré, ré mineur avec fa, sol mineur avec si♭, do mineur avec mi♭.\n\nDeux voisines sur le cycle ont six notes sur sept en commun : la musique module donc souvent vers une tonalité voisine. Le cycle sert aussi au saxophoniste alto : ta tonalité écrite se trouve trois pas plus loin, dans le sens des aiguilles, que la tonalité réelle (en sons réels). Un morceau d'harmonie en mi♭ réel (3 bémols) apparaît pour toi en do majeur écrit, et fa réel (1 bémol) en ré majeur écrit (2 dièses)."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Start at A major and move two steps clockwise on the circle of fifths. Which major key do you reach?",
+        "fr": "Pars de la majeur et avance de deux pas dans le sens des aiguilles sur le cycle des quintes. Quelle tonalité majeure atteins-tu ?"
+      },
+      "answer": "B",
+      "explanation": {
+        "en": "One fifth above A is E, and one fifth above E is B: B major (5 sharps).",
+        "fr": "Une quinte au-dessus de la donne mi, une quinte au-dessus de mi donne si : si majeur (5 dièses)."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many flats does the major key a perfect fifth below E♭ major have?",
+        "fr": "Combien de bémols compte la tonalité majeure située une quinte juste sous mi♭ majeur ?"
+      },
+      "answer": 4,
+      "explanation": {
+        "en": "A fifth below E♭ is A♭ (one step counterclockwise). E♭ has 3 flats, so A♭ has 4.",
+        "fr": "Une quinte sous mi♭, c'est la♭ (un pas dans le sens inverse). Mi♭ a 3 bémols, donc la♭ en a 4."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many steps apart are D major and B♭ major on the circle of fifths (shortest way)?",
+        "fr": "Combien de pas séparent ré majeur et si♭ majeur sur le cycle des quintes (par le plus court chemin) ?"
+      },
+      "answer": 4,
+      "explanation": {
+        "en": "D (2 sharps) → G (1) → C (0) → F (1 flat) → B♭ (2 flats): 4 steps.",
+        "fr": "Ré (2 dièses) → sol (1) → do (0) → fa (1 bémol) → si♭ (2 bémols) : 4 pas."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NOTE",
+      "prompt": {
+        "en": "What is the tonic of the relative minor of E major?",
+        "fr": "Quelle est la tonique du relatif mineur de mi majeur ?"
+      },
+      "answer": "C#",
+      "explanation": {
+        "en": "The relative minor starts on the sixth note of the major scale. E F♯ G♯ A B C♯: the sixth note is C♯, so C♯ minor.",
+        "fr": "Le relatif mineur commence sur la sixième note de la gamme majeure. Mi fa♯ sol♯ la si do♯ : la sixième est do♯, donc do♯ mineur."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "A concert band piece is in concert B♭ major. Moving three steps clockwise, which written major key does your alto part use?",
+        "fr": "Un morceau d'harmonie est en si♭ majeur (sons réels). En avançant de trois pas dans le sens des aiguilles, dans quelle tonalité majeure écrite est ta partie d'alto ?"
+      },
+      "answer": "G",
+      "explanation": {
+        "en": "B♭ → F → C → G. Written G major (1 sharp) is concert B♭ major (2 flats) plus three sharps.",
+        "fr": "Si♭ → fa → do → sol. Sol majeur écrit (1 dièse) correspond à si♭ majeur réel (2 bémols) plus trois dièses."
+      }
+    }
+  ]
+}

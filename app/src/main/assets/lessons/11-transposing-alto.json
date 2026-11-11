@@ -1,0 +1,115 @@
+{
+  "id": "11-transposing-alto",
+  "order": 11,
+  "minutes": 3,
+  "title": {
+    "en": "The alto as a transposing instrument",
+    "fr": "L'alto, instrument transpositeur"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Written pitch and concert pitch",
+        "fr": "Son écrit et son réel"
+      },
+      "body": {
+        "en": "Play a written C on your alto and check it on a tuner set to concert pitch: it reads E♭. The alto saxophone is an E♭ instrument, so everything you play sounds a major sixth lower than written. Written A sounds concert C, written G sounds concert B♭, written D sounds concert F.\n\nConcert pitch is the real sounding pitch, the one a piano, guitar or flute reads. Saxophones are written this way so that the same fingering keeps the same written name on every saxophone, whatever its size. A player can switch from alto to tenor or baritone without learning new note names; only the sound changes.",
+        "fr": "Joue un do écrit sur ton alto et vérifie-le avec un accordeur réglé en sons réels : il affiche mi♭. Le saxophone alto est un instrument en mi♭ : tout ce que tu joues sonne une sixte majeure plus bas que ce qui est écrit. Le la écrit sonne do réel, le sol écrit sonne si♭ réel, le ré écrit sonne fa réel.\n\nLe son réel (on dit aussi « en ut ») est la hauteur entendue, celle que lisent le piano, la guitare ou la flûte. On écrit les saxophones ainsi pour qu'un même doigté garde le même nom écrit sur tous les saxophones, quelle que soit leur taille. On peut passer de l'alto au ténor ou au baryton sans réapprendre les noms de notes : seul le son change."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "C5:1/4 A4:1/4 G4:1/4 D5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Converting notes",
+        "fr": "Convertir les notes"
+      },
+      "body": {
+        "en": "From written to concert, go down a major sixth. Since the octave usually does not matter when you name a note, you can instead go up a minor third (three half steps): written C → E♭, written E → G, written F♯ → A.\n\nFrom concert to written, do the reverse: up a major sixth, or down a minor third. If the pianist plays concert F, you play written D; concert B♭ is written G; concert C is written A.",
+        "fr": "De l'écrit au réel, descends d'une sixte majeure. Comme l'octave importe peu pour nommer une note, tu peux plutôt monter d'une tierce mineure (trois demi-tons) : do écrit → mi♭, mi écrit → sol, fa♯ écrit → la.\n\nDu réel à l'écrit, fais l'inverse : monte d'une sixte majeure, ou descends d'une tierce mineure. Si le pianiste joue fa réel, tu joues ré écrit ; si♭ réel s'écrit sol ; do réel s'écrit la."
+      }
+    },
+    {
+      "heading": {
+        "en": "Keys and playing with others",
+        "fr": "Tonalités et jeu avec d'autres musiciens"
+      },
+      "body": {
+        "en": "Key signatures move too: your written key has three more sharps (or three fewer flats) than the concert key. Concert C major (no sharps) becomes written A major (3 sharps). Concert E♭ (3 flats) becomes written C (none). Concert F (1 flat) becomes written D (2 sharps).\n\nWhen a guitarist says \"this song is in G\", they mean concert G, so you read in written E major (1 + 3 = 4 sharps). If you play from a piano or guitar chart, transpose each note up a major sixth, or find a part written for E♭ instruments. Many pop and jazz books come in C, B♭ and E♭ editions; as an alto player you want the E♭ one.",
+        "fr": "Les armures bougent aussi : ta tonalité écrite a trois dièses de plus (ou trois bémols de moins) que la tonalité réelle. Do majeur réel (sans altération) devient la majeur écrit (3 dièses). Mi♭ réel (3 bémols) devient do écrit (aucune). Fa réel (1 bémol) devient ré écrit (2 dièses).\n\nQuand un guitariste dit « ce morceau est en sol », il parle de sol réel : tu lis donc en mi majeur écrit (1 + 3 = 4 dièses). Si tu joues sur une partition de piano ou de guitare, transpose chaque note d'une sixte majeure vers le haut, ou cherche une partie pour instruments en mi♭. Beaucoup de recueils de pop et de jazz existent en éditions ut, si♭ et mi♭ : en tant qu'altiste, c'est l'édition mi♭ qu'il te faut."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Your alto plays written G. Which concert note sounds?",
+        "fr": "Ton alto joue un sol écrit. Quelle note réelle entend-on ?"
+      },
+      "answer": "Bb",
+      "explanation": {
+        "en": "Up a minor third from G (or down a major sixth): concert B♭.",
+        "fr": "Une tierce mineure au-dessus de sol (ou une sixte majeure en dessous) : si♭ réel."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTE",
+      "prompt": {
+        "en": "The piano plays concert F. Which written note do you play to match it?",
+        "fr": "Le piano joue un fa réel. Quelle note écrite joues-tu pour faire le même son ?"
+      },
+      "answer": "D",
+      "explanation": {
+        "en": "Concert to written: up a major sixth (or down a minor third). F → D.",
+        "fr": "Du réel à l'écrit : une sixte majeure au-dessus (ou une tierce mineure en dessous). Fa → ré."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NOTE",
+      "prompt": {
+        "en": "A song is in concert B♭ major. In which written major key do you read it?",
+        "fr": "Un morceau est en si♭ majeur réel. Dans quelle tonalité majeure écrite le lis-tu ?"
+      },
+      "answer": "G",
+      "explanation": {
+        "en": "B♭ up a major sixth is G. Check: 2 flats + 3 sharps = 1 sharp, G major.",
+        "fr": "Si♭ monté d'une sixte majeure donne sol. Vérification : 2 bémols + 3 dièses = 1 dièse, sol majeur."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "Concert A♭ major has four flats. How many flats does the written key signature of your alto part have?",
+        "fr": "La♭ majeur réel a quatre bémols. Combien de bémols compte l'armure écrite de ta partie d'alto ?"
+      },
+      "answer": 1,
+      "explanation": {
+        "en": "Three sharps added cancel three of the four flats: 1 flat, written F major (A♭ up a major sixth is F).",
+        "fr": "Trois dièses ajoutés annulent trois des quatre bémols : 1 bémol, fa majeur écrit (la♭ monté d'une sixte majeure donne fa)."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "You play written E. Which concert note sounds?",
+        "fr": "Tu joues un mi écrit. Quelle note réelle entend-on ?"
+      },
+      "answer": "G",
+      "explanation": {
+        "en": "Up a minor third from E (E–F–F♯–G): concert G.",
+        "fr": "Une tierce mineure au-dessus de mi (mi–fa–fa♯–sol) : sol réel."
+      }
+    }
+  ]
+}

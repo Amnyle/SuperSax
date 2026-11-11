@@ -33,3 +33,15 @@ Built:
 Verified:
 - `assembleDebug` green; 67 unit tests, 0 failures (YIN across every semitone 139–1397 Hz with detuning, noise and harmonics; hold analysis cases; metronome tick positions; synth pitch; melody; reading drill; weekly review text EN/FR; staff layout); lint 0 errors.
 - Not verified on a device: audio latency, real microphone behaviour, widget, reminders, staff glyph placement on screen (see `docs/DEVICE_CHECKS.md`).
+
+## Phase 3: Progress — done
+
+Built: rank calculation (`computeRank`, config in `assets/rank/rank_config.json`), rank screen (staircase, six-axis radar with the limiter, pillar details with every next-tier requirement and progress, self-reported range notes, verified/self-reported counts), snapshots; the generator uses the limiter (Regenerate) and the library (piece choice for new material and play for fun). Library: piece format, difficulty, matching states with reasons, 32 bundled pieces + the Littleroot Town metadata entry, piece view (written/concert toggle, Listen with note highlight, stages for piece and sections), song-milestone goals linked to pieces (also from onboarding), MusicXML and PDF import, PDF viewer. Recordings (record, tag, benchmark, A/B comparison, evidence), reed and gear log.
+
+## Phase 4: Learning content — done
+
+Built: 13 bilingual theory lessons with free-form quizzes (text, number, note keypad, note sequences, tap-on-staff), scale recognition (name from key signature, from notes, build from root; adaptive levels), fingering trainer (drawn key diagram, both directions, chart with alternates, altissimo warning), phone-session scheduling with the 20 percent cap using the four phone drills, Musicianship fed by reading, scale recognition and lessons.
+
+Verified (phases 3 and 4 were committed together, see git log): `assembleDebug` green; 86 unit tests, 0 failures (rank: unranked, each pillar, averages and divisions, Musicianship cap, limiter tie-break, consistency window and floor, verified-only altissimo, recompute after config change; difficulty ordering on synthetic and real pieces; matching states and choice; MusicXML import; every bundled piece and lesson loads, renders and its answers are accepted); lint 0 errors.
+
+Not done: by-ear scale recognition (spec: "if time allows").

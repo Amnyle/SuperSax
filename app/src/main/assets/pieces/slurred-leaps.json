@@ -1,0 +1,66 @@
+{
+  "id": "slurred-leaps",
+  "title": {
+    "en": "Slurred Leaps",
+    "fr": "Sauts liés"
+  },
+  "composer": "Sax Practice (original)",
+  "source": "Original composition for this app",
+  "licence": "CC0",
+  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "tags": [
+    "etude",
+    "slur",
+    "long-tone"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -1,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 76,
+  "pickup": false,
+  "measures": [
+    "F3:1/2 A3:1/2",
+    "C4:1/2 F4:1/2",
+    "E4:3/8 D4:1/8 C4:1/2",
+    "A3:1/2 F3:1/2",
+    "G3:1/2 Bb3:1/2",
+    "D4:1/2 G4:1/2",
+    "F4:3/8 E4:1/8 D4:1/4 C4:1/4",
+    "C4:1/1",
+    "D4:1/2 Bb3:1/2",
+    "G3:1/2 C4:1/2",
+    "E4:3/8 G4:1/8 F4:1/4 E4:1/4",
+    "F4:1/1"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–4",
+        "fr": "Mesures 1–4"
+      },
+      "from": 1,
+      "to": 4
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 5–8",
+        "fr": "Mesures 5–8"
+      },
+      "from": 5,
+      "to": 8
+    },
+    {
+      "id": "c",
+      "title": {
+        "en": "Bars 9–12",
+        "fr": "Mesures 9–12"
+      },
+      "from": 9,
+      "to": 12
+    }
+  ]
+}

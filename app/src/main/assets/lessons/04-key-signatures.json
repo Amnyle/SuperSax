@@ -1,0 +1,144 @@
+{
+  "id": "04-key-signatures",
+  "order": 4,
+  "minutes": 3,
+  "title": {
+    "en": "Key signatures",
+    "fr": "Les armures"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "What a key signature does",
+        "fr": "Le rôle de l'armure"
+      },
+      "body": {
+        "en": "Right after the clef you may see a group of sharps or flats. This is the key signature. Each sharp or flat in it applies to every note with that letter name, in every octave, for the whole piece. If the signature has an F♯, every F you read is played as F♯, unless something says otherwise.\n\nThe key signature saves writing the same accidental again and again, and it tells you the key, the family of notes the music is built from.",
+        "fr": "Juste après la clé, on trouve parfois un groupe de dièses ou de bémols : c'est l'armure. Chaque altération de l'armure s'applique à toutes les notes de ce nom, dans toutes les octaves, pendant tout le morceau. Si l'armure contient fa dièse, chaque fa que tu lis se joue fa dièse, sauf indication contraire.\n\nL'armure évite de répéter sans cesse la même altération, et elle indique la tonalité, c'est-à-dire la famille de notes sur laquelle la musique est construite."
+      },
+      "staff": {
+        "key": 2,
+        "time": "4/4",
+        "measures": [
+          "D4:1/4 F#4:1/4 A4:1/4 F5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "The fixed order",
+        "fr": "Un ordre immuable"
+      },
+      "body": {
+        "en": "Sharps always appear in the same order: F C G D A E B. Flats appear in the reverse order: B E A D G C F. A key with three sharps therefore has F♯, C♯ and G♯, never any other three. A key with two flats has B♭ and E♭.\n\nTo find the major key: with sharps, take the last sharp and go up a half step. Last sharp G♯ gives A major. With flats, the second-to-last flat names the key: B♭ E♭ A♭ gives E♭ major. Just learn the exception: one flat (B♭) is F major. No sharps or flats at all is C major.\n\nA key signature never mixes sharps and flats, and it is written at the start of every line of music, not just the first. Glance at each new line as you read.",
+        "fr": "Les dièses apparaissent toujours dans le même ordre : fa do sol ré la mi si. Les bémols suivent l'ordre inverse : si mi la ré sol do fa. Une tonalité à trois dièses contient donc fa♯, do♯ et sol♯, jamais trois autres. Une tonalité à deux bémols contient si♭ et mi♭.\n\nPour trouver la tonalité majeure : avec des dièses, prends le dernier dièse et monte d'un demi-ton. Dernier dièse sol♯ : la majeur. Avec des bémols, l'avant-dernier bémol donne le nom de la tonalité : si♭ mi♭ la♭ donne mi♭ majeur. Retiens simplement l'exception : un seul bémol (si♭), c'est fa majeur. Sans altération, c'est do majeur.\n\nUne armure ne mélange jamais dièses et bémols, et elle est répétée au début de chaque ligne de la partition, pas seulement de la première. Jette un œil à chaque nouvelle ligne pendant ta lecture."
+      }
+    },
+    {
+      "heading": {
+        "en": "Accidentals and naturals",
+        "fr": "Altérations accidentelles et bécarres"
+      },
+      "body": {
+        "en": "A sharp, flat or natural written directly before a note is an accidental. It overrides the key signature for that note and for the same note later in the same bar, then the bar line cancels it. The natural sign ♮ removes a sharp or flat: in G major, an F♮ is played as plain F until the end of the bar.\n\nOn the alto, check the key signature before you play a single note. Most early wrong notes come from forgetting it, not from bad fingers.",
+        "fr": "Un dièse, un bémol ou un bécarre placé juste devant une note est une altération accidentelle. Elle remplace l'armure pour cette note et pour la même note plus loin dans la mesure, puis la barre de mesure l'annule. Le bécarre ♮ supprime un dièse ou un bémol : en sol majeur, un fa bécarre se joue fa naturel jusqu'à la fin de la mesure.\n\nAu saxophone alto, regarde l'armure avant de jouer la première note. La plupart des fausses notes des débuts viennent d'un oubli de l'armure, pas des doigts."
+      },
+      "staff": {
+        "key": 1,
+        "time": "4/4",
+        "measures": [
+          "G4:1/4 Fn4:1/4 F4:1/4 G4:1/4",
+          "F4:1/4 E4:1/4 D4:1/2"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many sharps does written E major have?",
+        "fr": "Combien de dièses compte mi majeur (écrit) ?"
+      },
+      "answer": 4,
+      "explanation": {
+        "en": "E major's last sharp is a half step below E: D♯. Counting F C G D gives 4 sharps.",
+        "fr": "Le dernier dièse de mi majeur est un demi-ton sous mi : ré♯. En comptant fa do sol ré, on obtient 4 dièses."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Tap, in order, the sharps of the key signature of B major.",
+        "fr": "Touche, dans l'ordre, les dièses de l'armure de si majeur."
+      },
+      "answer": [
+        "F#",
+        "C#",
+        "G#",
+        "D#",
+        "A#"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "The last sharp is a half step below B: A♯. So the signature is F♯ C♯ G♯ D♯ A♯.",
+        "fr": "Le dernier dièse est un demi-ton sous si : la♯. L'armure est donc fa♯ do♯ sol♯ ré♯ la♯."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NOTE",
+      "prompt": {
+        "en": "A key signature has four flats. Which major key is it?",
+        "fr": "Une armure compte quatre bémols. Quelle est la tonalité majeure ?"
+      },
+      "answer": "Ab",
+      "explanation": {
+        "en": "Four flats are B♭ E♭ A♭ D♭. The second-to-last is A♭, so the key is A♭ major.",
+        "fr": "Quatre bémols : si♭ mi♭ la♭ ré♭. L'avant-dernier est la♭ : la tonalité est la♭ majeur."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NOTE",
+      "prompt": {
+        "en": "With this key signature, which note do you actually play for the last note?",
+        "fr": "Avec cette armure, quelle note joues-tu réellement pour la dernière note ?"
+      },
+      "staff": {
+        "key": 2,
+        "time": "4/4",
+        "measures": [
+          "D5:1/4 E5:1/4 D5:1/4 F5:1/4"
+        ]
+      },
+      "answer": "F#",
+      "explanation": {
+        "en": "Two sharps means F♯ and C♯ (D major). The last note is on the top line, F, so you play F♯.",
+        "fr": "Deux dièses : fa♯ et do♯ (ré majeur). La dernière note est sur la cinquième ligne, fa : tu joues fa♯."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "In this bar (G major), which note do you play on beat 4?",
+        "fr": "Dans cette mesure (sol majeur), quelle note joues-tu sur le quatrième temps ?"
+      },
+      "staff": {
+        "key": 1,
+        "time": "4/4",
+        "measures": [
+          "G4:1/4 Fn4:1/4 E4:1/4 F4:1/4"
+        ]
+      },
+      "answer": "F",
+      "explanation": {
+        "en": "The natural on beat 2 cancels the F♯ of the key signature until the bar line, so the F on beat 4 is still F natural.",
+        "fr": "Le bécarre du deuxième temps annule le fa♯ de l'armure jusqu'à la barre de mesure : le fa du quatrième temps reste fa naturel."
+      }
+    }
+  ]
+}

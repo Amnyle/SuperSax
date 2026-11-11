@@ -1,0 +1,416 @@
+{
+ "instrument": "ALTO_SAX",
+ "entries": [
+  {
+   "note": "Bb3",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "LOW_BB",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "B3",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "LOW_B",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "C4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2",
+    "R3",
+    "LOW_C"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "C#4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "LOW_C_SHARP",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "D4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "Eb4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2",
+    "R3",
+    "LOW_EB"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "E4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R1"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F#4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "R2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "G4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "G#4",
+   "keys": [
+    "L1",
+    "L2",
+    "L3",
+    "G_SHARP"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "A4",
+   "keys": [
+    "L1",
+    "L2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "Bb4",
+   "keys": [
+    "L1",
+    "BIS"
+   ],
+   "alternates": [
+    [
+     "L1",
+     "R1"
+    ],
+    [
+     "L1",
+     "SIDE_BB"
+    ]
+   ],
+   "verified": true
+  },
+  {
+   "note": "B4",
+   "keys": [
+    "L1"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "C5",
+   "keys": [
+    "L2"
+   ],
+   "alternates": [
+    [
+     "L1",
+     "SIDE_C"
+    ]
+   ],
+   "verified": true
+  },
+  {
+   "note": "C#5",
+   "keys": [],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "D5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2",
+    "R3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "Eb5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2",
+    "R3",
+    "LOW_EB"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "E5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "R1",
+    "R2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "R1"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F#5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "R2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "G5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "G#5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2",
+    "L3",
+    "G_SHARP"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "A5",
+   "keys": [
+    "OCT",
+    "L1",
+    "L2"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "Bb5",
+   "keys": [
+    "OCT",
+    "L1",
+    "BIS"
+   ],
+   "alternates": [
+    [
+     "OCT",
+     "L1",
+     "R1"
+    ],
+    [
+     "OCT",
+     "L1",
+     "SIDE_BB"
+    ]
+   ],
+   "verified": true
+  },
+  {
+   "note": "B5",
+   "keys": [
+    "OCT",
+    "L1"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "C6",
+   "keys": [
+    "OCT",
+    "L2"
+   ],
+   "alternates": [
+    [
+     "OCT",
+     "L1",
+     "SIDE_C"
+    ]
+   ],
+   "verified": true
+  },
+  {
+   "note": "C#6",
+   "keys": [
+    "OCT"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "D6",
+   "keys": [
+    "OCT",
+    "PALM_D"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "Eb6",
+   "keys": [
+    "OCT",
+    "PALM_D",
+    "PALM_EB"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "E6",
+   "keys": [
+    "OCT",
+    "PALM_D",
+    "PALM_EB",
+    "SIDE_E"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F6",
+   "keys": [
+    "OCT",
+    "PALM_D",
+    "PALM_EB",
+    "PALM_F",
+    "SIDE_E"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "F#6",
+   "keys": [
+    "OCT",
+    "PALM_D",
+    "PALM_EB",
+    "PALM_F",
+    "SIDE_E",
+    "HIGH_FSHARP"
+   ],
+   "alternates": [],
+   "verified": true
+  },
+  {
+   "note": "G6",
+   "keys": [
+    "OCT",
+    "FRONT_F",
+    "L1",
+    "L3"
+   ],
+   "alternates": [],
+   "verified": false,
+   "altissimo": true
+  }
+ ]
+}

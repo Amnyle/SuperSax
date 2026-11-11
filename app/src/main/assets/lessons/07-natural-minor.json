@@ -1,0 +1,145 @@
+{
+  "id": "07-natural-minor",
+  "order": 7,
+  "minutes": 3,
+  "title": {
+    "en": "The natural minor scale",
+    "fr": "La gamme mineure naturelle"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "A different pattern",
+        "fr": "Un autre motif"
+      },
+      "body": {
+        "en": "The natural minor scale also uses all seven letter names, but its steps follow another pattern: whole, half, whole, whole, half, whole, whole. Compared with the major scale on the same tonic, the 3rd, 6th and 7th notes are a half step lower. That lowered third, only three half steps above the tonic, gives minor its darker, more inward colour.\n\nA natural minor is the plain one: A B C D E F G A, no sharps or flats. Check it: A–B whole, B–C half, C–D whole, D–E whole, E–F half, F–G whole, G–A whole.",
+        "fr": "La gamme mineure naturelle utilise elle aussi les sept noms de notes, mais ses écarts suivent un autre motif : ton, demi-ton, ton, ton, demi-ton, ton, ton. Par rapport à la gamme majeure de même tonique, les 3e, 6e et 7e notes sont abaissées d'un demi-ton. Cette tierce abaissée, à trois demi-tons seulement de la tonique, donne au mineur sa couleur plus sombre et plus intérieure.\n\nLa mineur naturel est la plus simple : la si do ré mi fa sol la, sans altération. Vérifie : la–si ton, si–do demi-ton, do–ré ton, ré–mi ton, mi–fa demi-ton, fa–sol ton, sol–la ton."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "A4:1/4 B4:1/4 C5:1/4 D5:1/4",
+          "E5:1/4 F5:1/4 G5:1/4 A5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Relative major and minor",
+        "fr": "Relatif majeur et relatif mineur"
+      },
+      "body": {
+        "en": "A minor uses exactly the same notes as C major; it just starts on a different note. Pairs like this are called relatives, and they share one key signature. The relative minor's tonic is the 6th note of the major scale, which is also a minor third (three half steps) below the major tonic. Going the other way, the relative major is a minor third above the minor tonic.\n\nG major (one sharp) → down a minor third → E minor, also one sharp. F major (one flat) → D minor, one flat. So a key signature alone never tells you whether a piece is major or minor.",
+        "fr": "La mineur utilise exactement les mêmes notes que do majeur ; seule la note de départ change. On appelle ces paires des tons relatifs, et ils partagent la même armure. La tonique du relatif mineur est la 6e note de la gamme majeure, soit aussi une tierce mineure (trois demi-tons) sous la tonique majeure. Dans l'autre sens, le relatif majeur se trouve une tierce mineure au-dessus de la tonique mineure.\n\nSol majeur (un dièse) → une tierce mineure plus bas → mi mineur, un dièse aussi. Fa majeur (un bémol) → ré mineur, un bémol. L'armure seule ne dit donc jamais si un morceau est majeur ou mineur."
+      }
+    },
+    {
+      "heading": {
+        "en": "Telling them apart",
+        "fr": "Les distinguer"
+      },
+      "body": {
+        "en": "To decide, look at the music itself. Which note does the melody lean on, especially at the start and the very end? If a piece with one sharp keeps returning to E and ends there, it is in E minor; if it settles on G, it is G major. Accidentals help too: in minor pieces you will often see the 7th note raised (for example D♯ in E minor) to pull more strongly toward the tonic.\n\nWhen you practise minor scales on the alto, play the relative major right after. Hearing the same notes change character depending on the starting point trains your ear quickly.",
+        "fr": "Pour trancher, regarde la musique elle-même. Sur quelle note la mélodie s'appuie-t-elle, surtout au début et tout à la fin ? Si un morceau à un dièse revient sans cesse à mi et s'y termine, il est en mi mineur ; s'il se pose sur sol, il est en sol majeur. Les altérations accidentelles aident aussi : en mineur, on voit souvent la 7e note haussée (par exemple ré♯ en mi mineur) pour mieux attirer vers la tonique.\n\nQuand tu travailles une gamme mineure à l'alto, joue juste après son relatif majeur. Entendre les mêmes notes changer de caractère selon le point de départ éduque vite l'oreille."
+      },
+      "staff": {
+        "key": 1,
+        "time": "4/4",
+        "measures": [
+          "E5:1/4 B4:1/4 G4:1/4 B4:1/4",
+          "C5:1/4 A4:1/4 D#5:1/4 B4:1/4",
+          "E5:1/1"
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build the written E natural minor scale, from E up to E.",
+        "fr": "Construis la gamme de mi mineur naturel écrite, de mi à mi."
+      },
+      "answer": [
+        "E",
+        "F#",
+        "G",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "W-H-W-W-H-W-W from E: E F♯ G A B C D E. It shares G major's single sharp.",
+        "fr": "T-½-T-T-½-T-T à partir de mi : mi fa♯ sol la si do ré mi. Elle partage l'unique dièse de sol majeur."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build the written D natural minor scale, from D up to D.",
+        "fr": "Construis la gamme de ré mineur naturel écrite, de ré à ré."
+      },
+      "answer": [
+        "D",
+        "E",
+        "F",
+        "G",
+        "A",
+        "Bb",
+        "C",
+        "D"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "D E F G A B♭ C D. D minor is the relative of F major (a minor third up), so it has one flat, B♭.",
+        "fr": "Ré mi fa sol la si♭ do ré. Ré mineur est le relatif de fa majeur (une tierce mineure au-dessus) : un bémol, si♭."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "NUMBER",
+      "prompt": {
+        "en": "How many flats are in the key signature of C minor?",
+        "fr": "Combien de bémols compte l'armure de do mineur ?"
+      },
+      "answer": 3,
+      "explanation": {
+        "en": "The relative major is a minor third above C: E♭ major, which has 3 flats (B♭ E♭ A♭).",
+        "fr": "Le relatif majeur est une tierce mineure au-dessus de do : mi♭ majeur, qui a 3 bémols (si♭ mi♭ la♭)."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NOTE",
+      "prompt": {
+        "en": "What is the tonic of the relative minor of D major?",
+        "fr": "Quelle est la tonique du relatif mineur de ré majeur ?"
+      },
+      "answer": "B",
+      "explanation": {
+        "en": "A minor third (three half steps) below D is B: B minor, with the same two sharps.",
+        "fr": "Une tierce mineure (trois demi-tons) sous ré, c'est si : si mineur, avec les mêmes deux dièses."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Compare G major and G natural minor. What is the 6th note of G natural minor?",
+        "fr": "Compare sol majeur et sol mineur naturel. Quelle est la 6e note de sol mineur naturel ?"
+      },
+      "answer": "Eb",
+      "explanation": {
+        "en": "G major's 6th is E; minor lowers it a half step to E♭ (G minor: G A B♭ C D E♭ F G).",
+        "fr": "La 6e de sol majeur est mi ; le mineur l'abaisse d'un demi-ton : mi♭ (sol mineur : sol la si♭ do ré mi♭ fa sol)."
+      }
+    }
+  ]
+}

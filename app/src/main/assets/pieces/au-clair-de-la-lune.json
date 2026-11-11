@@ -1,0 +1,60 @@
+{
+  "id": "au-clair-de-la-lune",
+  "title": {
+    "en": "Au clair de la lune (By the Light of the Moon)",
+    "fr": "Au clair de la lune"
+  },
+  "composer": "Traditional",
+  "source": "Traditional French song, 18th century",
+  "licence": "public domain",
+  "credit": "Public domain melody, arranged for alto by Sax Practice",
+  "tags": [
+    "melody",
+    "folk"
+  ],
+  "reviewed": false,
+  "bundled": true,
+  "key": -3,
+  "mode": "major",
+  "time": "4/4",
+  "tempo": 80,
+  "pickup": false,
+  "measures": [
+    "Eb4:1/4 Eb4:1/4 Eb4:1/4 F4:1/4",
+    "G4:1/2 F4:1/2",
+    "Eb4:1/4 G4:1/4 F4:1/4 F4:1/4",
+    "Eb4:1/1",
+    "Eb4:1/4 Eb4:1/4 Eb4:1/4 F4:1/4",
+    "G4:1/2 F4:1/2",
+    "Eb4:1/4 G4:1/4 F4:1/4 F4:1/4",
+    "Eb4:1/1",
+    "F4:1/4 F4:1/4 F4:1/4 F4:1/4",
+    "C4:1/2 C4:1/2",
+    "F4:1/4 Eb4:1/4 D4:1/4 C4:1/4",
+    "Bb3:1/1",
+    "Eb4:1/4 Eb4:1/4 Eb4:1/4 F4:1/4",
+    "G4:1/2 F4:1/2",
+    "Eb4:1/4 G4:1/4 F4:1/4 F4:1/4",
+    "Eb4:1/1"
+  ],
+  "sections": [
+    {
+      "id": "a",
+      "title": {
+        "en": "Bars 1–8",
+        "fr": "Mesures 1–8"
+      },
+      "from": 1,
+      "to": 8
+    },
+    {
+      "id": "b",
+      "title": {
+        "en": "Bars 9–16",
+        "fr": "Mesures 9–16"
+      },
+      "from": 9,
+      "to": 16
+    }
+  ]
+}

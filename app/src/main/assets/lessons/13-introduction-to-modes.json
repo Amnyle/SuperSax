@@ -1,0 +1,160 @@
+{
+  "id": "13-introduction-to-modes",
+  "order": 13,
+  "minutes": 3,
+  "title": {
+    "en": "An introduction to modes",
+    "fr": "Introduction aux modes"
+  },
+  "sections": [
+    {
+      "heading": {
+        "en": "Same notes, new home",
+        "fr": "Mêmes notes, nouveau centre"
+      },
+      "body": {
+        "en": "Take the notes of C major, C D E F G A B, but start and end on D instead of C. The steps are no longer W-W-H-W-W-W-H; they are W-H-W-W-W-H-W. Because the half steps fall in new places, the scale has a different character. Each starting degree of the major scale gives one of seven modes:\n\n1 Ionian (the major scale itself), 2 Dorian, 3 Phrygian, 4 Lydian, 5 Mixolydian, 6 Aeolian (the natural minor), 7 Locrian. With C major's notes: D Dorian, E Phrygian, F Lydian, G Mixolydian, A Aeolian, B Locrian.",
+        "fr": "Prends les notes de do majeur, do ré mi fa sol la si, mais commence et termine sur ré au lieu de do. Les écarts ne sont plus T-T-½-T-T-T-½ mais T-½-T-T-T-½-T. Comme les demi-tons tombent ailleurs, la gamme change de caractère. Chaque degré de départ de la gamme majeure donne l'un des sept modes :\n\n1 ionien (la gamme majeure elle-même), 2 dorien, 3 phrygien, 4 lydien, 5 mixolydien, 6 éolien (le mineur naturel), 7 locrien. Avec les notes de do majeur : ré dorien, mi phrygien, fa lydien, sol mixolydien, la éolien, si locrien."
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "D4:1/4 E4:1/4 F4:1/4 G4:1/4",
+          "A4:1/4 B4:1/4 C5:1/4 D5:1/4"
+        ]
+      }
+    },
+    {
+      "heading": {
+        "en": "Their sound",
+        "fr": "Leur couleur"
+      },
+      "body": {
+        "en": "It helps to compare each mode with the major or minor scale on the same tonic. Major-sounding modes: Lydian is major with a raised 4th, bright and floating, loved in film music. Mixolydian is major with a lowered 7th, relaxed and bluesy, heard in rock, folk and over dominant chords in jazz.\n\nMinor-sounding modes: Dorian is natural minor with a raised 6th, minor but less sad, common in jazz, funk and Celtic tunes. Phrygian is natural minor with a lowered 2nd, dark with a Spanish or flamenco flavour. Aeolian is the natural minor itself. Locrian has a lowered 2nd and a lowered 5th; its unstable tonic makes it rare as a home key.",
+        "fr": "Il est utile de comparer chaque mode à la gamme majeure ou mineure de même tonique. Modes à couleur majeure : le lydien est un majeur avec la 4te haussée, lumineux et flottant, apprécié dans la musique de film. Le mixolydien est un majeur avec la 7e abaissée, détendu et bluesy, entendu dans le rock, le folk et sur les accords de dominante en jazz.\n\nModes à couleur mineure : le dorien est un mineur naturel avec la 6te haussée, mineur mais moins triste, courant en jazz, funk et musique celtique. Le phrygien est un mineur naturel avec la 2de abaissée, sombre, aux accents espagnols ou flamencos. L'éolien est le mineur naturel lui-même. Le locrien a la 2de et la 5te abaissées ; sa tonique instable le rend rare comme tonalité principale."
+      }
+    },
+    {
+      "heading": {
+        "en": "Finding a mode quickly",
+        "fr": "Trouver un mode rapidement"
+      },
+      "body": {
+        "en": "To build G Mixolydian, ask which major scale has G as its 5th note: C major. So G Mixolydian is G A B C D E F G. For E Dorian, E is the 2nd note of D major, so use D major's notes from E: E F♯ G A B C♯ D E.\n\nOn the alto, try each mode over a drone on its first note. Listen for the one note that differs from plain major or minor; that note is the colour of the mode, and it is the one to lean on when improvising.",
+        "fr": "Pour construire sol mixolydien, demande-toi quelle gamme majeure a sol pour 5e note : do majeur. Sol mixolydien est donc sol la si do ré mi fa sol. Pour mi dorien, mi est la 2e note de ré majeur : on prend les notes de ré majeur à partir de mi, mi fa♯ sol la si do♯ ré mi.\n\nÀ l'alto, essaie chaque mode sur un bourdon de sa première note. Écoute la note qui le distingue du simple majeur ou mineur : c'est la couleur du mode, celle sur laquelle t'appuyer en improvisation."
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q1",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build written D Dorian, from D up to D.",
+        "fr": "Construis ré dorien écrit, de ré à ré."
+      },
+      "answer": [
+        "D",
+        "E",
+        "F",
+        "G",
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "D is the 2nd note of C major, so D Dorian uses C major's notes: D E F G A B C D. Compared with D natural minor, the 6th is B instead of B♭.",
+        "fr": "Ré est la 2e note de do majeur : ré dorien utilise les notes de do majeur, ré mi fa sol la si do ré. Par rapport à ré mineur naturel, la 6te est si au lieu de si♭."
+      }
+    },
+    {
+      "id": "q2",
+      "type": "NOTES",
+      "prompt": {
+        "en": "Build written A Mixolydian, from A up to A.",
+        "fr": "Construis la mixolydien écrit, de la à la."
+      },
+      "answer": [
+        "A",
+        "B",
+        "C#",
+        "D",
+        "E",
+        "F#",
+        "G",
+        "A"
+      ],
+      "ordered": true,
+      "explanation": {
+        "en": "A is the 5th note of D major, so use D major's notes from A: A B C♯ D E F♯ G A. It is A major with G instead of G♯.",
+        "fr": "La est la 5e note de ré majeur : on prend les notes de ré majeur à partir de la, la si do♯ ré mi fa♯ sol la. C'est la majeur avec sol au lieu de sol♯."
+      }
+    },
+    {
+      "id": "q3",
+      "type": "TEXT",
+      "prompt": {
+        "en": "These notes run from E to E. Which mode is this?",
+        "fr": "Ces notes vont de mi à mi. De quel mode s'agit-il ?"
+      },
+      "staff": {
+        "key": 0,
+        "time": "4/4",
+        "measures": [
+          "E4:1/4 F#4:1/4 G4:1/4 A4:1/4",
+          "B4:1/4 C#5:1/4 D5:1/4 E5:1/4"
+        ]
+      },
+      "accept": {
+        "en": [
+          "dorian",
+          "e dorian",
+          "the dorian mode",
+          "dorian mode",
+          "dorian scale"
+        ],
+        "fr": [
+          "dorien",
+          "mi dorien",
+          "mode dorien",
+          "le mode dorien",
+          "e dorien",
+          "dorien sur mi"
+        ]
+      },
+      "explanation": {
+        "en": "F♯ and C♯ are the notes of D major, and E is its 2nd degree: E Dorian (E minor with a raised 6th, C♯).",
+        "fr": "Fa♯ et do♯ sont les notes de ré majeur, dont mi est le 2e degré : mi dorien (mi mineur avec la 6te haussée, do♯)."
+      }
+    },
+    {
+      "id": "q4",
+      "type": "NOTE",
+      "prompt": {
+        "en": "Written B♭ Lydian uses the notes of which major scale? Give its tonic.",
+        "fr": "Si♭ lydien écrit utilise les notes de quelle gamme majeure ? Donne sa tonique."
+      },
+      "answer": "F",
+      "explanation": {
+        "en": "Lydian starts on the 4th degree. B♭ is the 4th note of F major (F G A B♭), so B♭ Lydian is B♭ C D E F G A: F major.",
+        "fr": "Le lydien part du 4e degré. Si♭ est la 4e note de fa majeur (fa sol la si♭) : si♭ lydien s'écrit si♭ do ré mi fa sol la, avec les notes de fa majeur."
+      }
+    },
+    {
+      "id": "q5",
+      "type": "NOTE",
+      "prompt": {
+        "en": "What is the 2nd note of written E Phrygian?",
+        "fr": "Quelle est la 2e note de mi phrygien écrit ?"
+      },
+      "answer": "F",
+      "explanation": {
+        "en": "E is the 3rd note of C major, so E Phrygian is E F G A B C D E. Its lowered 2nd is F (natural), only a half step above the tonic.",
+        "fr": "Mi est la 3e note de do majeur : mi phrygien s'écrit mi fa sol la si do ré mi. Sa 2de abaissée est fa (naturel), à un demi-ton seulement de la tonique."
+      }
+    }
+  ]
+}
