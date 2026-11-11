@@ -10,5 +10,6 @@ build/
 .kotlin/
 *.jks
 *.keystore
+Super*.apk
 SaxPractice-*.apk
 SAX_KEYSTORE_BASE64.txt

@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "app.saxpractice"
+    namespace = "app.supersax"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "app.saxpractice"
+        applicationId = "app.supersax"
         minSdk = 26
         targetSdk = 37
         // Release builds get these from CI (-PversionCode=... -PversionName=...).

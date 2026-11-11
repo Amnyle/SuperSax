@@ -17,39 +17,39 @@ All pieces are `reviewed: false` until the owner proofreads them. Public-domain 
 
 | File – title | Author / source | Licence (credit) | Reviewed |
 |---|---|---|---|
-| `pieces/arpeggio-study-1.json` – Arpeggio Study No. 1 | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/arpeggio-study-2.json` – Arpeggio Study No. 2 | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/au-clair-de-la-lune.json` – Au clair de la lune (By the Light of the Moon) | Traditional; Traditional French song, 18th century | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/blues-in-c.json` – Twelve-Bar Blues | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/caprice-minor.json` – Caprice in Six Sharps (minor) | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/chromatic-etude.json` – Chromatic Etude | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/dotted-march.json` – Dotted Rhythm March | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/etude-in-b.json` – Etude in Five Sharps | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/frere-jacques.json` – Frère Jacques (Are You Sleeping?) | Traditional; Traditional French round, 18th century | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/fur-elise.json` – Für Elise (opening theme) | Ludwig van Beethoven; Ludwig van Beethoven, Bagatelle in A minor WoO 59 'Für Elise', 1810 (opening theme) | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/grand-etude.json` – Grand Etude in Six Sharps | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/hill-song.json` – Song of the Hills | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/lightly-row.json` – Lightly Row (Hänschen klein) | Traditional; Traditional German children's song 'Hänschen klein', 19th century | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
+| `pieces/arpeggio-study-1.json` – Arpeggio Study No. 1 | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/arpeggio-study-2.json` – Arpeggio Study No. 2 | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/au-clair-de-la-lune.json` – Au clair de la lune (By the Light of the Moon) | Traditional; Traditional French song, 18th century | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/blues-in-c.json` – Twelve-Bar Blues | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/caprice-minor.json` – Caprice in Six Sharps (minor) | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/chromatic-etude.json` – Chromatic Etude | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/dotted-march.json` – Dotted Rhythm March | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/etude-in-b.json` – Etude in Five Sharps | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/frere-jacques.json` – Frère Jacques (Are You Sleeping?) | Traditional; Traditional French round, 18th century | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/fur-elise.json` – Für Elise (opening theme) | Ludwig van Beethoven; Ludwig van Beethoven, Bagatelle in A minor WoO 59 'Für Elise', 1810 (opening theme) | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/grand-etude.json` – Grand Etude in Six Sharps | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/hill-song.json` – Song of the Hills | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/lightly-row.json` – Lightly Row (Hänschen klein) | Traditional; Traditional German children's song 'Hänschen klein', 19th century | public domain (Public domain melody, arranged for alto by Super Sax) | no |
 | `pieces/little-root-town.json` – Littleroot Town (Pokémon) | GAME FREAK sound team (Pokémon Ruby and Sapphire); Pokémon Ruby and Sapphire soundtrack (2002) | copyrighted (© Nintendo / Creatures / GAME FREAK. Not bundled: attach your own copy.) | no |
-| `pieces/little-waltz.json` – Little Waltz | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/long-tones-1.json` – Long Tones No. 1 (soft and steady) | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/long-tones-2.json` – Long Tones No. 2 (crescendo, diminuendo) | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/low-notes-study.json` – Low Notes Study | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/mary-had-a-little-lamb.json` – Mary Had a Little Lamb | Traditional; Traditional American nursery melody, 19th century | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/minuet-in-g.json` – Minuet (BWV Anh. 114) | Christian Petzold (formerly attributed to J. S. Bach); Minuet in G major, BWV Anh. 114, Notebook for Anna Magdalena Bach, 1725 (first half) | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/ode-to-joy.json` – Ode to Joy (theme) | Ludwig van Beethoven; Ludwig van Beethoven, Symphony No. 9, 1824 (theme, first eight bars) | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/palm-key-study.json` – Palm Key Study | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/perpetual-motion.json` – Perpetual Motion | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/row-row-row-your-boat.json` – Row, Row, Row Your Boat | Traditional; Traditional American round, 19th century (as published by E. O. Lyte, 1881) | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/sixteenth-etude-d.json` – Sixteenth-Note Etude | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/slur-steps.json` – Slurred Steps | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/slurred-leaps.json` – Slurred Leaps | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/syncopated-study.json` – Syncopated Study | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/syncopation-study.json` – Syncopation Study | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/tarantella.json` – Tarantella | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/thirds-etude-1.json` – Scale in Thirds No. 1 | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
-| `pieces/twinkle-twinkle.json` – Twinkle, Twinkle, Little Star | Traditional; Traditional French melody 'Ah ! vous dirai-je, maman', 18th century (printed 1761) | public domain (Public domain melody, arranged for alto by Sax Practice) | no |
-| `pieces/virtuoso-etude.json` – Virtuoso Etude in Six Sharps | Sax Practice (original); Original composition for this app | CC0 (Composed for Sax Practice, released under CC0 1.0) | no |
+| `pieces/little-waltz.json` – Little Waltz | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/long-tones-1.json` – Long Tones No. 1 (soft and steady) | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/long-tones-2.json` – Long Tones No. 2 (crescendo, diminuendo) | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/low-notes-study.json` – Low Notes Study | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/mary-had-a-little-lamb.json` – Mary Had a Little Lamb | Traditional; Traditional American nursery melody, 19th century | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/minuet-in-g.json` – Minuet (BWV Anh. 114) | Christian Petzold (formerly attributed to J. S. Bach); Minuet in G major, BWV Anh. 114, Notebook for Anna Magdalena Bach, 1725 (first half) | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/ode-to-joy.json` – Ode to Joy (theme) | Ludwig van Beethoven; Ludwig van Beethoven, Symphony No. 9, 1824 (theme, first eight bars) | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/palm-key-study.json` – Palm Key Study | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/perpetual-motion.json` – Perpetual Motion | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/row-row-row-your-boat.json` – Row, Row, Row Your Boat | Traditional; Traditional American round, 19th century (as published by E. O. Lyte, 1881) | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/sixteenth-etude-d.json` – Sixteenth-Note Etude | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/slur-steps.json` – Slurred Steps | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/slurred-leaps.json` – Slurred Leaps | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/syncopated-study.json` – Syncopated Study | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/syncopation-study.json` – Syncopation Study | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/tarantella.json` – Tarantella | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/thirds-etude-1.json` – Scale in Thirds No. 1 | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
+| `pieces/twinkle-twinkle.json` – Twinkle, Twinkle, Little Star | Traditional; Traditional French melody 'Ah ! vous dirai-je, maman', 18th century (printed 1761) | public domain (Public domain melody, arranged for alto by Super Sax) | no |
+| `pieces/virtuoso-etude.json` – Virtuoso Etude in Six Sharps | Super Sax (original); Original composition for this app | CC0 (Composed for Super Sax, released under CC0 1.0) | no |
 
 ## Theory lessons
 

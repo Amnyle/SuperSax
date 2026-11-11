@@ -1,4 +1,4 @@
-# Sax Practice
+# Super Sax
 
 An Android app (Kotlin, Jetpack Compose, Material 3) that helps a beginner **alto saxophonist** set goals for,
 plan, run and track practice. Everything stays on the phone: no account, no analytics, no ads; the only network
@@ -76,7 +76,7 @@ python3 tools/validate_lessons.py
 
 | Path | What |
 |---|---|
-| `app/src/main/java/app/saxpractice/domain/` | Pure Kotlin (no Android imports, enforced by a test): pitch and transposition, scales, program model, generator, adaptation, planner, session state machine, YIN, hold analysis, metronome/synth, rank, library (score, difficulty, matching, MusicXML), drills and lessons, weekly review, backup codec |
+| `app/src/main/java/app/supersax/domain/` | Pure Kotlin (no Android imports, enforced by a test): pitch and transposition, scales, program model, generator, adaptation, planner, session state machine, YIN, hold analysis, metronome/synth, rank, library (score, difficulty, matching, MusicXML), drills and lessons, weekly review, backup codec |
 | `.../data/` | Room database (schema in `app/schemas/`), repositories, DataStore settings, asset loader, backup, session manager, library and rank services |
 | `.../audio/` | AudioRecord capture, AudioTrack engine, MediaRecorder, Media3 player |
 | `.../notation/` | Staff layout (pure, tested) and the Compose Canvas staff, staff input |

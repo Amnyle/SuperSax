@@ -16,5 +16,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "SaxPractice"
+rootProject.name = "SuperSax"
 include(":app")

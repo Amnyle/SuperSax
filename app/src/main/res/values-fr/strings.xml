@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sax Practice</string>
+    <string name="app_name">Super Sax</string>
     <string name="back">Retour</string>
     <string name="decrease">Diminuer %1$s</string>
     <string name="increase">Augmenter %1$s</string>
@@ -250,7 +250,7 @@
     <string name="settings_sessions">Séances</string>
     <string name="silence_notifications">Couper les notifications pendant les séances</string>
     <string name="silence_notifications_hint">Utilise Ne pas déranger (les alarmes sonnent quand même) et le rétablit ensuite.</string>
-    <string name="silence_needs_access">Autorise « Accès à Ne pas déranger » pour Sax Practice dans l\'écran système, puis reviens.</string>
+    <string name="silence_needs_access">Autorise « Accès à Ne pas déranger » pour Super Sax dans l\'écran système, puis reviens.</string>
     <string name="rerun_onboarding">Répondre à nouveau aux questions de départ</string>
     <string name="settings_experimental">Expérimental</string>
     <string name="experimental_features">Fonctions expérimentales</string>
@@ -565,9 +565,9 @@
     <string name="update_daily_hint">Interroge GitHub sur la dernière version. C\'est le seul usage d\'internet par l\'application.</string>
     <string name="update_checking">Vérification…</string>
     <string name="update_up_to_date">Tu as la dernière version.</string>
-    <string name="update_available_title">Sax Practice %1$s est disponible</string>
+    <string name="update_available_title">Super Sax %1$s est disponible</string>
     <string name="update_tap_to_install">Touche pour mettre à jour</string>
-    <string name="update_allow_hint">Android a besoin de ton accord une fois pour que Sax Practice installe ses propres mises à jour.</string>
+    <string name="update_allow_hint">Android a besoin de ton accord une fois pour que Super Sax installe ses propres mises à jour.</string>
     <string name="update_allow">Autoriser les mises à jour</string>
     <string name="update_install">Mettre à jour vers %1$s</string>
     <string name="update_skip">Ignorer cette version</string>
@@ -578,7 +578,7 @@
     <string name="update_fail_network">Impossible de joindre GitHub. Vérifie la connexion et réessaie.</string>
     <string name="update_fail_no_release">Aucune version n\'a encore été publiée.</string>
     <string name="update_fail_incomplete">Le téléchargement était incomplet. Réessaie.</string>
-    <string name="update_fail_not_this_app">Le fichier téléchargé n\'est pas Sax Practice.</string>
+    <string name="update_fail_not_this_app">Le fichier téléchargé n\'est pas Super Sax.</string>
     <string name="update_fail_signature">Cette version est signée avec une autre clé que l\'application installée. Désinstalle une fois (exporte d\'abord une sauvegarde), puis installe-la depuis la page des versions.</string>
     <string name="update_fail_not_newer">Cette version n\'est pas plus récente que celle installée.</string>
     <string name="update_fail_install">Android n\'a pas pu installer la mise à jour.</string>

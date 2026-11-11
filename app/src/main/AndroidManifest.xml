@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SaxPractice">
+        android:theme="@style/Theme.SuperSax">
         <activity
             android:name=".MainActivity"
             android:exported="true"

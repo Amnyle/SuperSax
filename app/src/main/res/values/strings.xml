@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sax Practice</string>
+    <string name="app_name">Super Sax</string>
     <string name="back">Back</string>
     <string name="decrease">Decrease %1$s</string>
     <string name="increase">Increase %1$s</string>
@@ -250,7 +250,7 @@
     <string name="settings_sessions">Sessions</string>
     <string name="silence_notifications">Silence notifications during sessions</string>
     <string name="silence_notifications_hint">Uses Do Not Disturb (alarms still ring) and restores it afterwards.</string>
-    <string name="silence_needs_access">Allow \"Do Not Disturb access\" for Sax Practice in the system screen, then come back.</string>
+    <string name="silence_needs_access">Allow \"Do Not Disturb access\" for Super Sax in the system screen, then come back.</string>
     <string name="rerun_onboarding">Answer the setup questions again</string>
     <string name="settings_experimental">Experimental</string>
     <string name="experimental_features">Experimental features</string>
@@ -565,9 +565,9 @@
     <string name="update_daily_hint">Asks GitHub for the latest release. This is the only time the app uses the internet.</string>
     <string name="update_checking">Checking…</string>
     <string name="update_up_to_date">You have the latest version.</string>
-    <string name="update_available_title">Sax Practice %1$s is available</string>
+    <string name="update_available_title">Super Sax %1$s is available</string>
     <string name="update_tap_to_install">Tap to update</string>
-    <string name="update_allow_hint">Android needs your permission once for Sax Practice to install its own updates.</string>
+    <string name="update_allow_hint">Android needs your permission once for Super Sax to install its own updates.</string>
     <string name="update_allow">Allow updates</string>
     <string name="update_install">Update to %1$s</string>
     <string name="update_skip">Skip this version</string>
@@ -578,7 +578,7 @@
     <string name="update_fail_network">Could not reach GitHub. Check the connection and try again.</string>
     <string name="update_fail_no_release">No version has been published yet.</string>
     <string name="update_fail_incomplete">The download was incomplete. Try again.</string>
-    <string name="update_fail_not_this_app">The downloaded file is not Sax Practice.</string>
+    <string name="update_fail_not_this_app">The downloaded file is not Super Sax.</string>
     <string name="update_fail_signature">This version is signed with a different key than the installed app. Uninstall once (export a backup first), then install it from the releases page.</string>
     <string name="update_fail_not_newer">This version is not newer than the one installed.</string>
     <string name="update_fail_install">Android could not install the update.</string>

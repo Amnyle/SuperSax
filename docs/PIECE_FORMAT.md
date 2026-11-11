@@ -7,10 +7,10 @@ written alto pitch (a major sixth higher, key signature +3 sharps). Validate wit
 {
   "id": "slur-steps-1",
   "title": { "en": "Slur Steps", "fr": "Pas liés" },
-  "composer": "Sax Practice (original)",
+  "composer": "Super Sax (original)",
   "source": "Original composition for this app",
   "licence": "CC0",
-  "credit": "Composed for Sax Practice, released under CC0 1.0",
+  "credit": "Composed for Super Sax, released under CC0 1.0",
   "tags": ["etude", "slur"],
   "reviewed": false,
   "bundled": true,
