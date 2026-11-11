@@ -87,7 +87,7 @@ class ScaleCheckerViewModel(private val c: AppContainer) : ViewModel() {
         if (_ui.value.listening) c.mic.stop()
         val key = _ui.value.scaleKey ?: return
         viewModelScope.launch {
-            val result = ScaleChecker(a4 = c.audio.a4).check(frames.toList(), expected(key))
+            val result = ScaleChecker(c.audio.a4).check(frames.toList(), expected(key))
             _ui.value = _ui.value.copy(listening = false, result = result)
         }
     }

@@ -33,7 +33,7 @@ fun melodyOf(score: Score): Pair<List<MelodyNote>, List<Int>> {
         val beats = n.duration.value * score.timeDen
         if (tiedFrom && notes.isNotEmpty()) {
             val last = notes.removeAt(notes.lastIndex)
-            notes += last.copy(beats = last.beats + beats)
+            notes += last.withBeats(last.beats + beats)
         } else {
             notes += MelodyNote(n.pitch?.midi, beats); sourceIndex += i
         }

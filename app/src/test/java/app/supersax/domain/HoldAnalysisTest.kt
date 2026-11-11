@@ -38,7 +38,7 @@ class HoldAnalysisTest {
 
     @Test fun driftingFlatNote() {
         val sig = AudioSignals.silence(0.2) + AudioSignals.drifting(fa, 6.0, 0.0, -30.0) + AudioSignals.silence(0.5)
-        val h = HoldAnalysis.analyseAll(frames(sig), targetMidi = a).single()
+        val h = HoldAnalysis.analyseAll(frames(sig), a).single()
         assertTrue(h.driftCents < -20, "drift ${h.driftCents}")
         assertTrue(abs(h.slopeCentsPerSec - (-5.0)) < 0.6, "slope ${h.slopeCentsPerSec}")
         assertEquals(PitchDirection.FLAT, h.direction)
@@ -60,7 +60,7 @@ class HoldAnalysisTest {
         // A wildly sharp 250 ms attack and a flat 150 ms tail around a perfect note.
         val sig = AudioSignals.tone(fa * Math.pow(2.0, 80 / 1200.0), 0.25) + AudioSignals.tone(fa, 3.0) +
             AudioSignals.tone(fa * Math.pow(2.0, -80 / 1200.0), 0.15) + AudioSignals.silence(0.5)
-        val h = HoldAnalysis.analyseAll(frames(sig), targetMidi = a).single()
+        val h = HoldAnalysis.analyseAll(frames(sig), a).single()
         assertTrue(h.maxCents < 15 && h.minCents > -15, "min ${h.minCents} max ${h.maxCents}")
         assertTrue(h.inTuneShare > 0.9)
     }
@@ -85,7 +85,7 @@ class HoldAnalysisTest {
 
     @Test fun recomputeFromStoredTrace() {
         val sig = AudioSignals.drifting(fa, 5.0, 0.0, -20.0) + AudioSignals.silence(0.5)
-        val h = HoldAnalysis.analyseAll(frames(sig), a, HoldConfig(toleranceCents = 10.0)).single()
+        val h = HoldAnalysis.analyseAll(frames(sig), a, HoldConfig().withToleranceCents(10.0)).single()
         val at10 = HoldReport.inTuneShareAt(h.trace, 10.0)
         val at30 = HoldReport.inTuneShareAt(h.trace, 30.0)
         assertTrue(abs(at10 - h.inTuneShare) < 0.1)

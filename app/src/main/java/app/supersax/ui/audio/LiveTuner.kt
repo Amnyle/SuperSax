@@ -38,12 +38,12 @@ class LiveTuner(
     val reading: StateFlow<TunerReading> = _reading.asStateFlow()
     var targetMidi: Int? = null
         set(value) { field = value; tracker.targetMidi = value }
-    private var tracker = HoldTracker(HoldConfig(toleranceCents = toleranceCents, a4 = a4()))
+    private var tracker = HoldTracker(HoldConfig().withToleranceCents(toleranceCents).withA4(a4()))
     private var job: Job? = null
 
     fun start(hasPermission: Boolean) {
         if (job != null) return
-        tracker = HoldTracker(HoldConfig(toleranceCents = toleranceCents, a4 = a4()), targetMidi)
+        tracker = HoldTracker(HoldConfig().withToleranceCents(toleranceCents).withA4(a4()), targetMidi)
         mic.start(hasPermission)
         job = scope.launch {
             mic.frames.collect { f ->

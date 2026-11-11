@@ -56,7 +56,7 @@ class VerifyViewModel(private val c: AppContainer) : ViewModel() {
     val a4: Double get() = c.audio.a4
     private val _overtone = MutableStateFlow(OvertoneDrill.milestone.first())
     val overtone = _overtone.asStateFlow()
-    private val _altissimo = MutableStateFlow(AltissimoCheck.TARGETS.first)
+    private val _altissimo = MutableStateFlow(AltissimoCheck.TARGETS.first())
     val altissimo = _altissimo.asStateFlow()
     private val _success = MutableStateFlow(false)
     val success = _success.asStateFlow()

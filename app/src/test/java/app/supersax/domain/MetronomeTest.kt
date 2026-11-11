@@ -25,7 +25,7 @@ class MetronomeTest {
     }
 
     @Test fun accentAndSubdivisions() {
-        val m = MetronomeGenerator(44_100, 60, beatsPerBar = 4, subdivision = 2)
+        val m = MetronomeGenerator(44_100, 60, 4, 2)
         val out = FloatArray(44_100 * 4)
         m.mixInto(out)
         fun peak(at: Int) = (at until at + 500).maxOf { abs(out[it]) }

@@ -73,7 +73,7 @@ class MicCapture {
             fail(MicState.Reason.ERROR); return
         }
         if (record.state != AudioRecord.STATE_INITIALIZED) { record.release(); fail(MicState.Reason.BUSY); return }
-        val tracker = PitchTracker(Yin(sampleRate = sampleRate))
+        val tracker = PitchTracker(Yin(sampleRate))
         val buf = FloatArray(512)
         try {
             record.startRecording()
