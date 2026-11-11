@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "en": [
+      "Song player: search YouTube and download a song's audio right in the app, or import a file.",
+      "Each song is analysed: key (with the written key for alto) and tempo.",
+      "Change the tempo in BPM and the key in semitones, independently.",
+      "Bars are numbered: jump to any bar, loop a part, or stop at its end. Fix bar 1 and the tempo if the detection is off.",
+      "Checkpoints: mark places in a song (\"Chorus\") and practise from one to the next.",
+      "This window: after each update, a short list of what changed."
+    ],
+    "fr": [
+      "Lecteur de morceaux : cherche sur YouTube et télécharge l'audio d'un morceau dans l'appli, ou importe un fichier.",
+      "Chaque morceau est analysé : tonalité (avec la tonalité écrite pour l'alto) et tempo.",
+      "Change le tempo en BPM et la tonalité en demi-tons, indépendamment.",
+      "Les mesures sont numérotées : va à n'importe quelle mesure, boucle un passage ou arrête-toi à sa fin. Corrige la mesure 1 et le tempo si la détection se trompe.",
+      "Repères : marque des endroits d'un morceau (« Refrain ») et travaille de l'un au suivant.",
+      "Cette fenêtre : après chaque mise à jour, une courte liste des nouveautés."
+    ]
+  }
+]

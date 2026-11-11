@@ -2,7 +2,7 @@
 
 An Android app (Java core, Kotlin and Jetpack Compose UI, Material 3) that helps a beginner **alto saxophonist** set goals for,
 plan, run and track practice. Everything stays on the phone: no account, no analytics, no ads; the only network
-use is the optional update check on GitHub. English and French. The full specification is [`docs/SPEC.md`](docs/SPEC.md).
+use is the optional update check on GitHub and the song player's YouTube search and download. English and French. The full specification is [`docs/SPEC.md`](docs/SPEC.md).
 
 ## What it does
 
@@ -123,3 +123,11 @@ see [`docs/DEVICE_CHECKS.md`](docs/DEVICE_CHECKS.md).
 - [`docs/CONTENT.md`](docs/CONTENT.md) – author, source and licence of all bundled content.
 - [`docs/DEVICE_CHECKS.md`](docs/DEVICE_CHECKS.md) – what only a real phone can verify.
 - [`docs/PIECE_FORMAT.md`](docs/PIECE_FORMAT.md), [`docs/LESSON_FORMAT.md`](docs/LESSON_FORMAT.md) – content file formats.
+
+## Licence
+
+Super Sax is free software under the **GNU General Public License v3.0** (see `LICENSE`), because the song player
+uses [NewPipeExtractor](https://github.com/TeamNewPipe/NewPipeExtractor) (GPL-3.0) to search YouTube and download a
+song's audio. Downloading from YouTube is outside YouTube's terms of service; the feature is meant for the owner's
+personal practice. Bundled content keeps its own licences (`docs/CONTENT.md`).
+

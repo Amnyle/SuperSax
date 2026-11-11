@@ -33,7 +33,9 @@ import app.supersax.ui.practice.LevelsScreen
 import app.supersax.ui.practice.PlayLevelScreen
 import app.supersax.ui.advanced.OvertoneScreen
 import app.supersax.ui.advanced.AltissimoScreen
-import app.supersax.ui.advanced.SlowDownScreen
+import app.supersax.ui.songs.SongPlayerScreen
+import app.supersax.ui.songs.SongsScreen
+import app.supersax.ui.songs.YouTubeSearchScreen
 import app.supersax.ui.advanced.ScaleCheckerScreen
 import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.material.icons.rounded.Waves
@@ -76,6 +78,9 @@ object ExtraRoutes {
     const val OVERTONES = "overtones"
     const val ALTISSIMO = "altissimo"
     const val SLOW_DOWN = "slow_down"
+    const val YT_SEARCH = "youtube_search"
+    const val SONG = "song/{id}"
+    fun song(id: String) = "song/$id"
     const val SCALE_CHECKER = "scale_checker"
     fun piece(id: String) = "piece/$id"
     fun pdf(file: String) = "pdf/$file"
@@ -127,7 +132,15 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     }
     composable(ExtraRoutes.OVERTONES) { OvertoneScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.ALTISSIMO) { AltissimoScreen(onBack = { nav.popBackStack() }) }
-    composable(ExtraRoutes.SLOW_DOWN) { SlowDownScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.SLOW_DOWN) {
+        SongsScreen(onBack = { nav.popBackStack() }, onSong = { nav.navigate(ExtraRoutes.song(it)) }, onSearch = { nav.navigate(ExtraRoutes.YT_SEARCH) })
+    }
+    composable(ExtraRoutes.YT_SEARCH) {
+        YouTubeSearchScreen(onBack = { nav.popBackStack() }, onSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(ExtraRoutes.YT_SEARCH) { inclusive = true } } })
+    }
+    composable(ExtraRoutes.SONG, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
+        SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() })
+    }
     composable(ExtraRoutes.SCALE_CHECKER) { ScaleCheckerScreen(onBack = { nav.popBackStack() }) }
 }
 

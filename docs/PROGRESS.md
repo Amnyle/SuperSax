@@ -79,3 +79,9 @@ Verified: `testDebugUnitTest` **101 tests, 0 failures** (new: technique-only gen
 Built: star levels and unlocking for note reading, scales, fingerings and theory lessons; daily 5-minute mix with streak (Home card, Training entry) and reminder; alto sax logo; registers question removed.
 Verified: `testDebugUnitTest` **106 tests, 0 failures** (new: stars and unlocking, fingering levels, daily mix, streak; smoke test opens a level and the daily exercise); lint 0 errors; screenshots checked (`app/build/screens`).
 
+## Song player and What's new
+
+Built: YouTube search and audio download, file import, key and tempo detection, independent tempo (BPM) and key (semitones) changes, bars with a bar strip, part loop or stop, checkpoints, bar corrections; What's new window after updates; GPL-3.0 licence.
+Verified: `testDebugUnitTest` **113 tests, 0 failures** (new: tempo and first beat on click tracks, key on chord progressions, key spelling and alto transposition, bar maths, resampler; the screen tour opens the song list, the YouTube search and the What's new window); lint 0 errors.
+Not verifiable here: YouTube search and download (YouTube is not reachable from the build machine), decoding real files with the phone's codecs, and detection accuracy on real recordings.
+

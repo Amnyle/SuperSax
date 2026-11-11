@@ -180,3 +180,14 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **One question runner** for level rounds and the daily mix (`ui/practice`), Duolingo-like: progress bar, one question, green or red feedback with Continue.
 - **Logo**: a dark alto saxophone (neck, conical body, bow, flared bell, pads) on amber, as an adaptive icon kept inside the safe zone.
 
+## Song player (owner's requests)
+
+- **YouTube download, at the owner's explicit choice** after being told that YouTube's terms forbid it, that the only maintained library (NewPipeExtractor, from JitPack) makes the app GPL-3.0, and that YouTube changes break it until an update. Search returns videos; the best progressive audio stream (M4A preferred) is downloaded in 1 MB ranges into app storage. Imported files still work the same way.
+- **Licence**: the app is now GPL-3.0 (`LICENSE`); NewPipeExtractor needs core library desugaring for API 26.
+- **Analysis on the phone** (pure Java, `domain/song`): the audio is decoded with MediaCodec to mono 22.05 kHz (first 10 minutes). Tempo: spectral-flux onset envelope, autocorrelation 60–200 BPM with a log-normal prior at 120 BPM, then tempo and first beat refined together by a fine grid search (a tempo off by a fraction of a frame drifts over a whole song). Half or double tempo is inherently ambiguous for very fast or slow songs, so the player has ÷2 and ×2. Key: chroma summed over the song (65 Hz–2 kHz), Krumhansl–Kessler profiles, best of 24 keys. Tested on synthetic click tracks and chord progressions; real recordings can fool both, so corrections are one tap away.
+- **Key change without tempo change and tempo without pitch change** through Media3 playback parameters (speed and pitch are independent). Keys shown in concert pitch and written for alto (concert + 9 semitones).
+- **Bars** come from the corrected tempo, the start of bar 1 and the beats per bar (2, 3, 4 or 6): bar strip, previous/next bar, a part to loop or to stop at (then back to its start, ready to replay). Corrections: "Bar 1 starts here", ±0.5 BPM, ÷2, ×2, beats per bar.
+- **Checkpoints** are named times; loop from one to the next, or stop at the next.
+- **Song data in the key-value table** (`song:<id>`, JSON) so no database migration was needed; it is not part of the backup (nor are the downloaded files).
+- **What's new**: notes ship in `assets/whatsnew/whatsnew.json` with growing ids; after an update every unseen entry shows once; a fresh install marks them seen at the end of onboarding; Settings → App updates → What's new reopens them.
+

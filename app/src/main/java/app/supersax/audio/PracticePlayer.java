@@ -42,7 +42,7 @@ public final class PracticePlayer {
         exo.prepare();
         float speed = ui.getValue().getSpeed();
         ui.setValue(new PlayerUi().withSpeed(speed));
-        exo.setPlaybackParameters(new PlaybackParameters(speed, 1f));
+        applyParameters(speed, 0);
     }
 
     public void play() {
@@ -61,11 +61,30 @@ public final class PracticePlayer {
 
     public long position() { return exo.getCurrentPosition(); }
 
-    /** Playback speed (0.5..1.0 for practice); pitch stays the same. */
+    private void applyParameters(float speed, int semitones) {
+        exo.setPlaybackParameters(new PlaybackParameters(speed, (float) Math.pow(2, semitones / 12.0)));
+    }
+
+    /** Playback speed (0.25..2); the pitch stays as set by {@link #setSemitones}. */
     public void setSpeed(float speed) {
         float s = Math.max(0.25f, Math.min(2f, speed));
-        exo.setPlaybackParameters(new PlaybackParameters(s, 1f));
+        applyParameters(s, ui.getValue().getSemitones());
         ui.setValue(ui.getValue().withSpeed(s));
+    }
+
+    /** Key shift in semitones (−12..12) without changing the speed. */
+    public void setSemitones(int semitones) {
+        int st = Math.max(-12, Math.min(12, semitones));
+        applyParameters(ui.getValue().getSpeed(), st);
+        ui.setValue(ui.getValue().withSemitones(st));
+    }
+
+    private @Nullable Long returnTo;
+
+    /** Pause when playback reaches [ms] and go back to [thenSeekTo] (null: stay there), ready to replay the part. */
+    public void setStopAt(@Nullable Long ms, @Nullable Long thenSeekTo) {
+        returnTo = thenSeekTo;
+        ui.setValue(ui.getValue().withStopAt(ms));
     }
 
     public void setLoop(@Nullable Long startMs, @Nullable Long endMs) { ui.setValue(ui.getValue().withLoop(startMs, endMs)); }
@@ -78,6 +97,11 @@ public final class PracticePlayer {
         PlayerUi u = ui.getValue();
         Long a = u.getLoopStartMs(), b = u.getLoopEndMs();
         if (a != null && b != null && b > a && pos >= b) exo.seekTo(a);
+        Long stop = u.getStopAtMs();
+        if (stop != null && exo.isPlaying() && pos >= stop) {
+            exo.pause();
+            exo.seekTo(returnTo != null ? returnTo : stop);
+        }
         ui.setValue(u.withPosition(exo.getCurrentPosition(), Math.max(0, exo.getDuration())));
     }
 

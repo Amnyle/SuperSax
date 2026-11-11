@@ -74,3 +74,7 @@ For a published version: bundle only CC0, public-domain and CC BY material by de
 ## Font
 
 - **Google Sans Flex** (`app/src/main/res/font/sans_flex.ttf`), SIL Open Font License 1.1, the same file SuperHealth uses.
+
+## Libraries with a copyleft licence
+
+- **NewPipeExtractor** v0.27.1 (TeamNewPipe), GPL-3.0: YouTube search and audio stream extraction for the song player. Because of it the app is distributed under GPL-3.0 (`LICENSE`).

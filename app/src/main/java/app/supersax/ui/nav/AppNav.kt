@@ -135,6 +135,7 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
     }
     LaunchedEffect(dailySignal) { if (dailySignal > 0 && !startOnboarding) nav.navigate(ExtraRoutes.DAILY) { launchSingleTop = true } }
     LaunchedEffect(updatesSignal) { if (updatesSignal > 0 && !startOnboarding) nav.navigate(Routes.SETTINGS) { launchSingleTop = true } }
+    app.supersax.ui.whatsnew.WhatsNewAfterUpdate()
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {

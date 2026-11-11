@@ -1,0 +1,244 @@
+package app.supersax.ui.songs
+
+import android.content.Intent
+import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.FileOpen
+import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
+import app.supersax.AppContainer
+import app.supersax.LocaleHelper
+import app.supersax.R
+import app.supersax.domain.common.AudioRefRecord
+import app.supersax.domain.song.SongKeys
+import app.supersax.domain.song.SongSetup
+import app.supersax.ui.components.EmptyState
+import app.supersax.ui.components.ErrorBanner
+import app.supersax.ui.components.IconTile
+import app.supersax.ui.components.ScreenScaffold
+import app.supersax.ui.components.ScrollColumn
+import app.supersax.ui.components.SectionCard
+import app.supersax.ui.components.formatClock
+import app.supersax.ui.nav.LocalSettings
+import app.supersax.ui.nav.appViewModel
+import app.supersax.ui.theme.Sax
+import app.supersax.youtube.YouTubeSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.UUID
+
+/** A song in the list with what is known about it. */
+data class SongRow(val ref: AudioRefRecord, val setup: SongSetup)
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class SongsViewModel(private val c: AppContainer) : ViewModel() {
+    val songs = c.media.audioRefs.flatMapLatest { refs ->
+        if (refs.isEmpty()) flowOf(emptyList()) else combine(refs.map { r -> c.songs.observe(r.id) }) { setups ->
+            refs.mapIndexed { i, r -> SongRow(r, setups[i]) }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    /** Keeps a reference to the user's file (it stays where it is). */
+    fun import(uri: Uri, onAdded: (String) -> Unit) = viewModelScope.launch {
+        runCatching { c.context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
+        val name = c.context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+            ?.use { if (it.moveToFirst()) it.getString(0) else null } ?: "audio"
+        val rec = AudioRefRecord(UUID.randomUUID().toString(), uri.toString(), name.substringBeforeLast('.'), c.clock.nowMs())
+        c.media.saveAudioRef(rec)
+        onAdded(rec.id)
+    }
+
+    /** Removes the song; a downloaded file is deleted too, an imported file stays where it is. */
+    fun remove(r: AudioRefRecord) = viewModelScope.launch {
+        c.media.deleteAudioRef(r.id)
+        c.songs.delete(r.id)
+        val path = Uri.parse(r.uri).path
+        if (r.uri.startsWith("file:") && path != null && path.startsWith(c.songsDir.absolutePath)) withContext(Dispatchers.IO) { File(path).delete() }
+    }
+}
+
+/** Key and tempo of an analysed song, e.g. "B♭ major · 112 BPM". */
+@Composable
+fun songSummary(s: SongSetup): String? {
+    if (!s.analyzed) return null
+    val naming = LocalSettings.current.noteNaming
+    val key = if (s.keyTonic >= 0) stringResource(if (s.keyMinor) R.string.key_minor else R.string.key_major, naming.format(SongKeys.tonicName(s.keyTonic, s.keyMinor))) else null
+    return listOfNotNull(key, stringResource(R.string.bpm_value, Math.round(s.bpm).toInt())).joinToString(" · ")
+}
+
+/** The song player's list: downloaded and imported songs, YouTube search, file import. */
+@Composable
+fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Unit) {
+    val vm = appViewModel { SongsViewModel(it) }
+    val songs by vm.songs.collectAsStateWithLifecycle()
+    val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) vm.import(uri, onSong) }
+    ScreenScaffold(stringResource(R.string.slow_down), onBack = onBack) { padding ->
+        ScrollColumn(padding) {
+            Text(stringResource(R.string.songs_hint), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary)
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Button(onClick = onSearch, modifier = Modifier.weight(1f).heightIn(min = 56.dp), shape = RoundedCornerShape(18.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
+                    Icon(Icons.Rounded.Search, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.yt_search))
+                }
+                OutlinedButton(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp), shape = RoundedCornerShape(18.dp)) {
+                    Icon(Icons.Rounded.FileOpen, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.add_audio))
+                }
+            }
+            val list = songs ?: return@ScrollColumn
+            if (list.isEmpty()) EmptyState(stringResource(R.string.songs_empty))
+            list.forEach { row ->
+                SectionCard(modifier = Modifier.clickable { onSong(row.ref.id) }) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconTile(Icons.Rounded.MusicNote)
+                        Spacer(Modifier.width(14.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(row.ref.title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            Text(songSummary(row.setup) ?: stringResource(R.string.song_not_analysed), style = MaterialTheme.typography.bodySmall,
+                                color = Sax.colors.textSecondary)
+                        }
+                        IconButton(onClick = { vm.remove(row.ref) }) { Icon(Icons.Rounded.Delete, stringResource(R.string.remove), tint = Sax.colors.textTertiary) }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// --- YouTube search -------------------------------------------------------------------------
+
+data class SearchUi(
+    val searching: Boolean = false,
+    val results: List<YouTubeSource.Result> = emptyList(),
+    val error: Boolean = false,
+    /** url → download progress 0..1 */
+    val downloading: Map<String, Float> = emptyMap(),
+    val failed: String? = null,
+)
+
+class YouTubeSearchViewModel(private val c: AppContainer) : ViewModel() {
+    private val _ui = MutableStateFlow(SearchUi())
+    val ui = _ui.asStateFlow()
+
+    fun search(query: String, language: String) {
+        if (query.isBlank()) return
+        _ui.value = _ui.value.copy(searching = true, error = false)
+        viewModelScope.launch {
+            val r = withContext(Dispatchers.IO) { runCatching { YouTubeSource.search(query.trim(), language) } }
+            _ui.value = _ui.value.copy(searching = false, results = r.getOrDefault(emptyList()), error = r.isFailure)
+        }
+    }
+
+    fun download(item: YouTubeSource.Result, language: String, onDone: (String) -> Unit) {
+        if (item.url in _ui.value.downloading) return
+        _ui.value = _ui.value.copy(downloading = _ui.value.downloading + (item.url to 0f), failed = null)
+        viewModelScope.launch {
+            val r = withContext(Dispatchers.IO) {
+                runCatching {
+                    YouTubeSource.download(item.url, c.songsDir, language) { p ->
+                        _ui.value = _ui.value.copy(downloading = _ui.value.downloading + (item.url to p.toFloat()))
+                    }
+                }
+            }
+            _ui.value = _ui.value.copy(downloading = _ui.value.downloading - item.url, failed = if (r.isFailure) item.url else null)
+            val d = r.getOrNull() ?: return@launch
+            val rec = AudioRefRecord(UUID.randomUUID().toString(), Uri.fromFile(d.file).toString(), d.title, c.clock.nowMs())
+            c.media.saveAudioRef(rec)
+            c.songs.save(rec.id, SongSetup(source = item.url))
+            onDone(rec.id)
+        }
+    }
+}
+
+@Composable
+fun YouTubeSearchScreen(onBack: () -> Unit, onSong: (String) -> Unit) {
+    val vm = appViewModel { YouTubeSearchViewModel(it) }
+    val ui by vm.ui.collectAsStateWithLifecycle()
+    val language = LocaleHelper.effective(LocalContext.current)
+    var query by rememberSaveable { mutableStateOf("") }
+    ScreenScaffold(stringResource(R.string.yt_search), onBack = onBack) { padding ->
+        ScrollColumn(padding) {
+            OutlinedTextField(
+                query, { query = it }, Modifier.fillMaxWidth(), singleLine = true, shape = RoundedCornerShape(18.dp),
+                placeholder = { Text(stringResource(R.string.yt_search_hint)) },
+                leadingIcon = { Icon(Icons.Rounded.Search, null) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { vm.search(query, language) }),
+            )
+            Button(onClick = { vm.search(query, language) }, enabled = !ui.searching && query.isNotBlank(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) { Text(stringResource(R.string.yt_search_go)) }
+            if (ui.searching) Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) { CircularProgressIndicator(color = Sax.colors.accentInk) }
+            if (ui.error) ErrorBanner(stringResource(R.string.yt_search_failed))
+            if (ui.failed != null) ErrorBanner(stringResource(R.string.yt_download_failed))
+            ui.results.forEach { r ->
+                SectionCard {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(r.title, style = MaterialTheme.typography.titleSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                            Text(listOf(r.uploader, if (r.durationSec > 0) formatClock(r.durationSec) else "").filter { it.isNotBlank() }.joinToString(" · "),
+                                style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+                        }
+                        val p = ui.downloading[r.url]
+                        if (p != null) CircularProgressIndicator(progress = { p }, modifier = Modifier.size(36.dp), color = Sax.colors.accentInk)
+                        else IconButton(onClick = { vm.download(r, language, onSong) }) {
+                            Icon(Icons.Rounded.Download, stringResource(R.string.yt_download), tint = Sax.colors.accentInk)
+                        }
+                    }
+                    ui.downloading[r.url]?.let { LinearProgressIndicator(progress = { it }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent) }
+                }
+            }
+        }
+    }
+}

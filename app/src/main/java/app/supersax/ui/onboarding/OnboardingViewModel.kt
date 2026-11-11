@@ -110,7 +110,7 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
                 enduranceCapSec = c.content.generatorConfig.enduranceCapSec[a.endurance] ?: 300,
                 restSec = state.settings.restSec, createdAtEpochMs = now)
             c.practice.saveProgram(program, makeActive = true, nowMs = now)
-            c.settings.update { it.copy(onboardingDone = true) }
+            c.settings.update { it.copy(onboardingDone = true, lastWhatsNew = c.content.whatsNew.lastOrNull()?.id ?: 0) }
             onDone(if (useGenerated) null else program.id)
         }
     }

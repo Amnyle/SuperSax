@@ -51,6 +51,8 @@ data class SettingsRecord(
     val restSec: Int = 60,
     val experimental: Boolean = false,
     val onboardingDone: Boolean = false,
+    /** Id of the last "What's new" entry shown (fresh installs skip the notes). */
+    val lastWhatsNew: Int = 0,
     val synthTimbre: SynthTimbre = SynthTimbre.SINE,
     val currentReedId: String? = null,
     val currentMouthpieceId: String? = null,

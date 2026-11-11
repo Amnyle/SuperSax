@@ -60,6 +60,18 @@ class ScreenTour {
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Theory lessons", substring = true); shot("13-lessons")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Song player"); waitFor("Search YouTube"); shot("14-songs")
+        click("Search YouTube"); waitFor("Song or artist"); shot("15-youtube-search")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        // An update with notes not seen yet shows "What's new" once.
+        rule.activityRule.scenario.onActivity { a ->
+            val c = (a.application as app.supersax.SaxApp).container
+            kotlinx.coroutines.runBlocking { c.settings.update { it.copy(lastWhatsNew = 0) } }
+        }
+        waitFor("What's new"); shot("16-whats-new")
+        click("Got it")
+        rule.waitUntil(10_000) { rule.onAllNodesWithText("What's new").fetchSemanticsNodes().isEmpty() }
         click("Progress"); waitFor("Rank"); shot("08-progress")
         click("Home"); waitFor("Start ·", substring = true)
         rule.onAllNodesWithText("Settings").fetchSemanticsNodes()

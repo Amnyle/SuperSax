@@ -51,7 +51,12 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
 
     ScreenScaffold(stringResource(R.string.settings), onBack = onBack) { padding ->
         ScrollColumn(padding) {
-            SectionCard(stringResource(R.string.updates)) { UpdatesSection(s, vm::update) }
+            SectionCard(stringResource(R.string.updates)) {
+                UpdatesSection(s, vm::update)
+                var showNotes by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+                TextButton(onClick = { showNotes = true }) { Text(stringResource(R.string.whats_new_title)) }
+                if (showNotes) app.supersax.ui.whatsnew.WhatsNewDialog(app.supersax.ui.nav.LocalContainer.current.content.whatsNew.takeLast(3)) { showNotes = false }
+            }
             SectionCard(stringResource(R.string.daily_title)) { DailyReminderSection(s, vm::update) }
             SectionCard(stringResource(R.string.settings_display)) {
                 LanguageNamingTheme(s.language, s.noteNaming, s.theme, vm::update)
