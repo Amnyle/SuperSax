@@ -42,9 +42,9 @@ class TodayService(
         val restSec = settings.current().restSec
         val session = day?.let {
             SessionPlanner.plan(
-                programId = program.id, day = it, state = player, config = content.generatorConfig,
-                enduranceCapSec = minOf(program.enduranceCapSec, player.enduranceCapSec).coerceAtLeast(60),
-                restSec = restSec, pieces = pieceChooser.choose(player), availableMinutes = availableMinutes,
+                program.id, it, player, content.generatorConfig,
+                minOf(program.enduranceCapSec, player.enduranceCapSec).coerceAtLeast(60),
+                restSec, pieceChooser.choose(player), availableMinutes,
             )
         }
         return TodayPlan(program, day, today == null, session, program.phoneDrills.filter { it.dayOfWeek == dow })

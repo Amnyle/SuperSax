@@ -28,7 +28,7 @@ enum class ExerciseType(val isPhoneDrill: Boolean = false, val isPlaying: Boolea
  * Note fields are concert MIDI numbers (the storage standard).
  */
 @Serializable
-data class Target(
+data class Target @JvmOverloads constructor(
     val bpm: Int? = null,
     val holdSec: Int? = null,
     val scaleKey: String? = null,
@@ -43,7 +43,7 @@ data class Target(
 
 /** One exercise in a block. [catalogId] points to a description in `assets/exercises/exercises.json`. */
 @Serializable
-data class Exercise(
+data class Exercise @JvmOverloads constructor(
     val id: String,
     val catalogId: String,
     val type: ExerciseType,
@@ -81,7 +81,7 @@ enum class ProgramOrigin { GENERATED, MANUAL, BUNDLED }
  * Generated and manual programs are the same object, edited in the same editor.
  */
 @Serializable
-data class Program(
+data class Program @JvmOverloads constructor(
     val id: String,
     val name: String,
     val origin: ProgramOrigin,

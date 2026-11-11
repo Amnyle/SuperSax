@@ -15,9 +15,9 @@ class AdaptationTest {
 
     @Test fun twoCleanRunsAddFiveBpm() {
         var s = PlayerState(scales = listOf(ScaleProgress("MAJOR:Eb", 60, unlockedAtEpochMs = 1)))
-        var r = Adaptation.recordRun(s, "MAJOR:Eb", 60, clean = true, nowMs = 10, config = config)
+        var r = Adaptation.recordRun(s, "MAJOR:Eb", 60, true, 10, config)
         assertFalse(r.bumped); assertEquals(60, r.newBpm)
-        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 60, clean = true, nowMs = 11, config = config)
+        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 60, true, 11, config)
         assertTrue(r.bumped); assertEquals(65, r.newBpm)
         assertEquals(0, r.state.scale("MAJOR:Eb")!!.consecutiveClean)
         // A mistake in between resets the streak.
@@ -48,10 +48,10 @@ class AdaptationTest {
     }
 
     @Test fun longToneGrowthRule() {
-        assertEquals(9, Adaptation.nextHoldTarget(8, tiredEarly = false, tirednessRating = 2, meanAbsDriftCents = 5.0, config = config))
-        assertEquals(7, Adaptation.nextHoldTarget(8, tiredEarly = true, tirednessRating = 2, meanAbsDriftCents = null, config = config))
-        assertEquals(8, Adaptation.nextHoldTarget(8, tiredEarly = false, tirednessRating = 5, meanAbsDriftCents = null, config = config))
-        assertEquals(8, Adaptation.nextHoldTarget(8, tiredEarly = false, tirednessRating = 1, meanAbsDriftCents = 35.0, config = config))
+        assertEquals(9, Adaptation.nextHoldTarget(8, false, 2, 5.0, config))
+        assertEquals(7, Adaptation.nextHoldTarget(8, true, 2, null, config))
+        assertEquals(8, Adaptation.nextHoldTarget(8, false, 5, null, config))
+        assertEquals(8, Adaptation.nextHoldTarget(8, false, 1, 35.0, config))
         assertEquals(config.holdMaxSec, Adaptation.nextHoldTarget(config.holdMaxSec, false, 1, null, config))
         assertEquals(config.holdMinSec, Adaptation.nextHoldTarget(config.holdMinSec, true, 1, null, config))
         assertTrue(Adaptation.tiredEarly(240, 100, config))
@@ -60,7 +60,7 @@ class AdaptationTest {
 
     @Test fun staminaRamp() {
         var s = PlayerState(enduranceCapSec = 180)
-        repeat(config.staminaSessionsForStep) { s = Adaptation.afterSession(s, lipsTired = false, config = config) }
+        repeat(config.staminaSessionsForStep) { s = Adaptation.afterSession(s, false, config) }
         assertEquals(180 + config.staminaStepSec, s.enduranceCapSec)
         s = Adaptation.afterSession(s, false, config)
         s = Adaptation.afterSession(s, true, config)

@@ -33,7 +33,7 @@ class SessionPlannerTest {
         Generator.generate(Generator.Input("p", "P", setOf(1), minutes, 300), config).days.first()
 
     @Test fun resolvesTemplateIntoConcreteSession() {
-        val plan = SessionPlanner.plan("p", day(20), state, config, pieces = PieceChoice("piece-new", "s1", "piece-fun"))
+        val plan = SessionPlanner.plan("p", day(20), state, config, state.enduranceCapSec, config.restSec, PieceChoice("piece-new", "s1", "piece-fun"), null)
         val plays = plan.steps.filter { it.kind == StepKind.PLAY }
         // Playing time equals the program day.
         assertEquals(20 * 60, plan.playingSec)
@@ -85,7 +85,7 @@ class SessionPlannerTest {
     }
 
     @Test fun shortOnTimeDropsNewMaterial() {
-        val plan = SessionPlanner.plan("p", day(30), state, config, availableMinutes = 15)
+        val plan = SessionPlanner.plan("p", day(30), state, config, state.enduranceCapSec, config.restSec, PieceChoice(), 15)
         assertTrue(plan.steps.none { it.blockKind == BlockKind.NEW_MATERIAL })
         assertEquals(15 * 60, plan.playingSec)
     }

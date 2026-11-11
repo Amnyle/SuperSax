@@ -22,7 +22,7 @@ enum class Registers { LOW, MIDDLE, HIGH }
  * Tempo is in eighth notes per minute, as in the rank table.
  */
 @Serializable
-data class ScaleProgress(
+data class ScaleProgress @JvmOverloads constructor(
     val scaleKey: String,
     val bpm: Int,
     val consecutiveClean: Int = 0,
@@ -36,7 +36,7 @@ data class ScaleProgress(
  * Seeded by onboarding, then updated by the adaptation rules after each session.
  */
 @Serializable
-data class PlayerState(
+data class PlayerState @JvmOverloads constructor(
     val scales: List<ScaleProgress> = emptyList(),
     val holdTargetSec: Int = 6,
     val enduranceCapSec: Int = 300,
@@ -50,12 +50,18 @@ data class PlayerState(
     val writtenHighMidi: Int = 84,
 ) {
     fun scale(key: String): ScaleProgress? = scales.firstOrNull { it.scaleKey == key }
+
+    // Copy helpers for the Java core (Java cannot use named copy arguments).
+    fun withScales(v: List<ScaleProgress>) = copy(scales = v)
+    fun withHoldTarget(v: Int) = copy(holdTargetSec = v)
+    fun withStamina(enduranceCapSec: Int, sessionsWithoutFatigue: Int) =
+        copy(enduranceCapSec = enduranceCapSec, sessionsWithoutFatigue = sessionsWithoutFatigue)
     val unlockedKeys: List<String> get() = scales.map { it.scaleKey }
 }
 
 /** Answers collected by onboarding (one question per page). */
 @Serializable
-data class OnboardingAnswers(
+data class OnboardingAnswers @JvmOverloads constructor(
     val days: Set<Int> = setOf(1, 3, 5),
     val minutesPerSession: Int = 20,
     val endurance: Endurance = Endurance.FROM_5_TO_10,

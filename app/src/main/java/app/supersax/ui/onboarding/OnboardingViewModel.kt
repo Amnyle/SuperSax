@@ -60,15 +60,9 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
         val cfg = c.content.generatorConfig
         return Generator.generate(
             Generator.Input(
-                programId = UUID.randomUUID().toString(),
-                name = "",
-                days = a.days.ifEmpty { setOf(1) },
-                minutesPerSession = a.minutesPerSession,
-                enduranceCapSec = cfg.enduranceCapSec[a.endurance] ?: 300,
-                focus = a.focus,
-                availablePhoneDrills = c.availablePhoneDrills,
-                restSec = _ui.value.settings.restSec,
-                createdAtEpochMs = c.clock.nowMs(),
+                UUID.randomUUID().toString(), "", a.days.ifEmpty { setOf(1) }, a.minutesPerSession,
+                cfg.enduranceCapSec[a.endurance] ?: 300, a.focus, null, c.availablePhoneDrills,
+                _ui.value.settings.restSec, c.clock.nowMs(),
             ),
             cfg,
         )
