@@ -12,13 +12,15 @@ data class SplitRow(
     val scales: Int,
     val newMaterial: Int,
     val playForFun: Int,
+    /** Breathing warm-up (no sound), played first. */
+    val breathing: Int = 0,
 ) {
     fun of(kind: BlockKind): Int = when (kind) {
         BlockKind.LONG_TONES -> longTones
         BlockKind.SCALES -> scales
         BlockKind.NEW_MATERIAL -> newMaterial
         BlockKind.PLAY_FOR_FUN -> playForFun
-        BlockKind.BREATHING -> 0
+        BlockKind.BREATHING -> breathing
     }
 }
 
@@ -60,7 +62,7 @@ data class AdaptationConfig(
 data class GeneratorConfig(
     val splits: List<SplitRow>,
     /** Kinds dropped first when time is short. Kinds not listed are protected. */
-    val dropOrder: List<BlockKind> = listOf(BlockKind.NEW_MATERIAL, BlockKind.SCALES, BlockKind.LONG_TONES),
+    val dropOrder: List<BlockKind> = listOf(BlockKind.NEW_MATERIAL, BlockKind.BREATHING, BlockKind.SCALES, BlockKind.LONG_TONES),
     val restSec: Int = 60,
     val enduranceCapSec: Map<Endurance, Int> = mapOf(
         Endurance.UNDER_3 to 120, Endurance.FROM_3_TO_5 to 180, Endurance.FROM_5_TO_10 to 300,

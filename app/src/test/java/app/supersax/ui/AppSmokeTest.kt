@@ -3,6 +3,7 @@ package app.supersax.ui
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import app.supersax.MainActivity
@@ -36,14 +37,17 @@ class AppSmokeTest {
 
     @Test fun onboardingThenTwoTapsToARunningSession() {
         waitFor("Step 1 of 10")
-        repeat(9) { click("Next") }
+        waitFor("Welcome to Super Sax")
+        click("Get started")
+        repeat(8) { click("Next") }
         waitFor("Your program")
         click("Use this program")
         // Today: one big Start button.
         waitFor("Start ·", substring = true)
         click("Start ·", substring = true)
         waitFor("Step 1 of", substring = true)
-        rule.onNodeWithText("Lips tired").assertExists()
+        // The session opens on the silent breathing warm-up.
+        waitFor("Breathing", substring = true)
         rule.onNodeWithText("+1 min").performClick()
         click("End session")
         waitFor("Session done")
@@ -51,10 +55,10 @@ class AppSmokeTest {
         waitFor("Start ·", substring = true)
 
         // Tabs and main screens compose without crashing.
-        click("Tools"); waitFor("Tuner")
-        click("Library"); waitFor("Ode to Joy", substring = true)
-        click("Ode to Joy", substring = true); waitFor("Listen")
-        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        // Home dashboard: the week and the rank.
+        waitFor("This week"); waitFor("Coming up")
+        click("Training"); waitFor("Tuner"); waitFor("On the phone")
+        rule.onAllNodesWithText("Library").assertCountEquals(0)
         click("Progress"); waitFor("Rank")
         click("Rank"); waitFor("Weakest pillar", substring = true)
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }

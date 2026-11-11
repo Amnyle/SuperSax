@@ -18,7 +18,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class SessionPlannerTest {
-    private val config = TestAssets.generatorConfig
+    private val config = TestAssets.specGeneratorConfig
     private val state = PlayerState(
         scales = listOf(
             ScaleProgress("MAJOR:Eb", 70, lastPracticedEpochMs = 500),
@@ -69,7 +69,8 @@ class SessionPlannerTest {
         val plan = SessionPlanner.plan("p", d, state.copy(enduranceCapSec = 240), config)
         var continuous = 0
         plan.steps.forEach { s ->
-            continuous = if (s.kind == StepKind.REST) 0 else continuous + s.durationSec
+            // Only steps on the reed count (a silent breathing step does not tire the lips).
+            continuous = if (s.kind == StepKind.REST) 0 else if (s.exerciseType?.isPlaying == true) continuous + s.durationSec else continuous
             assertTrue(continuous <= 240, "continuous playing $continuous")
         }
     }

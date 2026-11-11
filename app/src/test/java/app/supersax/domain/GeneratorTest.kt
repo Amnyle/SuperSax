@@ -16,9 +16,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class GeneratorTest {
-    private val config = TestAssets.generatorConfig
+    private val config = TestAssets.specGeneratorConfig
 
-    private fun split(m: Int) = Generator.baseSplit(m, config)
+    /** The split without the breathing block (always 0 in the spec table). */
+    private fun split(m: Int) = Generator.baseSplit(m, config).filterKeys { it != BlockKind.BREATHING }
 
     @Test fun tableSplits() {
         assertEquals(mapOf(LONG_TONES to 3, SCALES to 4, NEW_MATERIAL to 0, PLAY_FOR_FUN to 3), split(10))
@@ -85,7 +86,7 @@ class GeneratorTest {
         assertEquals(base.getValue(SCALES) + 2, tech.getValue(SCALES))
         assertEquals(20, tech.values.sum())
         // Reading focus is served by phone drills, not sax minutes.
-        assertEquals(base, Generator.adjustedSplit(20, listOf(Focus.READING), null, config))
+        assertEquals(base, Generator.adjustedSplit(20, listOf(Focus.READING), null, config).filterKeys { it != BlockKind.BREATHING })
     }
 
     @Test fun limiterAdjustments() {

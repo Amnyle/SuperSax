@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class Generator {
     public static final List<BlockKind> PLAYING_KINDS = Collections.unmodifiableList(
-        Arrays.asList(BlockKind.LONG_TONES, BlockKind.SCALES, BlockKind.NEW_MATERIAL, BlockKind.PLAY_FOR_FUN));
+        Arrays.asList(BlockKind.BREATHING, BlockKind.LONG_TONES, BlockKind.SCALES, BlockKind.NEW_MATERIAL, BlockKind.PLAY_FOR_FUN));
 
     /** Note key added to {@code Program.notes} when the limiter is Consistency. */
     public static final String NOTE_CONSISTENCY_PREFIX = "consistency_shorter:";
@@ -140,11 +140,18 @@ public final class Generator {
     }
 
     /** Block that receives extra minutes for a focus, or null if the focus is served by phone drills. */
+    /** The song block that receives repertoire time, or null when the split has no song blocks (technique-only sessions). */
+    private static @Nullable BlockKind repertoireBlock(Map<BlockKind, Integer> split) {
+        if (split.getOrDefault(BlockKind.NEW_MATERIAL, 0) > 0) return BlockKind.NEW_MATERIAL;
+        if (split.getOrDefault(BlockKind.PLAY_FOR_FUN, 0) > 0) return BlockKind.PLAY_FOR_FUN;
+        return null;
+    }
+
     public static @Nullable BlockKind receiverFor(Focus focus, Map<BlockKind, Integer> split) {
         switch (focus) {
             case TONE: return BlockKind.LONG_TONES;
             case TECHNIQUE: return BlockKind.SCALES;
-            case REPERTOIRE: return split.getOrDefault(BlockKind.NEW_MATERIAL, 0) > 0 ? BlockKind.NEW_MATERIAL : BlockKind.PLAY_FOR_FUN;
+            case REPERTOIRE: return repertoireBlock(split);
             default: return null;
         }
     }
@@ -153,7 +160,7 @@ public final class Generator {
         switch (limiter) {
             case SOUND: case RANGE: return BlockKind.LONG_TONES;
             case TECHNIQUE: return BlockKind.SCALES;
-            case REPERTOIRE: return split.getOrDefault(BlockKind.NEW_MATERIAL, 0) > 0 ? BlockKind.NEW_MATERIAL : BlockKind.PLAY_FOR_FUN;
+            case REPERTOIRE: return repertoireBlock(split);
             default: return null;
         }
     }

@@ -15,7 +15,21 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import app.supersax.ui.theme.CardRadius
+import app.supersax.ui.theme.FieldRadius
+import app.supersax.ui.theme.Sax
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Warning
@@ -41,7 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.supersax.R
 
-/** Standard screen frame with a title, an optional back arrow and actions. */
+/** Standard screen frame: a large left-aligned title on the page background, an optional back arrow and actions. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenScaffold(
@@ -51,15 +65,20 @@ fun ScreenScaffold(
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(title) },
+                title = { Text(title, style = if (onBack == null) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     if (onBack != null) IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = { actions() },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background,
+                ),
             )
         },
         content = content,
@@ -70,7 +89,7 @@ fun ScreenScaffold(
 @Composable
 fun ScrollColumn(padding: PaddingValues, content: @Composable ColumnScope.() -> Unit) {
     Column(
-        Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp),
+        Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         content = content,
     )
@@ -78,18 +97,58 @@ fun ScrollColumn(padding: PaddingValues, content: @Composable ColumnScope.() -> 
 
 @Composable
 fun SectionCard(title: String? = null, modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Card(modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Card(
+        modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(CardRadius),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(0.dp),
+    ) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             if (title != null) Text(title, style = MaterialTheme.typography.titleMedium)
             content()
         }
     }
 }
 
+/** Small grey label above a section or a title. */
+@Composable
+fun Overline(text: String, modifier: Modifier = Modifier) {
+    Text(text, modifier, style = MaterialTheme.typography.labelLarge, color = Sax.colors.textSecondary, maxLines = 1)
+}
+
+/** A rounded square holding an icon, tinted with [tint] (amber by default). */
+@Composable
+fun IconTile(icon: ImageVector, tint: Color = Sax.colors.accentInk, background: Color = Sax.colors.accentSoft, size: Int = 44) {
+    Box(Modifier.size(size.dp).clip(RoundedCornerShape(FieldRadius)).background(background), contentAlignment = Alignment.Center) {
+        Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size((size * 0.52f).dp))
+    }
+}
+
+/** A tappable row: icon tile, title and subtitle, chevron. Used in hub lists. */
+@Composable
+fun NavRow(title: String, subtitle: String?, icon: ImageVector, onClick: () -> Unit, tint: Color = Sax.colors.accentInk, background: Color = Sax.colors.accentSoft) {
+    Row(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(FieldRadius)).clickable(onClick = onClick).heightIn(min = 64.dp).padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconTile(icon, tint, background)
+        Spacer(Modifier.width(14.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleMedium)
+            if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        }
+        Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, contentDescription = null, tint = Sax.colors.textTertiary)
+    }
+}
+
 /** Large primary button (at least 64 dp tall), for the main action of a screen. */
 @Composable
 fun BigButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
-    Button(onClick = onClick, enabled = enabled, modifier = modifier.fillMaxWidth().heightIn(min = 64.dp)) {
+    Button(
+        onClick = onClick, enabled = enabled, modifier = modifier.fillMaxWidth().heightIn(min = 64.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent),
+    ) {
         Text(text, style = MaterialTheme.typography.titleLarge)
     }
 }
@@ -106,7 +165,7 @@ fun EmptyState(text: String, action: String? = null, onAction: (() -> Unit)? = n
 /** A visible, recoverable error message with an optional retry action. */
 @Composable
 fun ErrorBanner(text: String, action: String? = null, onAction: (() -> Unit)? = null) {
-    Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
+    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(FieldRadius), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)) {
         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.onErrorContainer)
             Text(text, Modifier.weight(1f), color = MaterialTheme.colorScheme.onErrorContainer)

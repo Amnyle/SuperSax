@@ -70,3 +70,7 @@ All pieces are `reviewed: false` until the owner proofreads them. Public-domain 
 | `lessons/13-introduction-to-modes.json` – An introduction to modes | Original text (EN/FR) written for this app | CC0 | no |
 
 For a published version: bundle only CC0, public-domain and CC BY material by default (the metadata-only Littleroot Town entry carries no notes).
+
+## Font
+
+- **Google Sans Flex** (`app/src/main/res/font/sans_flex.ttf`), SIL Open Font License 1.1, the same file SuperHealth uses.

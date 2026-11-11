@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import app.supersax.ui.theme.Sax
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -55,7 +57,8 @@ fun UpdatesSection(s: SettingsRecord, update: ((SettingsRecord) -> SettingsRecor
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { scope.launch { Updater.downloadAndInstall(context.applicationContext, st.update) } },
-                    enabled = Updater.canInstall(context), modifier = Modifier.heightIn(min = 48.dp)) {
+                    enabled = Updater.canInstall(context), modifier = Modifier.heightIn(min = 52.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
                     Text(stringResource(R.string.update_install, st.update.version))
                 }
                 TextButton(onClick = { update { it.copy(updateSkip = st.update.version) } }) { Text(stringResource(R.string.update_skip)) }
@@ -68,8 +71,14 @@ fun UpdatesSection(s: SettingsRecord, update: ((SettingsRecord) -> SettingsRecor
         is Updater.State.Installing -> Text(stringResource(R.string.update_installing, st.version))
         is Updater.State.Failed -> Text(stringResource(failureText(st.reason)), color = MaterialTheme.colorScheme.error)
     }
+    if (state !is Updater.State.Available && state !is Updater.State.Downloading && state !is Updater.State.Installing) {
+        Button(
+            onClick = { scope.launch { Updater.refresh(context) } }, enabled = state !is Updater.State.Checking,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent),
+        ) { Text(stringResource(R.string.update_check_now), style = MaterialTheme.typography.titleSmall) }
+    }
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        TextButton(onClick = { scope.launch { Updater.refresh(context) } }) { Text(stringResource(R.string.update_check_now)) }
         TextButton(onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Updater.RELEASES_PAGE))) }) {
             Text(stringResource(R.string.update_all_releases))
         }

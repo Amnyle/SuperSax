@@ -69,3 +69,8 @@ Verified: 96 unit tests (including version comparison and release selection), li
 Built: the app is now Super Sax (`app.supersax`). The core is Java (74 Java files: pitch, scales, YIN and audio analysis, synth and metronome, generator, adaptation, planner, rank, library and MusicXML, notation layout, drills and quiz checking, goals, weekly review, release rules, backup zip, Android audio engine, microphone, recorder and player). The UI, data layer and serializable models stay Kotlin. See DECISIONS.md, "Java core, Kotlin UI".
 Verified: after every group, `assembleDebug` green and `testDebugUnitTest` **96 tests, 0 failures**; `lintDebug` 0 errors at the end. Not verifiable here: audio on a real phone (same as before, see DEVICE_CHECKS.md).
 
+## Rework round 1
+
+Built: Home dashboard, Training split (saxophone / phone), Progress regrouped, library hidden, welcome + language + note names first in onboarding (three questions removed), technique-only sessions with a breathing warm-up, new look (SuperHealth style, amber accent), update check at the top of Settings.
+Verified: `testDebugUnitTest` **101 tests, 0 failures** (new: technique-only generator tests, onboarding and tabs in the UI tests, a screen tour that saves screenshots to `app/build/screens`); lint 0 errors.
+

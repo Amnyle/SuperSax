@@ -1,10 +1,10 @@
 {
   "splits": [
-    { "minutes": 10, "longTones": 3, "scales": 4, "newMaterial": 0, "playForFun": 3 },
-    { "minutes": 20, "longTones": 4, "scales": 6, "newMaterial": 5, "playForFun": 5 },
-    { "minutes": 30, "longTones": 5, "scales": 8, "newMaterial": 9, "playForFun": 8 }
+    { "minutes": 10, "breathing": 1, "longTones": 3, "scales": 6, "newMaterial": 0, "playForFun": 0 },
+    { "minutes": 20, "breathing": 2, "longTones": 7, "scales": 11, "newMaterial": 0, "playForFun": 0 },
+    { "minutes": 30, "breathing": 2, "longTones": 11, "scales": 17, "newMaterial": 0, "playForFun": 0 }
   ],
-  "dropOrder": ["NEW_MATERIAL", "SCALES", "LONG_TONES"],
+  "dropOrder": ["NEW_MATERIAL", "BREATHING", "SCALES", "LONG_TONES"],
   "restSec": 60,
   "enduranceCapSec": {
     "UNDER_3": 120,

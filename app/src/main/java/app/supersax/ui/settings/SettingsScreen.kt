@@ -51,6 +51,7 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
 
     ScreenScaffold(stringResource(R.string.settings), onBack = onBack) { padding ->
         ScrollColumn(padding) {
+            SectionCard(stringResource(R.string.updates)) { UpdatesSection(s, vm::update) }
             SectionCard(stringResource(R.string.settings_display)) {
                 LanguageNamingTheme(s.language, s.noteNaming, s.theme, vm::update)
             }
@@ -104,7 +105,6 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
                     Text(stringResource(msg, backup.messageArg ?: ""), color = MaterialTheme.colorScheme.primary)
                 }
             }
-            SectionCard(stringResource(R.string.updates)) { UpdatesSection(s, vm::update) }
             Text(stringResource(R.string.privacy_note), style = MaterialTheme.typography.bodySmall)
         }
     }

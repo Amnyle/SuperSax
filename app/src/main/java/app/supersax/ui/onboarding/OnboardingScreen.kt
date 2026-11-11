@@ -14,7 +14,26 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.rounded.EmojiEvents
+import androidx.compose.material.icons.rounded.GraphicEq
+import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.ui.draw.clip
+import app.supersax.ui.components.IconTile
+import app.supersax.ui.theme.FieldRadius
+import app.supersax.ui.theme.Sax
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -58,11 +77,12 @@ fun OnboardingScreen(onFinished: (manualProgramId: String?) -> Unit) {
     val vm = appViewModel { OnboardingViewModel(it) }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val a = ui.answers
-    Scaffold { padding ->
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
             LinearProgressIndicator(
                 progress = { (ui.page + 1f) / (OnboardingViewModel.LAST_PAGE + 1) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
+                color = Sax.colors.accent, trackColor = Sax.colors.elevated, drawStopIndicator = {},
             )
             Text(
                 stringResource(R.string.onb_step, ui.page + 1, OnboardingViewModel.LAST_PAGE + 1),
@@ -70,35 +90,47 @@ fun OnboardingScreen(onFinished: (manualProgramId: String?) -> Unit) {
             )
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(vertical = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 when (ui.page) {
-                    0 -> DaysPage(a.days, a.minutesPerSession, { d -> vm.answers { it.copy(days = d) } }, { m -> vm.answers { it.copy(minutesPerSession = m) } })
-                    1 -> RadioPage(stringResource(R.string.onb_endurance_q), Endurance.entries.map { enduranceLabel(it) }, a.endurance.ordinal) { i ->
-                        vm.answers { it.copy(endurance = Endurance.entries[i]) }
+                    0 -> WelcomePage()
+                    1 -> RadioPage(stringResource(R.string.onb_language_q), LANGUAGES.map { stringResource(it.second) },
+                        LANGUAGES.indexOfFirst { it.first == ui.settings.language }.coerceAtLeast(0)) { i ->
+                        vm.settings { it.copy(language = LANGUAGES[i].first) }
                     }
-                    2 -> HoldPage(a.longestHoldSec, a.registers, { s -> vm.answers { it.copy(longestHoldSec = s) } }, { r -> vm.answers { it.copy(registers = r) } })
-                    3 -> ScalesPage(a.cleanScales, a.comfortableBpm, { s -> vm.answers { it.copy(cleanScales = s) } }, { b -> vm.answers { it.copy(comfortableBpm = b) } })
-                    4 -> RadioPage(stringResource(R.string.onb_reading_q), readingLevels(), a.readingLevel) { i -> vm.answers { it.copy(readingLevel = i) } }
-                    5 -> RadioPage(stringResource(R.string.onb_theory_q), theoryLevels(), a.theoryLevel) { i -> vm.answers { it.copy(theoryLevel = i) } }
-                    6 -> SongsPage(a.songsNow, a.songsNext, { l -> vm.answers { it.copy(songsNow = l) } }, { l -> vm.answers { it.copy(songsNext = l) } })
-                    7 -> FocusPage(a.focus) { f -> vm.answers { it.copy(focus = f) } }
-                    8 -> SettingsPage(ui.settings.language, ui.settings.noteNaming, ui.settings.theme, vm::settings)
+                    2 -> RadioPage(stringResource(R.string.onb_naming_q),
+                        listOf(stringResource(R.string.onb_naming_letters), stringResource(R.string.onb_naming_solfege)),
+                        if (ui.settings.noteNaming == NoteNaming.LETTERS) 0 else 1) { i ->
+                        vm.settings { it.copy(noteNaming = if (i == 0) NoteNaming.LETTERS else NoteNaming.SOLFEGE) }
+                    }
+                    3 -> DaysPage(a.days, a.minutesPerSession, { d -> vm.answers { it.copy(days = d) } }, { m -> vm.answers { it.copy(minutesPerSession = m) } })
+                    4 -> RegistersPage(a.registers) { r -> vm.answers { it.copy(registers = r) } }
+                    5 -> ScalesPage(a.cleanScales, a.comfortableBpm, { s -> vm.answers { it.copy(cleanScales = s) } }, { b -> vm.answers { it.copy(comfortableBpm = b) } })
+                    6 -> RadioPage(stringResource(R.string.onb_reading_q), readingLevels(), a.readingLevel) { i -> vm.answers { it.copy(readingLevel = i) } }
+                    7 -> RadioPage(stringResource(R.string.onb_theory_q), theoryLevels(), a.theoryLevel) { i -> vm.answers { it.copy(theoryLevel = i) } }
+                    8 -> FocusPage(a.focus) { f -> vm.answers { it.copy(focus = f) } }
                     else -> ResultPage(ui)
                 }
             }
             val defaultName = stringResource(R.string.program_default_name)
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (ui.page > 0) TextButton(onClick = vm::back, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.back)) }
-                Spacer(Modifier.weight(1f))
-                if (ui.page < OnboardingViewModel.LAST_PAGE) {
-                    Button(onClick = vm::next, enabled = ui.page != 0 || a.days.isNotEmpty(), modifier = Modifier.heightIn(min = 48.dp)) {
-                        Text(stringResource(R.string.next))
+            val amber = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)
+            if (ui.page < OnboardingViewModel.LAST_PAGE) {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                    if (ui.page > 0) TextButton(onClick = vm::back, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.back)) }
+                    Spacer(Modifier.weight(1f))
+                    Button(onClick = vm::next, enabled = ui.page != 3 || a.days.isNotEmpty(), modifier = Modifier.heightIn(min = 52.dp), colors = amber) {
+                        Text(stringResource(if (ui.page == 0) R.string.onb_get_started else R.string.next), style = MaterialTheme.typography.titleSmall)
                     }
-                } else {
-                    OutlinedButton(onClick = { vm.finish(false, defaultName, onFinished) }, enabled = !ui.saving, modifier = Modifier.heightIn(min = 48.dp)) {
+                }
+            } else {
+                // Last page: the two choices stacked full width (side by side they do not fit narrow screens in French).
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { vm.finish(true, defaultName, onFinished) }, enabled = !ui.saving,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp), colors = amber) {
+                        Text(stringResource(R.string.onb_use_program), style = MaterialTheme.typography.titleSmall)
+                    }
+                    OutlinedButton(onClick = { vm.finish(false, defaultName, onFinished) }, enabled = !ui.saving,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
                         Text(stringResource(R.string.onb_build_manually))
                     }
-                    Button(onClick = { vm.finish(true, defaultName, onFinished) }, enabled = !ui.saving, modifier = Modifier.heightIn(min = 48.dp)) {
-                        Text(stringResource(R.string.onb_use_program))
-                    }
+                    TextButton(onClick = vm::back, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.back)) }
                 }
             }
         }
@@ -106,7 +138,10 @@ fun OnboardingScreen(onFinished: (manualProgramId: String?) -> Unit) {
 }
 
 @Composable
-private fun Question(text: String) = Text(text, style = MaterialTheme.typography.headlineSmall)
+private fun Question(text: String) = Text(text, style = MaterialTheme.typography.headlineMedium)
+
+/** Language choices of the onboarding (code, label). */
+private val LANGUAGES = listOf("system" to R.string.language_system, "en" to R.string.language_en, "fr" to R.string.language_fr)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -124,10 +159,12 @@ private fun DaysPage(days: Set<Int>, minutes: Int, onDays: (Set<Int>) -> Unit, o
 @Composable
 private fun RadioPage(question: String, options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
     Question(question)
-    Column(Modifier.selectableGroup()) {
+    Column(Modifier.selectableGroup(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEachIndexed { i, label ->
             Row(
-                Modifier.fillMaxWidth().heightIn(min = 56.dp).selectable(selected = i == selected, onClick = { onSelect(i) }, role = Role.RadioButton),
+                Modifier.fillMaxWidth().heightIn(min = 60.dp).clip(RoundedCornerShape(FieldRadius))
+                    .background(if (i == selected) Sax.colors.accentSoft else Sax.colors.card)
+                    .selectable(selected = i == selected, onClick = { onSelect(i) }, role = Role.RadioButton).padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 RadioButton(selected = i == selected, onClick = null)
@@ -139,10 +176,8 @@ private fun RadioPage(question: String, options: List<String>, selected: Int, on
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HoldPage(hold: Int, registers: Set<Registers>, onHold: (Int) -> Unit, onRegisters: (Set<Registers>) -> Unit) {
-    Question(stringResource(R.string.onb_hold_q))
-    Stepper(stringResource(R.string.onb_hold_seconds), hold, onHold, 2..60) { stringResource(R.string.seconds_short, it) }
-    Text(stringResource(R.string.onb_registers_q), style = MaterialTheme.typography.titleMedium)
+private fun RegistersPage(registers: Set<Registers>, onRegisters: (Set<Registers>) -> Unit) {
+    Question(stringResource(R.string.onb_registers_q))
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Registers.entries.forEach { r ->
             val label = stringResource(when (r) { Registers.LOW -> R.string.register_low; Registers.MIDDLE -> R.string.register_middle; Registers.HIGH -> R.string.register_high })
@@ -150,6 +185,33 @@ private fun HoldPage(hold: Int, registers: Set<Registers>, onHold: (Int) -> Unit
                 label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp))
         }
     }
+}
+
+/** First page: what the app is for, before any question. */
+@Composable
+private fun WelcomePage() {
+    Box(Modifier.size(72.dp).clip(RoundedCornerShape(22.dp)).background(Sax.colors.accent), contentAlignment = Alignment.Center) {
+        Icon(Icons.Rounded.MusicNote, null, tint = Sax.colors.onAccent, modifier = Modifier.size(40.dp))
+    }
+    Text(stringResource(R.string.onb_welcome_title), style = MaterialTheme.typography.headlineLarge)
+    Text(stringResource(R.string.onb_welcome_body), style = MaterialTheme.typography.bodyLarge, color = Sax.colors.textSecondary)
+    listOf(
+        Triple(Icons.Rounded.CalendarMonth, R.string.onb_welcome_plan, R.string.onb_welcome_plan_sub),
+        Triple(Icons.Rounded.GraphicEq, R.string.onb_welcome_listen, R.string.onb_welcome_listen_sub),
+        Triple(Icons.Rounded.Smartphone, R.string.onb_welcome_phone, R.string.onb_welcome_phone_sub),
+        Triple(Icons.Rounded.EmojiEvents, R.string.onb_welcome_rank, R.string.onb_welcome_rank_sub),
+    ).forEach { (icon, title, sub) ->
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconTile(icon)
+            Spacer(Modifier.width(14.dp))
+            Column {
+                Text(stringResource(title), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(sub), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+            }
+        }
+    }
+    Text(stringResource(R.string.onb_welcome_private), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+    Text(stringResource(R.string.onb_welcome_next), style = MaterialTheme.typography.titleSmall)
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -169,44 +231,12 @@ private fun ScalesPage(clean: Set<String>, bpm: Int, onClean: (Set<String>) -> U
     Stepper(stringResource(R.string.onb_bpm), bpm, onBpm, 40..200, 5) { stringResource(R.string.bpm_value, it) }
 }
 
-@Composable
-private fun SongsPage(now: List<String>, next: List<String>, onNow: (List<String>) -> Unit, onNext: (List<String>) -> Unit) {
-    Question(stringResource(R.string.onb_songs_q))
-    SongList(stringResource(R.string.onb_songs_now), now, onNow)
-    SongList(stringResource(R.string.onb_songs_next), next, onNext)
-    Text(stringResource(R.string.onb_songs_hint), style = MaterialTheme.typography.bodySmall)
-}
-
-@Composable
-private fun SongList(label: String, items: List<String>, onChange: (List<String>) -> Unit) {
-    var text by remember { mutableStateOf("") }
-    SectionCard(label) {
-        var pick by remember { mutableStateOf(false) }
-        items.forEachIndexed { i, s ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(s.substringBefore(PIECE_SEPARATOR), Modifier.weight(1f))
-                TextButton(onClick = { onChange(items.filterIndexed { j, _ -> j != i }) }) { Text(stringResource(R.string.remove)) }
-            }
-        }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(text, { text = it }, Modifier.weight(1f), label = { Text(stringResource(R.string.onb_song_title)) }, singleLine = true)
-            TextButton(onClick = { if (text.isNotBlank()) { onChange(items + text.trim()); text = "" } }) { Text(stringResource(R.string.add)) }
-        }
-        val language = app.supersax.LocaleHelper.effective(androidx.compose.ui.platform.LocalContext.current)
-        TextButton(onClick = { pick = true }) { Text(stringResource(R.string.onb_from_library)) }
-        if (pick) app.supersax.ui.library.PiecePickerDialog(
-            onPick = { p -> onChange(items + (p.file.title.get(language) + PIECE_SEPARATOR + p.id)); pick = false },
-            onDismiss = { pick = false }, withNotesOnly = false,
-        )
-    }
-}
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun FocusPage(focus: List<Focus>, onFocus: (List<Focus>) -> Unit) {
     Question(stringResource(R.string.onb_focus_q))
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Focus.entries.forEach { f ->
+        Focus.entries.filter { it != Focus.REPERTOIRE }.forEach { f ->
             val selected = f in focus
             FilterChip(
                 selected = selected,
@@ -215,17 +245,6 @@ private fun FocusPage(focus: List<Focus>, onFocus: (List<Focus>) -> Unit) {
             )
         }
     }
-}
-
-@Composable
-private fun SettingsPage(
-    language: String,
-    naming: NoteNaming,
-    theme: ThemeMode,
-    update: ((app.supersax.domain.backup.SettingsRecord) -> app.supersax.domain.backup.SettingsRecord) -> Unit,
-) {
-    Question(stringResource(R.string.onb_settings_q))
-    LanguageNamingTheme(language, naming, theme, update)
 }
 
 /** Language, note names and theme pickers, shared by onboarding and settings. */

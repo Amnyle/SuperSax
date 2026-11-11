@@ -1,24 +1,50 @@
 package app.supersax.ui.nav
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Insights
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.rounded.FitnessCenter
+import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.rounded.History
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -31,13 +57,15 @@ import app.supersax.ui.goals.GoalsScreen
 import app.supersax.ui.history.HistoryScreen
 import app.supersax.ui.hub.HubEntry
 import app.supersax.ui.hub.HubScreen
+import app.supersax.ui.hub.HubSection
+import app.supersax.ui.home.HomeScreen
+import app.supersax.ui.theme.Sax
 import app.supersax.ui.onboarding.OnboardingScreen
 import app.supersax.ui.program.ProgramEditorScreen
 import app.supersax.ui.program.ProgramsScreen
 import app.supersax.ui.session.SessionScreen
 import app.supersax.ui.session.SessionSummaryScreen
 import app.supersax.ui.settings.SettingsScreen
-import app.supersax.ui.today.TodayScreen
 
 object Routes {
     const val ONBOARDING = "onboarding"
@@ -57,11 +85,44 @@ object Routes {
 private data class Tab(val route: String, val label: Int, val icon: androidx.compose.ui.graphics.vector.ImageVector)
 
 private val tabs = listOf(
-    Tab(Routes.TODAY, R.string.today, Icons.Default.PlayArrow),
-    Tab(Routes.TOOLS, R.string.tools, Icons.Default.Build),
-    Tab(ExtraRoutes.LIBRARY, R.string.library, Icons.Default.LibraryMusic),
-    Tab(Routes.PROGRESS, R.string.progress, Icons.Default.Insights),
+    Tab(Routes.TODAY, R.string.home, Icons.Rounded.Home),
+    Tab(Routes.TOOLS, R.string.training, Icons.Rounded.FitnessCenter),
+    Tab(Routes.PROGRESS, R.string.progress, Icons.Rounded.Insights),
 )
+
+/** Floating pill navigation bar: equal tabs, the active one on an amber pill. */
+@Composable
+private fun BottomBar(route: String?, onTab: (String) -> Unit) {
+    val dark = Sax.colors.dark
+    val shape = RoundedCornerShape(26.dp)
+    Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 10.dp)) {
+        Row(
+            Modifier.fillMaxWidth().height(68.dp)
+                .shadow(if (dark) 0.dp else 12.dp, shape, ambientColor = Color.Black.copy(alpha = 0.14f), spotColor = Color.Black.copy(alpha = 0.10f))
+                .clip(shape).background(if (dark) Sax.colors.elevated else Sax.colors.card)
+                .border(1.dp, if (dark) Color(0x1FFFFFFF) else Color(0x1A000000), shape).padding(horizontal = 4.dp),
+        ) {
+            tabs.forEach { t -> TabItem(t, route == t.route, Modifier.weight(1f)) { onTab(t.route) } }
+        }
+    }
+}
+
+@Composable
+private fun TabItem(tab: Tab, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
+    val pill by animateDpAsState(if (selected) 56.dp else 28.dp, spring(dampingRatio = 0.8f, stiffness = 600f), label = "pill")
+    val label = stringResource(tab.label)
+    Column(
+        modifier.fillMaxHeight().selectable(selected, onClick = onClick, role = Role.Tab, interactionSource = remember { MutableInteractionSource() }, indication = null),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+    ) {
+        Box(Modifier.width(pill).height(32.dp).clip(CircleShape).background(if (selected) Sax.colors.accent else Color.Transparent), contentAlignment = Alignment.Center) {
+            Icon(tab.icon, null, tint = if (selected) Sax.colors.onAccent else Sax.colors.textSecondary, modifier = Modifier.size(22.dp))
+        }
+        Spacer(Modifier.height(3.dp))
+        Text(label, fontSize = 12.sp, color = if (selected) Sax.colors.text else Sax.colors.textSecondary,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium, maxLines = 1)
+    }
+}
 
 /** Navigation graph. [startOnboarding] is true on first launch; [startSignal] changes when the widget asks to start. */
 @Composable
@@ -74,16 +135,10 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
     }
     LaunchedEffect(updatesSignal) { if (updatesSignal > 0 && !startOnboarding) nav.navigate(Routes.SETTINGS) { launchSingleTop = true } }
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            if (tabs.any { it.route == route }) NavigationBar {
-                tabs.forEach { t ->
-                    NavigationBarItem(
-                        selected = route == t.route,
-                        onClick = { nav.navigate(t.route) { popUpTo(Routes.TODAY) { saveState = true }; launchSingleTop = true; restoreState = true } },
-                        icon = { Icon(t.icon, contentDescription = null) },
-                        label = { Text(stringResource(t.label)) },
-                    )
-                }
+            if (tabs.any { it.route == route }) BottomBar(route) { r ->
+                nav.navigate(r) { popUpTo(Routes.TODAY) { saveState = true }; launchSingleTop = true; restoreState = true }
             }
         },
     ) { padding ->
@@ -95,11 +150,13 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
                 }
             }
             composable(Routes.TODAY) {
-                TodayScreen(
+                HomeScreen(
                     onStartSession = { nav.navigate(Routes.SESSION) },
                     onSettings = { nav.navigate(Routes.SETTINGS) },
                     onPrograms = { nav.navigate(Routes.PROGRAMS) },
                     onPhoneDrill = { type -> phoneDrillRoute(type)?.let { nav.navigate(it) } },
+                    onRank = { nav.navigate(ExtraRoutes.RANK) },
+                    onHistory = { nav.navigate(Routes.HISTORY) },
                 )
             }
             composable(Routes.SESSION) {
@@ -123,8 +180,19 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
                     onImported = onRecreate,
                 )
             }
-            composable(Routes.TOOLS) { HubScreen(stringResource(R.string.tools), toolEntries(nav)) }
-            composable(Routes.PROGRESS) { HubScreen(stringResource(R.string.progress), progressEntries(nav)) }
+            composable(Routes.TOOLS) {
+                HubScreen(stringResource(R.string.training), listOf(
+                    HubSection(stringResource(R.string.training_sax), saxTrainingEntries(nav), stringResource(R.string.training_sax_hint)),
+                    HubSection(stringResource(R.string.training_phone), phoneTrainingEntries(nav), stringResource(R.string.training_phone_hint)),
+                ))
+            }
+            composable(Routes.PROGRESS) {
+                HubScreen(stringResource(R.string.progress), listOf(
+                    HubSection(stringResource(R.string.progress_level), extraProgressEntries(nav)),
+                    HubSection(stringResource(R.string.progress_plan), planEntries(nav)),
+                    HubSection(stringResource(R.string.progress_logs), extraLogEntries(nav)),
+                ))
+            }
             extraDestinations(nav)
         }
     }
@@ -134,11 +202,8 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
 fun phoneDrillRoute(type: ExerciseType): String? = extraPhoneDrillRoute(type)
 
 @Composable
-private fun progressEntries(nav: NavHostController): List<HubEntry> = listOf(
-    HubEntry(stringResource(R.string.goals), stringResource(R.string.goals_sub), Icons.Default.Flag) { nav.navigate(Routes.GOALS) },
-    HubEntry(stringResource(R.string.history), stringResource(R.string.history_sub), Icons.Default.History) { nav.navigate(Routes.HISTORY) },
-    HubEntry(stringResource(R.string.programs), stringResource(R.string.programs_sub), Icons.AutoMirrored.Filled.List) { nav.navigate(Routes.PROGRAMS) },
-) + extraProgressEntries(nav)
-
-@Composable
-private fun toolEntries(nav: NavHostController): List<HubEntry> = extraToolEntries(nav)
+private fun planEntries(nav: NavHostController): List<HubEntry> = listOf(
+    HubEntry(stringResource(R.string.goals), stringResource(R.string.goals_sub), Icons.Rounded.Flag) { nav.navigate(Routes.GOALS) },
+    HubEntry(stringResource(R.string.history), stringResource(R.string.history_sub), Icons.Rounded.History) { nav.navigate(Routes.HISTORY) },
+    HubEntry(stringResource(R.string.programs), stringResource(R.string.programs_sub), Icons.AutoMirrored.Rounded.List) { nav.navigate(Routes.PROGRAMS) },
+)

@@ -61,7 +61,7 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
         return Generator.generate(
             Generator.Input(
                 UUID.randomUUID().toString(), "", a.days.ifEmpty { setOf(1) }, a.minutesPerSession,
-                cfg.enduranceCapSec[a.endurance] ?: 300, a.focus, null, c.availablePhoneDrills,
+                cfg.enduranceCapSec[a.endurance] ?: 300, a.focus.filter { it != app.supersax.domain.program.Focus.REPERTOIRE }, null, c.availablePhoneDrills,
                 _ui.value.settings.restSec, c.clock.nowMs(),
             ),
             cfg,
@@ -110,12 +110,6 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
                 enduranceCapSec = c.content.generatorConfig.enduranceCapSec[a.endurance] ?: 300,
                 restSec = state.settings.restSec, createdAtEpochMs = now)
             c.practice.saveProgram(program, makeActive = true, nowMs = now)
-            (a.songsNow + a.songsNext).filter { it.isNotBlank() }.forEach { entry ->
-                val title = entry.substringBefore(PIECE_SEPARATOR).trim()
-                val pieceId = entry.substringAfter(PIECE_SEPARATOR, "").ifBlank { null }
-                c.practice.saveGoal(GoalRecord(UUID.randomUUID().toString(), GoalType.SONG_MILESTONE, title, now,
-                    pieceId = pieceId, stage = app.supersax.domain.common.PieceStage.CLEAN_AT_TEMPO.name))
-            }
             c.settings.update { it.copy(onboardingDone = true) }
             onDone(if (useGenerated) null else program.id)
         }

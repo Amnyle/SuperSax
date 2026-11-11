@@ -162,3 +162,12 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 
 - **Super Sax**, application ID `app.supersax` (the owner had not installed a build yet, so the ID changed with the name).
 
+## Rework round 1 (owner's requests, after the first install)
+
+- **Tabs Home · Training · Progress** (the owner's choice). Home is a dashboard: today's session with Start, this week's days (played, planned, missed), the rank and the weakest pillar, the next planned sessions, today's phone drills. Training has two sections: with the saxophone, and on the phone only.
+- **Library hidden, data kept**: no tab or entry leads to it; routes, bundled pieces and stored progress stay so it can come back.
+- **Technique-only sessions, against spec section 6**: generated sessions hold breathing, long tones and scales (no new material or play for fun). Table: 10 min 1/3/6, 20 min 2/7/11, 30 min 2/11/17 (breathing/long tones/scales); breathing is dropped first when short on time. The repertoire focus is no longer offered and the Repertoire limiter adds nothing when there are no song blocks. The generator mechanics are still tested against the spec's original table (`TestAssets.specGeneratorConfig`).
+- **Onboarding**: a welcome page first, then language, then note names (A B C or Do Ré Mi). Removed: lip endurance, longest hold and songs (defaults: 5 to 10 minutes endurance, 8 s hold; both still adapt from sessions). Theme moved to Settings only. The last page stacks its two buttons (side by side they did not fit narrow screens in French).
+- **Look modelled on SuperHealth**: cool grey background, white borderless cards (24 dp radius), Google Sans Flex, floating pill bottom bar, saxophone amber as the one accent (deep gold for text on white, blue for phone-only training).
+- **App updates at the top of Settings**, with a full-width "Check for updates" button (it was at the bottom and easy to miss).
+

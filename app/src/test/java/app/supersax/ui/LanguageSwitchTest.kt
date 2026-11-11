@@ -3,6 +3,8 @@ package app.supersax.ui
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.printToString
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import app.supersax.MainActivity
@@ -37,16 +39,21 @@ class LanguageSwitchTest {
     /** Acceptance: switching language changes the strings; switching note names changes note labels. */
     @Test fun languageAndNoteNamesSwitch() {
         waitFor("Step 1 of 10")
-        repeat(8) { click("Next") }
-        waitFor("Language, note names and theme")
-        click("Solfège (Do Ré Mi)")
+        click("Get started")
+        // Language first, then note names.
+        waitFor("Which language?")
         click("Français")
-        // The activity recreates in French.
-        waitFor("Suivant")
+        // The activity recreates in French, on the same page.
+        waitFor("Quelle langue ?")
         click("Suivant")
+        waitFor("Comment nommes-tu les notes ?")
+        click("Do Ré Mi Fa Sol La Si")
+        repeat(7) { click("Suivant") }
         waitFor("Ton programme")
         click("Utiliser ce programme")
-        waitFor("Démarrer ·", substring = true)
+        runCatching { waitFor("Démarrer ·", substring = true) }.onFailure {
+            println("DUMP " + rule.onRoot(useUnmergedTree = true).printToString(maxDepth = 60)); throw it
+        }
         // The first unlocked scale (written C major) is shown in solfège.
         waitFor("Do majeur", substring = true)
     }

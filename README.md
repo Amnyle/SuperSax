@@ -6,7 +6,7 @@ use is the optional update check on GitHub. English and French. The full specifi
 
 ## What it does
 
-- **Onboarding** (one question per page, re-runnable) → a **generated program** or one you **build by hand**;
+- **Onboarding** (welcome, then language and note names, then one question per page, re-runnable) → a **generated program** or one you **build by hand**;
   both open in the same editor (days → blocks → exercises → targets, phone sessions).
 - **Today**: one big Start button. Timer-first **session player**: countdown on monotonic time, pause, +1 min,
   next, **lips tired** (enforced rest), clean-run logging with a tempo bump after two clean runs, metronome in
