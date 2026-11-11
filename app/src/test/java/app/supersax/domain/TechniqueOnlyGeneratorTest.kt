@@ -26,11 +26,20 @@ class TechniqueOnlyGeneratorTest {
         }
     }
 
-    @Test fun breathingWarmUpComesFirst() {
-        listOf(10, 20, 30).forEach { m ->
-            val day = Generator.generate(input(m), config).days.first()
-            assertEquals(BlockKind.BREATHING, day.blocks.first().kind, "$m")
-        }
+    @Test fun noBreathingBlock() {
+        for (m in 5..90) assertTrue(Generator.generate(input(m), config).days.first().blocks.none { it.kind == BlockKind.BREATHING }, "$m")
+    }
+
+    @Test fun neverTheSameScaleTwiceInASession() {
+        // A beginner with one unlocked scale and a 30-minute day (two scale exercises).
+        val day = Generator.generate(input(30), config).days.first()
+        val state = app.supersax.domain.program.PlayerState(scales = listOf(app.supersax.domain.program.ScaleProgress("MAJOR:Eb", 60)))
+        val plan = app.supersax.domain.planner.SessionPlanner.plan("p", day, state, config, 300, 60,
+            app.supersax.domain.planner.PieceChoice(), null)
+        val keys = plan.steps.filter { it.kind == app.supersax.domain.planner.StepKind.PLAY && it.chunk == 1 }.mapNotNull { it.target.scaleKey }
+        assertTrue(keys.size >= 2, "$keys")
+        assertEquals(keys.size, keys.distinct().size, "$keys")
+        assertEquals("MAJOR:Eb", keys.first())
     }
 
     @Test fun repertoireFocusOrLimiterNeverAddsSongs() {
@@ -39,11 +48,10 @@ class TechniqueOnlyGeneratorTest {
         assertTrue(day.blocks.none { it.kind in songs }, "${day.blocks}")
     }
 
-    @Test fun shortOnTimeDropsBreathingBeforeTechnique() {
+    @Test fun shortOnTimeKeepsBothTechniqueBlocks() {
         val day = Generator.generate(input(20), config).days.first()
         val cut = Generator.fitToMinutes(day.blocks, 10, config).associate { it.kind to it.minutes }
         assertEquals(10, cut.values.sum())
-        assertTrue((cut[BlockKind.BREATHING] ?: 0) <= (day.blocks.first { it.kind == BlockKind.BREATHING }.minutes), "$cut")
         assertTrue((cut[BlockKind.LONG_TONES] ?: 0) > 0 && (cut[BlockKind.SCALES] ?: 0) > 0, "$cut")
     }
 }

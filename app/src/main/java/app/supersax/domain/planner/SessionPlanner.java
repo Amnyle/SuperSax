@@ -26,6 +26,17 @@ public final class SessionPlanner {
                                       int enduranceCapSec, int restSec, PieceChoice pieces, @Nullable Integer availableMinutes) {
         List<Block> blocks = availableMinutes != null ? Generator.fitToMinutes(day.getBlocks(), availableMinutes, config) : day.getBlocks();
         List<String> scaleQueue = scaleRotation(state, config);
+        // Never the same scale twice in one session: when there are more scale exercises than unlocked
+        // scales, the extra ones introduce the next scales of the unlock order (they unlock when played).
+        int scaleSlots = 0;
+        for (Block b : blocks) {
+            if (b.getMinutes() <= 0) continue;
+            for (Exercise e : b.getExercises()) if (e.getType() == ExerciseType.SCALE && e.getTarget().getScaleKey() == null) scaleSlots++;
+        }
+        for (String key : config.getAdaptation().getUnlockOrder()) {
+            if (scaleQueue.size() >= scaleSlots) break;
+            if (!scaleQueue.contains(key)) scaleQueue.add(key);
+        }
         List<Block> ordered = new ArrayList<>(blocks);
         ordered.sort(Comparator.comparingInt(b -> b.getKind().ordinal()));
         List<List<PlannedStep>> raw = new ArrayList<>();

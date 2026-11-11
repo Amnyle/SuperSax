@@ -195,3 +195,13 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Key signature on a staff**, written for alto by default or in concert pitch, following the transposition.
 - **Metronome over the song**: a separate low-latency stream renders clicks from song time (bar 1 accented, nothing before bar 1), aimed with the output latency measured from AudioTrack timestamps and a continuous song clock (resync only after seeks, pauses or drift above 30 ms). Separate volumes for music and clicks.
 
+## Round 4 fixes (owner's feedback)
+
+- **Own song audio engine** (`SongEngine` + pure `SongRenderer` + `TimeStretcher`): the platform time-stretcher (Sonic, made for speech) distorted music. Songs are decoded once to a cached 16-bit PCM file (memory-mapped). At normal speed and key the samples pass through untouched; otherwise a phase vocoder with identity phase locking (4096-sample frames, 8× overlap) changes the duration and a Catmull-Rom resampler shifts the pitch.
+- **Clicks inside the music stream**: the separate click stream drifted and bunched (it filled its buffer faster than real time, then resynced); clicks are now rendered by the same renderer at exact sample positions computed from song time, so they cannot drift.
+- **No breathing block** in generated sessions (the owner does not want it); existing generated programs give its minutes to long tones (one-time migration).
+- **Never the same scale twice in a session**: when there are more scale exercises than unlocked scales, the extra ones introduce the next scales of the unlock order.
+- **Range rank from real notes only**: onboarding no longer stores the registers answer as self-reported range notes, and those stored before are removed once (they were saved in pairs at the same instant); notes claimed on the Rank screen and verified notes are kept.
+- **Fingering chart** as its own Training entry: a sheet per register (low, middle, high, altissimo) with every note's fingering; tap for the large view, the staff position and the alternates.
+- **Logo**: a minimal single-shape alto saxophone (constant-width tube, bow, wedge bell).
+

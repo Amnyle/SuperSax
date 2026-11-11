@@ -85,3 +85,8 @@ Built: YouTube search and audio download, file import, key and tempo detection, 
 Verified: `testDebugUnitTest` **113 tests, 0 failures** (new: tempo and first beat on click tracks, key on chord progressions, key spelling and alto transposition, bar maths, resampler; the screen tour opens the song list, the YouTube search and the What's new window); lint 0 errors.
 Not verifiable here: YouTube search and download (YouTube is not reachable from the build machine), decoding real files with the phone's codecs, and detection accuracy on real recordings.
 
+## Round 4 fixes
+
+Built: music-quality time stretching and key shift for the song player with clicks in the same stream; no breathing block; no repeated scale in a session; range rank no longer seeded by onboarding; fingering chart sheet; new logo.
+Verified: `testDebugUnitTest` **124 tests, 0 failures** (new: time stretcher keeps pitch, loudness and chords and is transparent at 100 percent; renderer passes samples through untouched, places clicks on the exact sample at any speed, loops and stops, shifts the key without changing the tempo; planner never repeats a scale; no breathing block); lint 0 errors. Not verifiable here: the sound on a phone.
+

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.supersax.AppContainer
 import app.supersax.audio.AudioDecoder
-import app.supersax.audio.PracticePlayer
 import app.supersax.domain.common.AudioRefRecord
 import app.supersax.domain.song.Checkpoint
 import app.supersax.domain.song.KeyDetector
@@ -32,11 +31,13 @@ data class Part(val fromMs: Long, val toMs: Long, val stop: Boolean)
 /** Metronome over the song and the two volumes (0..1). */
 data class MixUi(val clicks: Boolean = false, val clickVolume: Float = 0.7f, val musicVolume: Float = 1f)
 
-/** Analysis progress: null when idle, 0..1 while analysing. */
-data class AnalysisUi(val progress: Float? = null, val failed: Boolean = false)
+/** Preparing (decoding once to the cache) and analysis progress: null when idle, 0..1 while working. */
+data class AnalysisUi(val progress: Float? = null, val failed: Boolean = false, val preparing: Boolean = false)
 
 class SongPlayerViewModel(private val c: AppContainer, val songId: String) : ViewModel() {
-    val player = PracticePlayer(c.context)
+    val player = app.supersax.audio.SongEngine()
+    private val pcm = java.io.File(java.io.File(c.context.cacheDir, "songs").apply { mkdirs() }, "$songId.pcm")
+    private var pcmInfo: AudioDecoder.PcmInfo? = null
     private val _ref = MutableStateFlow<AudioRefRecord?>(null)
     val ref = _ref.asStateFlow()
     val setup: StateFlow<SongSetup> = c.songs.observe(songId).stateIn(viewModelScope, SharingStarted.Eagerly, SongSetup())
@@ -44,7 +45,6 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     val analysis = _analysis.asStateFlow()
     private val _part = MutableStateFlow<Part?>(null)
     val part = _part.asStateFlow()
-    private val overlay = app.supersax.audio.ClickOverlay()
     private val _mix = MutableStateFlow(MixUi())
     val mix = _mix.asStateFlow()
 
@@ -52,31 +52,47 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         viewModelScope.launch {
             val r = c.media.audioRefs.first().firstOrNull { it.id == songId } ?: return@launch
             _ref.value = r
-            player.load(Uri.parse(r.uri))
+            if (!prepare(r)) return@launch
             val saved = c.songs.get(songId)
             if (!saved.analyzed || saved.analysisVersion < app.supersax.domain.song.CURRENT_ANALYSIS) analyse()
         }
         viewModelScope.launch {
             while (isActive) {
                 player.tick()
-                val u = player.ui.value
                 val st = setup.value
-                overlay.sync(u.positionMs, u.speed, u.playing, if (st.analyzed) st.bpm else 0.0, st.firstBeatMs, st.beatsPerBar)
+                val m = _mix.value
+                player.setClicks(m.clicks, m.clickVolume, if (st.analyzed) st.bpm else 0.0, st.firstBeatMs, st.beatsPerBar)
                 delay(40)
             }
         }
     }
 
-    /** Decodes the audio and detects tempo, first beat and key; keeps the checkpoints and the source. */
+    /** Decodes the song once into the cache (reused next time) and opens it in the engine. */
+    private suspend fun prepare(r: AudioRefRecord): Boolean {
+        var info = withContext(Dispatchers.IO) { AudioDecoder.pcmInfo(pcm) }
+        if (info == null) {
+            _analysis.value = AnalysisUi(0f, preparing = true)
+            info = withContext(Dispatchers.IO) {
+                runCatching { AudioDecoder.decodeToPcm(c.context, Uri.parse(r.uri), pcm) { p -> _analysis.value = AnalysisUi(p.toFloat(), preparing = true) } }.getOrNull()
+            }
+        }
+        if (info == null) { _analysis.value = AnalysisUi(null, failed = true); return false }
+        pcmInfo = info
+        withContext(Dispatchers.IO) { player.open(pcm, info) }
+        _analysis.value = AnalysisUi()
+        return true
+    }
+
+    /** Detects tempo, first beat and key from the cached audio; keeps the checkpoints and the source. */
     fun analyse() {
-        val r = _ref.value ?: return
+        val info = pcmInfo ?: run { _ref.value?.let { r -> viewModelScope.launch { if (prepare(r)) analyse() } }; return }
         if (_analysis.value.progress != null) return
-        _analysis.value = AnalysisUi(0f)
+        _analysis.value = AnalysisUi(0.1f)
         viewModelScope.launch {
             val result = withContext(Dispatchers.Default) {
                 runCatching {
-                    val samples = AudioDecoder.decode(c.context, Uri.parse(r.uri)) { p -> _analysis.value = AnalysisUi((p * 0.8).toFloat()) } ?: error("no audio")
-                    _analysis.value = AnalysisUi(0.85f)
+                    val samples = AudioDecoder.monoFromPcm(pcm, info)
+                    _analysis.value = AnalysisUi(0.6f)
                     val tempo = TempoDetector.detect(samples, AudioDecoder.RATE)
                     _analysis.value = AnalysisUi(0.93f)
                     val key = KeyDetector.detect(samples, AudioDecoder.RATE)
@@ -118,8 +134,8 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
 
     // --- metronome and volumes ----------------------------------------------------------------
 
-    fun setClicks(on: Boolean) { _mix.value = _mix.value.copy(clicks = on); overlay.setEnabled(on) }
-    fun setClickVolume(v: Float) { _mix.value = _mix.value.copy(clickVolume = v); overlay.setGain(v) }
+    fun setClicks(on: Boolean) { _mix.value = _mix.value.copy(clicks = on) }
+    fun setClickVolume(v: Float) { _mix.value = _mix.value.copy(clickVolume = v) }
     fun setMusicVolume(v: Float) { _mix.value = _mix.value.copy(musicVolume = v); player.setVolume(v) }
 
     // --- bars ---------------------------------------------------------------------------------
@@ -170,5 +186,5 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         playPart(cp.ms, next, stop)
     }
 
-    override fun onCleared() { overlay.release(); player.release() }
+    override fun onCleared() { player.release() }
 }

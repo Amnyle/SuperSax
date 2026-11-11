@@ -100,11 +100,7 @@ class OnboardingViewModel(private val c: AppContainer) : ViewModel() {
             c.practice.saveOnboarding(a)
             val player = seedPlayer(a, c.practice.playerNow())
             c.practice.savePlayer(player)
-            // The range the player says they can play, flagged as self-reported.
-            listOf(player.writtenLowMidi, player.writtenHighMidi).forEach { w ->
-                c.progress.addRankEvent(app.supersax.domain.common.RankEventRecord(UUID.randomUUID().toString(), now,
-                    app.supersax.domain.common.RankEventKind.RANGE_NOTE, writtenMidi = w, verified = false))
-            }
+            // No range notes here: the range rank comes from notes played (or claimed on the Rank screen).
             val program = if (useGenerated) (state.preview ?: generate(a)).copy(name = programName)
             else Program(UUID.randomUUID().toString(), programName, ProgramOrigin.MANUAL, emptyList(),
                 enduranceCapSec = c.content.generatorConfig.enduranceCapSec[a.endurance] ?: 300,

@@ -53,11 +53,11 @@ private val SHAPES = mapOf(
  * Pressed keys are filled; when [onToggle] is set, tapping a key toggles it.
  */
 @Composable
-fun FingeringDiagram(pressed: Set<SaxKey>, description: String, onToggle: ((SaxKey) -> Unit)? = null) {
+fun FingeringDiagram(pressed: Set<SaxKey>, description: String, width: androidx.compose.ui.unit.Dp = 220.dp, onToggle: ((SaxKey) -> Unit)? = null) {
     val outline = MaterialTheme.colorScheme.onSurface
     val fill = MaterialTheme.colorScheme.primary
     val body = MaterialTheme.colorScheme.surfaceVariant
-    var mod = Modifier.width(220.dp).height(420.dp).semantics { contentDescription = description }
+    var mod = Modifier.width(width).height(width * (420f / 220f)).semantics { contentDescription = description }
     if (onToggle != null) mod = mod.pointerInput(Unit) {
         detectTapGestures { p ->
             val hit = SHAPES.minByOrNull { (_, s) -> hypot(p.x - s.x * size.width, p.y - s.y * size.height) }
@@ -76,12 +76,12 @@ fun FingeringDiagram(pressed: Set<SaxKey>, description: String, onToggle: ((SaxK
             if (s.round) {
                 val r = s.w * size.width / 2
                 if (on) drawCircle(fill, r, c)
-                drawCircle(outline, r, c, style = Stroke(3f))
+                drawCircle(outline, r, c, style = Stroke(3f * size.width / 660f * 1.5f + 1f))
             } else {
                 val sz = Size(s.w * size.width, s.h * size.height)
                 val tl = Offset(c.x - sz.width / 2, c.y - sz.height / 2)
                 if (on) drawRoundRect(fill, tl, sz, CornerRadius(12f, 12f))
-                drawRoundRect(outline, tl, sz, CornerRadius(12f, 12f), style = Stroke(3f))
+                drawRoundRect(outline, tl, sz, CornerRadius(12f, 12f), style = Stroke(3f * size.width / 660f * 1.5f + 1f))
             }
         }
     }

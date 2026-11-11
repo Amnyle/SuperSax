@@ -71,6 +71,7 @@ interface RankDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertEvent(e: RankEventEntity)
     @Insert suspend fun insertEvents(items: List<RankEventEntity>)
     @Query("DELETE FROM rank_event") suspend fun clearEvents()
+    @Query("DELETE FROM rank_event WHERE id = :id") suspend fun deleteEvent(id: String)
     @Query("SELECT * FROM rank_snapshot ORDER BY atMs") fun observeSnapshots(): Flow<List<RankSnapshotEntity>>
     @Query("SELECT * FROM rank_snapshot ORDER BY atMs") suspend fun snapshots(): List<RankSnapshotEntity>
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertSnapshot(s: RankSnapshotEntity)

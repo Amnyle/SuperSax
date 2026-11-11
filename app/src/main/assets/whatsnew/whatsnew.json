@@ -32,5 +32,24 @@
       "La mesure 1 commence maintenant quand la musique commence, pas dans le silence avant (les morceaux sont réanalysés une fois).",
       "Clics de métronome sur le morceau, au tempo choisi, avec des volumes séparés pour la musique et les clics."
     ]
+  },
+  {
+    "id": 3,
+    "en": [
+      "Song player: slowing down or speeding up now keeps the sound clean (a new music time-stretching engine); at 100 percent the original sound plays untouched.",
+      "Metronome clicks are now part of the same sound, so they stay exactly on the beat.",
+      "Sessions: no more breathing block, and never the same scale twice in one session.",
+      "Rank: your range now comes from notes you play or claim, not from the setup questions.",
+      "New fingering chart: every note's fingering, by register (Training → On the phone).",
+      "A cleaner, more modern logo."
+    ],
+    "fr": [
+      "Lecteur de morceaux : ralentir ou accélérer garde maintenant un son propre (nouveau moteur d'étirement du temps pour la musique) ; à 100 % le son d'origine est joué tel quel.",
+      "Les clics du métronome font maintenant partie du même son : ils restent exactement sur le temps.",
+      "Séances : plus de bloc de respiration, et jamais deux fois la même gamme dans une séance.",
+      "Rang : ta tessiture vient maintenant des notes que tu joues ou déclares, pas des questions de départ.",
+      "Nouvelle tablature des doigtés : le doigté de chaque note, par registre (Entraînement → Sur le téléphone).",
+      "Un logo plus épuré et moderne."
+    ]
   }
 ]

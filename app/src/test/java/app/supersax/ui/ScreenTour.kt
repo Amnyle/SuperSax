@@ -58,6 +58,8 @@ class ScreenTour {
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Daily exercise"); waitFor("1/", substring = true); shot("12-daily")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Fingering chart"); waitFor("Middle"); shot("20-fingering-chart")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Theory lessons", substring = true); shot("13-lessons")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         // A song already analysed (B♭ major, 112 BPM), to see the player without an audio file.

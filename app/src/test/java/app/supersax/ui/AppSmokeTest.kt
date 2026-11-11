@@ -46,8 +46,7 @@ class AppSmokeTest {
         waitFor("Start ·", substring = true)
         click("Start ·", substring = true)
         waitFor("Step 1 of", substring = true)
-        // The session opens on the silent breathing warm-up.
-        waitFor("Breathing", substring = true)
+        waitFor("Lips tired")
         rule.onNodeWithText("+1 min").performClick()
         click("End session")
         waitFor("Session done")

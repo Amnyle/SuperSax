@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.compose.material.icons.rounded.Leaderboard
+import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Inventory2
@@ -190,5 +191,6 @@ fun phoneTrainingEntries(nav: NavHostController): List<HubEntry> {
         HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Rounded.Piano, blue) { nav.navigate(ExtraRoutes.SCALE_REC) },
         HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Rounded.School, blue) { nav.navigate(ExtraRoutes.LESSONS) },
         HubEntry(stringResource(R.string.ex_fingering), stringResource(R.string.fingering_sub), Icons.Rounded.TouchApp, blue) { nav.navigate(ExtraRoutes.FINGERING) },
+        HubEntry(stringResource(R.string.fing_chart_title), stringResource(R.string.fing_chart_sub), Icons.Rounded.GridView, blue) { nav.navigate(ExtraRoutes.FINGERING_CHART) },
     )
 }

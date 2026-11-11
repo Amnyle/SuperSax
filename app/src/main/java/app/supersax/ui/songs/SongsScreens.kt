@@ -104,6 +104,7 @@ class SongsViewModel(private val c: AppContainer) : ViewModel() {
     fun remove(r: AudioRefRecord) = viewModelScope.launch {
         c.media.deleteAudioRef(r.id)
         c.songs.delete(r.id)
+        withContext(Dispatchers.IO) { File(File(c.context.cacheDir, "songs"), "${r.id}.pcm").delete() }
         val path = Uri.parse(r.uri).path
         if (r.uri.startsWith("file:") && path != null && path.startsWith(c.songsDir.absolutePath)) withContext(Dispatchers.IO) { File(path).delete() }
     }

@@ -1,8 +1,8 @@
 {
   "splits": [
-    { "minutes": 10, "breathing": 1, "longTones": 3, "scales": 6, "newMaterial": 0, "playForFun": 0 },
-    { "minutes": 20, "breathing": 2, "longTones": 7, "scales": 11, "newMaterial": 0, "playForFun": 0 },
-    { "minutes": 30, "breathing": 2, "longTones": 11, "scales": 17, "newMaterial": 0, "playForFun": 0 }
+    { "minutes": 10, "breathing": 0, "longTones": 4, "scales": 6, "newMaterial": 0, "playForFun": 0 },
+    { "minutes": 20, "breathing": 0, "longTones": 8, "scales": 12, "newMaterial": 0, "playForFun": 0 },
+    { "minutes": 30, "breathing": 0, "longTones": 12, "scales": 18, "newMaterial": 0, "playForFun": 0 }
   ],
   "dropOrder": ["NEW_MATERIAL", "BREATHING", "SCALES", "LONG_TONES"],
   "restSec": 60,

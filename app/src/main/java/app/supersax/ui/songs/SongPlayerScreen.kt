@@ -93,7 +93,7 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit) {
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
             analysis.progress?.let { p ->
                 SectionCard {
-                    Text(stringResource(R.string.song_analysing), style = MaterialTheme.typography.titleSmall)
+                    Text(stringResource(if (analysis.preparing) R.string.song_preparing else R.string.song_analysing), style = MaterialTheme.typography.titleSmall)
                     LinearProgressIndicator(progress = { p }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent, trackColor = Sax.colors.elevated)
                 }
             }

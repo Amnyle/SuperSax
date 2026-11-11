@@ -611,7 +611,7 @@
     <string name="onb_welcome_title">Bienvenue dans Super Sax</string>
     <string name="onb_welcome_body">Ton compagnon d\'entraînement pour le saxophone alto. Il t\'aide à construire ta technique, ton son et ta théorie avec des séances courtes et régulières, et te montre tes progrès.</string>
     <string name="onb_welcome_plan">Un plan fait pour toi</string>
-    <string name="onb_welcome_plan_sub">Respiration, notes tenues et gammes, à la mesure de tes jours et de tes minutes.</string>
+    <string name="onb_welcome_plan_sub">Notes tenues et gammes, à la mesure de tes jours et de tes minutes.</string>
     <string name="onb_welcome_listen">Il écoute pendant que tu joues</string>
     <string name="onb_welcome_listen_sub">Un accordeur, un métronome et un bourdon, avec des minuteurs qui guident chaque bloc.</string>
     <string name="onb_welcome_phone">S\'entraîner sans le sax</string>
@@ -756,4 +756,12 @@
         <item quantity="many">%1$d bémols</item>
         <item quantity="other">%1$d bémols</item>
     </plurals>
+    <string name="fing_chart_title">Tablature des doigtés</string>
+    <string name="fing_chart_sub">Le doigté de chaque note, par registre</string>
+    <string name="fing_alternates_n">+ %1$d autre doigté</string>
+    <string name="reg_low">Grave</string>
+    <string name="reg_middle">Médium</string>
+    <string name="reg_high">Aigu</string>
+    <string name="reg_altissimo">Suraigu</string>
+    <string name="song_preparing">Préparation de l\'audio (la première fois seulement)…</string>
 </resources>

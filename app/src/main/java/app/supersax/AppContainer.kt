@@ -82,7 +82,36 @@ class AppContainer(val context: Context) {
     val audio = AudioEngine()
     val mic = MicCapture()
 
+    /** One-time data fixes after an update (each runs once, marked in the key-value table). */
+    private suspend fun migrate() {
+        val kv = db.kv()
+        if (kv.get("migr:onboarding_range") == null) {
+            // Onboarding used to store the registers answer as two self-reported range notes at the same
+            // instant; they are not notes actually played, so they no longer count for the Range rank.
+            db.rank().events().filter { it.kind == app.supersax.domain.common.RankEventKind.RANGE_NOTE && !it.verified }
+                .groupBy { it.atMs }.values.filter { it.size == 2 }.flatten().forEach { db.rank().deleteEvent(it.id) }
+            kv.put(app.supersax.data.db.KeyValueEntity("migr:onboarding_range", "1"))
+        }
+        if (kv.get("migr:no_breathing") == null) {
+            // Generated programs no longer have a breathing block: its minutes go to long tones.
+            practice.programs.first().filter { it.origin == app.supersax.domain.program.ProgramOrigin.GENERATED }.forEach { p ->
+                var changed = false
+                val days = p.days.map { d ->
+                    val breathing = d.blocks.filter { it.kind == app.supersax.domain.program.BlockKind.BREATHING }.sumOf { it.minutes }
+                    if (breathing == 0 && d.blocks.none { it.kind == app.supersax.domain.program.BlockKind.BREATHING }) return@map d
+                    changed = true
+                    val rest = d.blocks.filter { it.kind != app.supersax.domain.program.BlockKind.BREATHING }
+                    val target = rest.indexOfFirst { it.kind == app.supersax.domain.program.BlockKind.LONG_TONES }.let { if (it < 0) 0 else it }
+                    d.copy(blocks = rest.mapIndexed { i, b -> if (i == target) b.copy(minutes = b.minutes + breathing) else b })
+                }
+                if (changed) practice.saveProgram(p.copy(days = days), makeActive = false, nowMs = clock.nowMs())
+            }
+            kv.put(app.supersax.data.db.KeyValueEntity("migr:no_breathing", "1"))
+        }
+    }
+
     init {
+        appScope.launch { runCatching { migrate() } }
         // Rank snapshots on every change (used by the weekly review; never notified).
         appScope.launch { rank.result.collect { runCatching { rank.snapshotIfChanged(it) } } }
         appScope.launch {
