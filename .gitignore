@@ -11,3 +11,4 @@ build/
 *.jks
 *.keystore
 SaxPractice-*.apk
+SAX_KEYSTORE_BASE64.txt
