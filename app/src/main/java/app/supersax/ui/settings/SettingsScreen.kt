@@ -99,6 +99,9 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
                 }
             }
             SectionCard(stringResource(R.string.backup)) {
+                AutoBackupSection(s, vm::update)
+                androidx.compose.material3.HorizontalDivider(color = app.supersax.ui.theme.Sax.colors.divider)
+                Text(stringResource(R.string.backup_file_title), style = MaterialTheme.typography.titleSmall)
                 Text(stringResource(R.string.backup_hint), style = MaterialTheme.typography.bodySmall)
                 ToggleRow(stringResource(R.string.backup_include_recordings), null, includeRecordings) { includeRecordings = it }
                 Row {

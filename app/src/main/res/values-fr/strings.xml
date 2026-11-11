@@ -764,4 +764,25 @@
     <string name="reg_high">Aigu</string>
     <string name="reg_altissimo">Suraigu</string>
     <string name="song_preparing">Préparation de l\'audio (la première fois seulement)…</string>
+    <string name="auto_backup">Sauvegarde automatique</string>
+    <string name="auto_backup_off">Désactivée</string>
+    <string name="auto_backup_drive">Google Drive</string>
+    <string name="auto_backup_folder">Dossier</string>
+    <string name="auto_backup_hint">Sauvegarde tes séances, programmes, progrès et réglages automatiquement sur Google Drive ou dans un dossier.</string>
+    <string name="auto_backup_choose_drive">Choisis Google Drive dans le sélecteur. Si Drive n\'y est pas, installe son appli et connecte-toi.</string>
+    <string name="auto_backup_drive_hint">Dans le sélecteur Android, ouvre Google Drive et choisis le dossier. L\'appli Drive doit être installée et connectée. Ce fichier est remplacé à chaque sauvegarde ; Drive l\'envoie en ligne.</string>
+    <string name="auto_backup_folder_hint">Un fichier daté est ajouté à chaque sauvegarde ; les 7 plus récents sont gardés. Fonctionne avec le téléphone, une carte SD ou une appli de cloud qui montre ses dossiers.</string>
+    <string name="auto_backup_change_file">Changer le fichier Drive</string>
+    <string name="auto_backup_change_folder">Changer le dossier</string>
+    <string name="auto_backup_daily">Chaque jour</string>
+    <string name="auto_backup_weekly">Chaque semaine</string>
+    <string name="auto_backup_recordings">Inclure les enregistrements</string>
+    <string name="auto_backup_recordings_hint">Fichiers plus lourds ; le reste est léger.</string>
+    <string name="auto_backup_running">Sauvegarde en cours…</string>
+    <string name="auto_backup_failed">Échec de la dernière sauvegarde : %1$s</string>
+    <string name="auto_backup_last">Dernière sauvegarde : %1$s</string>
+    <string name="auto_backup_never">Pas encore de sauvegarde</string>
+    <string name="auto_backup_now">Sauvegarder maintenant</string>
+    <string name="auto_backup_done">Sauvegarde enregistrée</string>
+    <string name="backup_file_title">Exporter ou restaurer un fichier</string>
 </resources>

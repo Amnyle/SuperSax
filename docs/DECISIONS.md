@@ -204,3 +204,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Range rank from real notes only**: onboarding no longer stores the registers answer as self-reported range notes, and those stored before are removed once (they were saved in pairs at the same instant); notes claimed on the Rank screen and verified notes are kept.
 - **Fingering chart** as its own Training entry: a sheet per register (low, middle, high, altissimo) with every note's fingering; tap for the large view, the staff position and the alternates.
 - **Logo** (owner's choice after two rounds of options): a thick, flat, tilted alto saxophone (curved neck and mouthpiece, conical body, bow, flared bell with rim, key pads) in gold on near-black; a separate single-colour layer for themed icons.
+
+## Automatic backup (owner's request, modelled on SuperHealth)
+
+- **Destinations through the Storage Access Framework, no account login in the app**: Google Drive = one file created once in the Drive app's picker (only the Drive provider is accepted), replaced at each backup, uploaded by Drive; or a folder (dated files, the 7 newest kept). Persistable URI permissions keep access.
+- **Schedule**: WorkManager every 6 hours with a network constraint; a backup is written when the last one is older than the chosen period (every day by default, or every week) minus 2 hours of slack. Last time or error shown in Settings; "Back up now" button. Recordings are optional (off by default, larger files).
+

@@ -51,6 +51,15 @@ data class SettingsRecord(
     val restSec: Int = 60,
     val experimental: Boolean = false,
     val onboardingDone: Boolean = false,
+    /** Automatic backup: "NONE", "DRIVE" (one Google Drive file, replaced each time) or "FOLDER" (dated files, last 7 kept). */
+    val autoBackupDest: String = "NONE",
+    val autoBackupDocument: String? = null,
+    val autoBackupFolder: String? = null,
+    /** Days between automatic backups (1 = every day, 7 = every week). */
+    val autoBackupEveryDays: Int = 1,
+    val autoBackupRecordings: Boolean = false,
+    val lastAutoBackupMs: Long = 0,
+    val lastAutoBackupError: String? = null,
     /** Id of the last "What's new" entry shown (fresh installs skip the notes). */
     val lastWhatsNew: Int = 0,
     val synthTimbre: SynthTimbre = SynthTimbre.SINE,

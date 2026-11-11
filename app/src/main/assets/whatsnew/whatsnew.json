@@ -55,10 +55,12 @@
   {
     "id": 4,
     "en": [
-      "New logo: a gold saxophone on black."
+      "New logo: a gold saxophone on black.",
+      "Automatic backup to Google Drive (or a folder), every day or week: Settings → Backup."
     ],
     "fr": [
-      "Nouveau logo : un saxophone doré sur fond noir."
+      "Nouveau logo : un saxophone doré sur fond noir.",
+      "Sauvegarde automatique sur Google Drive (ou dans un dossier), chaque jour ou chaque semaine : Réglages → Sauvegarde."
     ]
   }
 ]

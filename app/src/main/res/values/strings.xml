@@ -760,4 +760,25 @@
     <string name="reg_high">High</string>
     <string name="reg_altissimo">Altissimo</string>
     <string name="song_preparing">Preparing the audio (only the first time)…</string>
+    <string name="auto_backup">Automatic backup</string>
+    <string name="auto_backup_off">Off</string>
+    <string name="auto_backup_drive">Google Drive</string>
+    <string name="auto_backup_folder">Folder</string>
+    <string name="auto_backup_hint">Back up your sessions, programs, progress and settings automatically to Google Drive or a folder.</string>
+    <string name="auto_backup_choose_drive">Choose Google Drive in the picker. If Drive is not there, install its app and sign in.</string>
+    <string name="auto_backup_drive_hint">In the Android picker, open Google Drive and choose the folder. The Drive app must be installed and signed in. This file is replaced at each backup; Drive uploads it.</string>
+    <string name="auto_backup_folder_hint">A dated file is added at each backup; the 7 newest are kept. Works with the phone, an SD card, or a cloud app that shows its folders.</string>
+    <string name="auto_backup_change_file">Change the Drive file</string>
+    <string name="auto_backup_change_folder">Change the folder</string>
+    <string name="auto_backup_daily">Every day</string>
+    <string name="auto_backup_weekly">Every week</string>
+    <string name="auto_backup_recordings">Include recordings</string>
+    <string name="auto_backup_recordings_hint">Bigger files; the rest is small.</string>
+    <string name="auto_backup_running">Backing up…</string>
+    <string name="auto_backup_failed">Last backup failed: %1$s</string>
+    <string name="auto_backup_last">Last backup: %1$s</string>
+    <string name="auto_backup_never">No backup yet</string>
+    <string name="auto_backup_now">Back up now</string>
+    <string name="auto_backup_done">Backup saved</string>
+    <string name="backup_file_title">Export or restore a file</string>
 </resources>
