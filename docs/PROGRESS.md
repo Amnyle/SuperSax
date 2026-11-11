@@ -45,3 +45,16 @@ Built: 13 bilingual theory lessons with free-form quizzes (text, number, note ke
 Verified (phases 3 and 4 were committed together, see git log): `assembleDebug` green; 86 unit tests, 0 failures (rank: unranked, each pillar, averages and divisions, Musicianship cap, limiter tie-break, consistency window and floor, verified-only altissimo, recompute after config change; difficulty ordering on synthetic and real pieces; matching states and choice; MusicXML import; every bundled piece and lesson loads, renders and its answers are accepted); lint 0 errors.
 
 Not done: by-ear scale recognition (spec: "if time allows").
+
+## Phase 5: Advanced listening and polish — done
+
+Built: overtone drill (6 targets, milestone writes a verified rank event), altissimo verification (written G6–D7, writes verified Range notes), slow-down and loop player (50–100 percent without pitch change, A–B loop, named loops, SAF references), experimental scale checker behind the Experimental setting (segmentation, comparison, speed, confirm before logging), synth timbre setting, recording goals linked to a scale or piece, content descriptions for drawn widgets and PDF pages, hard-coded strings removed, Robolectric UI tests and render checks.
+
+Verified:
+- `./gradlew assembleDebug` green; `./gradlew testDebugUnitTest`: **94 tests, 0 failures**; `./gradlew lintDebug`: **0 errors** (31 warnings: plurals suggestions, API-level notes, `UseKtx` style hints).
+- End-to-end on the JVM with Robolectric (the real app, Room, DataStore, Compose): cold start → onboarding → generated program → Today → Start (session running after one tap on Today) → +1 min → End session → summary → Save; then Tools, Library, a piece with Listen, Rank, Weekly review and History open without errors. A second test switches language to French and note names to solfège during onboarding and checks French strings and "Do majeur" on Today.
+- Rendered images of the staff (Bravura glyphs, accidentals including double flat/sharp, ledger lines, flags, dots, ties, rests) and of the fingering diagram, staircase, radar and needle were inspected (`docs/renders/`).
+
+Not done:
+- By-ear scale recognition (the spec lists it as a later addition "if time allows").
+- Nothing was run on a real phone or emulator (no KVM in the build container): audio latency, microphone behaviour, notifications, widget, Do Not Disturb, PDF and file pickers remain unverified on a device; see `docs/DEVICE_CHECKS.md`.

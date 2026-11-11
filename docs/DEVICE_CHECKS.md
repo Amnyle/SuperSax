@@ -32,3 +32,10 @@ build container), so **every UI flow below is unverified on a device** until the
 - [ ] Recording: start/stop, playback, A/B comparison stays in sync; files under app storage; included in backup when chosen.
 - [ ] Fingering diagram: keys are easy to tap with a finger; key positions make sense to a sax player (owner to judge).
 - [ ] Lesson quizzes: the tap-on-staff input picks the intended line or space at normal and large font sizes.
+
+## Phase 5
+- [ ] Altissimo: detection of real altissimo notes (harmonically rich, can be unstable) on written G6, A6, C7 with the owner's horn; note how often a correctly played note fails to verify.
+- [ ] Overtones: the 2nd and 3rd partials of low B♭, C and D are recognised; a wrong partial shows "another partial is sounding".
+- [ ] Slow-down player: 50 percent speed keeps the pitch (compare with a tuner); A–B loop wraps without a gap you notice; a file moved after adding shows a clear error.
+- [ ] Scale checker (Settings → Experimental): with a real scale at 60–120 BPM, how often the "looks clean" verdict matches what the owner heard. It must never log without the confirmation tap.
+- [ ] TalkBack: main buttons, the cents needle, staff and charts read sensible descriptions.

@@ -107,13 +107,15 @@ object StaffLayout {
     }
 
     private fun noteWidth(n: ScoreNote, accidental: Boolean): Float =
-        1.8f + 5.2f * sqrt(n.duration.value.toFloat()) + if (accidental) ACC_ADVANCE + 0.2f else 0f
+        1.5f + 4.0f * sqrt(n.duration.value.toFloat()) + if (accidental) ACC_ADVANCE + 0.2f else 0f
 
     private fun headerWidth(keyFifths: Int, withTime: Boolean) =
         0.6f + CLEF_ADVANCE + kotlin.math.abs(keyFifths) * ACC_ADVANCE + 0.6f + if (withTime) TIME_ADVANCE else 0f
 
     /** Lays out [score] (draw it as given: pass a written score for the alto view). */
-    fun layout(score: Score, width: Float, showTime: Boolean = true): List<StaffSystem> {
+    fun layout(score: Score, fullWidth: Float, showTime: Boolean = true): List<StaffSystem> {
+        // Keep the final bar line clear of the right edge.
+        val width = fullWidth - 0.6f
         val key = KeySignature(score.keyFifths)
         // Pre-compute per-measure note lists and accidental display.
         var idx = 0

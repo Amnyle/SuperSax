@@ -59,6 +59,7 @@ fun WeeklyReviewScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val naming = app.saxpractice.ui.nav.LocalSettings.current.noteNaming
     var copied by remember { mutableStateOf(false) }
+    val appName = stringResource(R.string.app_name)
     ScreenScaffold(stringResource(R.string.weekly_review), onBack = onBack) { padding ->
         ScrollColumn(padding) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -72,7 +73,7 @@ fun WeeklyReviewScreen(onBack: () -> Unit) {
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = {
-                    context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText("Sax Practice", text))
+                    context.getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(appName, text))
                     copied = true
                 }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.copy_text)) }
                 OutlinedButton(onClick = {

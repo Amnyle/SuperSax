@@ -35,7 +35,7 @@ fun RankStaircase(tier: Int, labels: List<String>, description: String) {
         val w = (size.width - gap * (n - 1)) / n
         val labelSpace = 22.dp.toPx()
         val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
-            textSize = 10.dp.toPx(); textAlign = android.graphics.Paint.Align.CENTER; color = text.toArgb()
+            textSize = 9.dp.toPx(); textAlign = android.graphics.Paint.Align.CENTER; color = text.toArgb()
         }
         for (i in 0 until n) {
             val t = i + 1
@@ -48,7 +48,7 @@ fun RankStaircase(tier: Int, labels: List<String>, description: String) {
                 else -> muted
             }
             drawRoundRect(color, Offset(x, size.height - labelSpace - h), Size(w, h), CornerRadius(6f, 6f))
-            drawContext.canvas.nativeCanvas.drawText(labels[i].take(4), x + w / 2, size.height - 4.dp.toPx(), paint)
+            drawContext.canvas.nativeCanvas.drawText(labels[i], x + w / 2, size.height - 4.dp.toPx(), paint)
         }
     }
 }

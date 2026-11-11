@@ -1,0 +1,65 @@
+package app.saxpractice.ui
+
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import app.saxpractice.MainActivity
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+
+/**
+ * Runs the real app on the JVM (Robolectric): first launch → onboarding → generated program →
+ * Today → Start (the "two taps" path), then opens the main screens to check they compose.
+ */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [35])
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+class AppSmokeTest {
+    @get:Rule val rule = createAndroidComposeRule<MainActivity>()
+
+    private fun waitFor(text: String, substring: Boolean = false) =
+        rule.waitUntil(10_000) { rule.onAllNodesWithText(text, substring = substring).fetchSemanticsNodes().isNotEmpty() }
+
+    private fun click(text: String, substring: Boolean = false) {
+        waitFor(text, substring)
+        val node = rule.onAllNodesWithText(text, substring = substring)[0]
+        runCatching { node.performScrollTo() }
+        node.performClick()
+        rule.waitForIdle()
+    }
+
+    @Test fun onboardingThenTwoTapsToARunningSession() {
+        waitFor("Step 1 of 10")
+        repeat(9) { click("Next") }
+        waitFor("Your program")
+        click("Use this program")
+        // Today: one big Start button.
+        waitFor("Start ·", substring = true)
+        click("Start ·", substring = true)
+        waitFor("Step 1 of", substring = true)
+        rule.onNodeWithText("Lips tired").assertExists()
+        rule.onNodeWithText("+1 min").performClick()
+        click("End session")
+        waitFor("Session done")
+        click("Save")
+        waitFor("Start ·", substring = true)
+
+        // Tabs and main screens compose without crashing.
+        click("Tools"); waitFor("Tuner")
+        click("Library"); waitFor("Ode to Joy", substring = true)
+        click("Ode to Joy", substring = true); waitFor("Listen")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Progress"); waitFor("Rank")
+        click("Rank"); waitFor("Weakest pillar", substring = true)
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Weekly review"); waitFor("Sessions:", substring = true)
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("History"); waitFor("Week of", substring = true)
+    }
+}

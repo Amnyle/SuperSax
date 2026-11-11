@@ -128,3 +128,14 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Scale recognition** levels: accidentals ≤ 1, 2, 4, 6, 6; minors from level 3, modes at level 5; questions rotate between "name from key signature", "name from notes" and "build from root". By-ear questions were not added.
 - **Fingering diagram**: a schematic, not a picture of a real sax; standard fingerings follow common charts; low B♭/B shown without the right-hand pinky.
 - **Phone drills available**: reading, scale recognition, theory lesson, fingering; Today links each planned phone session to its screen.
+
+## Advanced listening and polish (phase 5)
+
+- **Overtone milestone** = all six targets verified: low D, C and B♭ fingerings sounding their 2nd and 3rd partials (expected = fingered concert frequency × partial, ±35¢, held 1 s). Each verified target is stored as a drill result, so progress survives restarts.
+- **Altissimo check**: written G6–D7, ±40¢, held 2 s → tuner-verified Range note. The YIN search range (to 1500 Hz) covers written D7 (concert F6, 1397 Hz).
+- **Slow-down player**: Media3 playback speed 50–100 percent in 5 percent steps, pitch unchanged; A–B loop enforced by polling every 50 ms; files are referenced by persisted SAF URIs (not copied); named loops are stored with the reference (and backed up; the files themselves are not).
+- **Scale checker**: note changes need > 60¢ for 45 ms (hysteresis), notes under 70 ms are dropped, alignment by edit distance; "clean" only if every expected note is matched with nothing wrong, missing or extra. Expected = the scale over the player's range, up and down. It writes nothing until the player taps "clean run" or "mistake"; inside a running session the run joins that session, otherwise it is saved as a short session and goes through the normal adaptation rules (a confirmed clean pair is self-reported, like any other).
+- **UI tests on the JVM**: Robolectric 4.17 (SDK 35 runtime) with Compose test rules runs the real app; tests fork one JVM per class because DataStore keeps one instance per process. Robolectric downloads its Android jar from the same Maven Central mirror as the build.
+- **Render checks**: `RenderCheck` draws the staff and the Canvas widgets to PNGs (copies in `docs/renders/`); this caught clipped bar lines and too-wide note spacing, now fixed.
+- **Fingering diagram orientation**: seen from the player (palm keys and the left pinky table on the left, side keys and right pinky keys on the right).
+- **Phases 3 and 4 were committed together** because they share wiring (container, navigation) and were finished at the same time; the build and tests were green at that commit.

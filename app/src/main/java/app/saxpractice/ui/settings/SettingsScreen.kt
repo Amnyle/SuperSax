@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +59,14 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
                 Text(stringResource(R.string.instrument_fixed_hint), style = MaterialTheme.typography.bodySmall)
                 Stepper(stringResource(R.string.reference_pitch), s.a4Hz.toInt(), { v -> vm.update { it.copy(a4Hz = v.toDouble()) } }, 430..450) {
                     stringResource(R.string.hz_value, it)
+                }
+                Text(stringResource(R.string.synth_timbre))
+                Row {
+                    app.saxpractice.domain.backup.SynthTimbre.entries.forEach { t ->
+                        androidx.compose.material3.FilterChip(selected = s.synthTimbre == t, onClick = { vm.update { it.copy(synthTimbre = t) } },
+                            label = { Text(stringResource(if (t == app.saxpractice.domain.backup.SynthTimbre.SINE) R.string.timbre_sine else R.string.timbre_soft)) },
+                            modifier = Modifier.heightIn(min = 48.dp).padding(end = 8.dp))
+                    }
                 }
             }
             SectionCard(stringResource(R.string.settings_sessions)) {

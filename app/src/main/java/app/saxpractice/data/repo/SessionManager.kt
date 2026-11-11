@@ -137,6 +137,22 @@ class SessionManager(
         return record.id
     }
 
+    /**
+     * Logs scale runs confirmed by the player outside a session (scale checker) as a short session,
+     * applying the same adaptation rules. Inside a running session, runs go into that session instead.
+     */
+    suspend fun logRuns(runs: List<RunRecord>, durationSec: Int) {
+        if (_run.value != null) {
+            runs.forEach { r -> update { cur, _ -> cur.recordRun(r.scaleKey, r.bpm, r.clean) } }
+            return
+        }
+        val now = clock.nowMs()
+        val record = SessionRecord(UUID.randomUUID().toString(), now - durationSec * 1000L, now, null, null, null,
+            plannedSec = durationSec, playedSec = durationSec, note = "scale checker", reedId = settings.current().currentReedId, runs = runs)
+        practice.saveSession(record)
+        applyAdaptation(record, now)
+    }
+
     /** Abandons the running session without saving. */
     suspend fun discard() {
         settings.dndPrevious()?.let { quiet.restore(it); settings.setDndPrevious(null) }

@@ -26,6 +26,14 @@ import app.saxpractice.ui.learn.LessonsScreen
 import app.saxpractice.ui.learn.LessonScreen
 import app.saxpractice.ui.learn.ScaleRecognitionScreen
 import app.saxpractice.ui.learn.FingeringScreen
+import app.saxpractice.ui.advanced.OvertoneScreen
+import app.saxpractice.ui.advanced.AltissimoScreen
+import app.saxpractice.ui.advanced.SlowDownScreen
+import app.saxpractice.ui.advanced.ScaleCheckerScreen
+import androidx.compose.material.icons.filled.SlowMotionVideo
+import androidx.compose.material.icons.filled.Waves
+import androidx.compose.material.icons.filled.North
+import androidx.compose.material.icons.filled.Science
 import androidx.compose.material.icons.filled.Piano
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.TouchApp
@@ -57,6 +65,10 @@ object ExtraRoutes {
     const val SCALE_REC = "scale_recognition"
     const val FINGERING = "fingering"
     fun lesson(id: String) = "lesson/$id"
+    const val OVERTONES = "overtones"
+    const val ALTISSIMO = "altissimo"
+    const val SLOW_DOWN = "slow_down"
+    const val SCALE_CHECKER = "scale_checker"
     fun piece(id: String) = "piece/$id"
     fun pdf(file: String) = "pdf/$file"
     fun recordings(pieceId: String? = null) = if (pieceId == null) "recordings" else "recordings?piece=$pieceId"
@@ -89,6 +101,10 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     }
     composable(ExtraRoutes.SCALE_REC) { ScaleRecognitionScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.FINGERING) { FingeringScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.OVERTONES) { OvertoneScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.ALTISSIMO) { AltissimoScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.SLOW_DOWN) { SlowDownScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.SCALE_CHECKER) { ScaleCheckerScreen(onBack = { nav.popBackStack() }) }
 }
 
 fun extraPhoneDrillRoute(type: ExerciseType): String? = when (type) {
@@ -116,5 +132,10 @@ fun extraToolEntries(nav: NavHostController): List<HubEntry> = listOf(
     HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Default.Piano) { nav.navigate(ExtraRoutes.SCALE_REC) },
     HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Default.School) { nav.navigate(ExtraRoutes.LESSONS) },
     HubEntry(stringResource(R.string.ex_fingering), stringResource(R.string.fingering_sub), Icons.Default.TouchApp) { nav.navigate(ExtraRoutes.FINGERING) },
-)
+    HubEntry(stringResource(R.string.slow_down), stringResource(R.string.slow_down_sub), Icons.Default.SlowMotionVideo) { nav.navigate(ExtraRoutes.SLOW_DOWN) },
+    HubEntry(stringResource(R.string.overtones), stringResource(R.string.overtones_sub), Icons.Default.Waves) { nav.navigate(ExtraRoutes.OVERTONES) },
+    HubEntry(stringResource(R.string.altissimo), stringResource(R.string.altissimo_sub), Icons.Default.North) { nav.navigate(ExtraRoutes.ALTISSIMO) },
+) + if (LocalSettings.current.experimental) listOf(
+    HubEntry(stringResource(R.string.scale_checker), stringResource(R.string.scale_checker_sub), Icons.Default.Science) { nav.navigate(ExtraRoutes.SCALE_CHECKER) },
+) else emptyList()
 

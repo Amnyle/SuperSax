@@ -67,7 +67,7 @@ fun TunerDisplay(reading: TunerReading, tolerance: Double = 10.0, large: Boolean
 @Composable
 fun CentsNeedle(cents: Double?, tolerance: Double, modifier: Modifier) {
     val outline = MaterialTheme.colorScheme.onSurfaceVariant
-    val desc = cents?.let { "${it.roundToInt()} cents" } ?: ""
+    val desc = cents?.let { stringResource(R.string.cents_description, it.roundToInt()) } ?: stringResource(R.string.tuner_play_a_note)
     Canvas(modifier.semantics { contentDescription = desc }) {
         val cx = size.width / 2
         val cy = size.height * 0.95f
@@ -95,7 +95,8 @@ fun CentsNeedle(cents: Double?, tolerance: Double, modifier: Modifier) {
 fun TraceChart(trace: List<Float>, traceHz: Double, tolerance: Double, modifier: Modifier = Modifier.fillMaxWidth().height(140.dp)) {
     val line = MaterialTheme.colorScheme.primary
     val axis = MaterialTheme.colorScheme.onSurfaceVariant
-    Canvas(modifier.semantics { contentDescription = "trace" }) {
+    val desc = stringResource(R.string.trace_description, tolerance.roundToInt())
+    Canvas(modifier.semantics { contentDescription = desc }) {
         val range = maxOf(30.0, (trace.maxOfOrNull { abs(it.toDouble()) } ?: 0.0) + 5).toFloat()
         fun y(c: Float) = size.height / 2 - c / range * size.height / 2
         drawRect(InTuneGreen.copy(alpha = 0.18f), Offset(0f, y(tolerance.toFloat())), Size(size.width, y(-tolerance.toFloat()) - y(tolerance.toFloat())))

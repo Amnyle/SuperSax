@@ -22,28 +22,29 @@ import kotlin.math.hypot
 private data class KeyShape(val x: Float, val y: Float, val w: Float, val h: Float, val round: Boolean)
 
 private val SHAPES = mapOf(
+    // Seen from the player: left hand on top, the player's left on the left.
     SaxKey.FRONT_F to KeyShape(0.45f, 0.05f, 0.10f, 0.03f, false),
-    SaxKey.OCT to KeyShape(0.22f, 0.12f, 0.08f, 0.05f, false),
-    SaxKey.PALM_D to KeyShape(0.70f, 0.05f, 0.10f, 0.035f, false),
-    SaxKey.PALM_EB to KeyShape(0.72f, 0.10f, 0.10f, 0.035f, false),
-    SaxKey.PALM_F to KeyShape(0.70f, 0.15f, 0.10f, 0.035f, false),
+    SaxKey.OCT to KeyShape(0.10f, 0.13f, 0.08f, 0.05f, false),
+    SaxKey.PALM_D to KeyShape(0.24f, 0.05f, 0.10f, 0.035f, false),
+    SaxKey.PALM_EB to KeyShape(0.22f, 0.10f, 0.10f, 0.035f, false),
+    SaxKey.PALM_F to KeyShape(0.24f, 0.15f, 0.10f, 0.035f, false),
     SaxKey.L1 to KeyShape(0.45f, 0.13f, 0.13f, 0.065f, true),
     SaxKey.BIS to KeyShape(0.45f, 0.195f, 0.06f, 0.025f, true),
     SaxKey.L2 to KeyShape(0.45f, 0.26f, 0.13f, 0.065f, true),
     SaxKey.L3 to KeyShape(0.45f, 0.36f, 0.13f, 0.065f, true),
-    SaxKey.G_SHARP to KeyShape(0.68f, 0.36f, 0.10f, 0.035f, false),
-    SaxKey.LOW_C_SHARP to KeyShape(0.68f, 0.42f, 0.10f, 0.035f, false),
-    SaxKey.LOW_B to KeyShape(0.63f, 0.475f, 0.08f, 0.035f, false),
-    SaxKey.LOW_BB to KeyShape(0.74f, 0.475f, 0.08f, 0.035f, false),
-    SaxKey.SIDE_E to KeyShape(0.24f, 0.56f, 0.08f, 0.04f, false),
-    SaxKey.SIDE_C to KeyShape(0.24f, 0.62f, 0.08f, 0.04f, false),
-    SaxKey.SIDE_BB to KeyShape(0.24f, 0.68f, 0.08f, 0.04f, false),
-    SaxKey.HIGH_FSHARP to KeyShape(0.14f, 0.62f, 0.07f, 0.04f, false),
+    SaxKey.G_SHARP to KeyShape(0.24f, 0.40f, 0.10f, 0.035f, false),
+    SaxKey.LOW_C_SHARP to KeyShape(0.24f, 0.455f, 0.10f, 0.035f, false),
+    SaxKey.LOW_B to KeyShape(0.18f, 0.51f, 0.08f, 0.035f, false),
+    SaxKey.LOW_BB to KeyShape(0.29f, 0.51f, 0.08f, 0.035f, false),
+    SaxKey.SIDE_E to KeyShape(0.72f, 0.55f, 0.08f, 0.04f, false),
+    SaxKey.SIDE_C to KeyShape(0.72f, 0.61f, 0.08f, 0.04f, false),
+    SaxKey.SIDE_BB to KeyShape(0.72f, 0.67f, 0.08f, 0.04f, false),
+    SaxKey.HIGH_FSHARP to KeyShape(0.84f, 0.61f, 0.07f, 0.04f, false),
     SaxKey.R1 to KeyShape(0.45f, 0.60f, 0.13f, 0.065f, true),
     SaxKey.R2 to KeyShape(0.45f, 0.70f, 0.13f, 0.065f, true),
     SaxKey.R3 to KeyShape(0.45f, 0.80f, 0.13f, 0.065f, true),
-    SaxKey.LOW_EB to KeyShape(0.66f, 0.88f, 0.10f, 0.035f, false),
-    SaxKey.LOW_C to KeyShape(0.66f, 0.94f, 0.10f, 0.035f, false),
+    SaxKey.LOW_EB to KeyShape(0.68f, 0.88f, 0.10f, 0.035f, false),
+    SaxKey.LOW_C to KeyShape(0.68f, 0.94f, 0.10f, 0.035f, false),
 )
 
 /**

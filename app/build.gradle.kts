@@ -42,7 +42,14 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
-        unitTests.all { it.maxHeapSize = "2g" }
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            it.maxHeapSize = "3g"
+            // One JVM per test class: DataStore keeps one instance per process, so app state must not leak between tests.
+            it.forkEvery = 1
+            // Robolectric fetches the Android framework jar at run time; use the same Central mirror as the build.
+            it.systemProperty("robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2")
+        }
     }
     sourceSets {
         // Unit tests read the real asset files (rank config, pieces, lessons) from disk.
@@ -89,4 +96,9 @@ dependencies {
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

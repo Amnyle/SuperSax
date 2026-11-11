@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,8 +59,9 @@ fun PdfScreen(fileName: String, onBack: () -> Unit) {
         if (failed) { ErrorBanner(stringResource(R.string.pdf_failed)); return@ScreenScaffold }
         val list = pages ?: run { Text(stringResource(R.string.loading), Modifier.padding(padding).padding(16.dp)); return@ScreenScaffold }
         LazyColumn(Modifier.padding(padding)) {
-            items(list) { bmp ->
-                Image(bmp.asImageBitmap(), contentDescription = null, contentScale = ContentScale.FillWidth,
+            items(list.size) { i ->
+                val bmp = list[i]
+                Image(bmp.asImageBitmap(), contentDescription = stringResource(R.string.pdf_page, i + 1, list.size), contentScale = ContentScale.FillWidth,
                     modifier = Modifier.fillMaxWidth().background(Color.White).padding(bottom = 8.dp))
             }
         }

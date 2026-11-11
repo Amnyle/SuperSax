@@ -101,7 +101,12 @@ private fun goalDetail(g: GoalRecord, p: GoalProgress): String = when (g.type) {
     GoalType.TIME -> stringResource(R.string.goal_time_detail, p.current, p.target)
     GoalType.TEMPO -> stringResource(R.string.goal_tempo_detail, scaleLabel(g.scaleKey), p.current, p.target)
     GoalType.SONG_MILESTONE -> stringResource(R.string.goal_song_detail, stageLabel(PieceStage.entries[p.current.coerceIn(0, 3)]), stageLabel(PieceStage.entries[p.target.coerceIn(0, 3)]))
-    GoalType.RECORDING -> stringResource(if (p.done) R.string.goal_recording_done else R.string.goal_recording_todo, g.benchmarkKey ?: "")
+    GoalType.RECORDING -> {
+        val key = g.benchmarkKey ?: ""
+        val name = if (key.contains(":")) scaleLabel(key)
+        else app.saxpractice.ui.nav.LocalContainer.current.libraryService.piece(key)?.file?.title?.get(app.saxpractice.LocaleHelper.effective(androidx.compose.ui.platform.LocalContext.current)) ?: key
+        stringResource(if (p.done) R.string.goal_recording_done else R.string.goal_recording_todo, name)
+    }
 }
 
 @Composable
@@ -125,6 +130,10 @@ private fun AddGoalDialog(onAdd: (GoalRecord) -> Unit, onDismiss: () -> Unit) {
     var weeks by remember { mutableStateOf(0) }
     var benchmark by remember { mutableStateOf("") }
     var pickScale by remember { mutableStateOf(false) }
+    var pickBenchScale by remember { mutableStateOf(false) }
+    var pickBenchPiece by remember { mutableStateOf(false) }
+    var benchmarkPieceTitle by remember { mutableStateOf<String?>(null) }
+    val language = app.saxpractice.LocaleHelper.effective(androidx.compose.ui.platform.LocalContext.current)
     val typeLabels = mapOf(
         GoalType.TIME to R.string.goal_type_time, GoalType.TEMPO to R.string.goal_type_tempo,
         GoalType.SONG_MILESTONE to R.string.goal_type_song, GoalType.RECORDING to R.string.goal_type_recording,
@@ -153,7 +162,9 @@ private fun AddGoalDialog(onAdd: (GoalRecord) -> Unit, onDismiss: () -> Unit) {
                     GoalType.SONG_MILESTONE -> OutlinedTextField(title, { title = it }, label = { Text(stringResource(R.string.onb_song_title)) }, singleLine = true)
                     GoalType.RECORDING -> {
                         OutlinedTextField(title, { title = it }, label = { Text(stringResource(R.string.goal_title)) }, singleLine = true)
-                        OutlinedTextField(benchmark, { benchmark = it }, label = { Text(stringResource(R.string.benchmark_key)) }, singleLine = true)
+                        Text(stringResource(R.string.benchmark_key))
+                        TextButton(onClick = { pickBenchScale = true }) { Text(if (benchmark.contains(":")) scaleLabel(benchmark) else stringResource(R.string.pick_scale)) }
+                        TextButton(onClick = { pickBenchPiece = true }) { Text(benchmarkPieceTitle ?: stringResource(R.string.pick_piece)) }
                     }
                 }
                 if (type != GoalType.TIME) Stepper(stringResource(R.string.deadline_weeks), weeks, { weeks = it }, 0..52) {
@@ -183,4 +194,9 @@ private fun AddGoalDialog(onAdd: (GoalRecord) -> Unit, onDismiss: () -> Unit) {
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
     )
     if (pickScale) ScalePickerDialog(onPick = { scaleKey = it; pickScale = false }, onDismiss = { pickScale = false })
+    if (pickBenchScale) ScalePickerDialog(onPick = { benchmark = it; benchmarkPieceTitle = null; pickBenchScale = false }, onDismiss = { pickBenchScale = false })
+    if (pickBenchPiece) app.saxpractice.ui.library.PiecePickerDialog(
+        onPick = { benchmark = it.id; benchmarkPieceTitle = it.file.title.get(language); pickBenchPiece = false },
+        onDismiss = { pickBenchPiece = false },
+    )
 }
