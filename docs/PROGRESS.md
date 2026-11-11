@@ -63,3 +63,9 @@ Not done:
 
 Built: GitHub releases updater (check, download with progress, signature and version verification, PackageInstaller install, daily background check with a notification, skip a version), Settings → App updates, a release workflow that tests, signs and publishes every push to `main`.
 Verified: 96 unit tests (including version comparison and release selection), lint 0 errors, a locally signed release APK 1.0.0 (certificate checked with apksigner). Not verifiable here: the actual download and install on a phone, and the GitHub Actions run (it needs the signing secret first).
+
+## After phase 5: Java core + Kotlin UI, and the name Super Sax
+
+Built: the app is now Super Sax (`app.supersax`). The core is Java (74 Java files: pitch, scales, YIN and audio analysis, synth and metronome, generator, adaptation, planner, rank, library and MusicXML, notation layout, drills and quiz checking, goals, weekly review, release rules, backup zip, Android audio engine, microphone, recorder and player). The UI, data layer and serializable models stay Kotlin. See DECISIONS.md, "Java core, Kotlin UI".
+Verified: after every group, `assembleDebug` green and `testDebugUnitTest` **96 tests, 0 failures**; `lintDebug` 0 errors at the end. Not verifiable here: audio on a real phone (same as before, see DEVICE_CHECKS.md).
+

@@ -149,3 +149,16 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Signing**: a dedicated release key (RSA 4096) kept out of the repository. GitHub Actions reads it from the secret `SAX_KEYSTORE_BASE64`; the keystore password is fixed in the workflow because the keystore file itself is the secret.
 - **Versions**: CI publishes `v1.0.<run number>` with versionCode 100 + run number; the first hand-built release is 1.0.0 (versionCode 100). Comparison is numeric part by part.
 - **Release trigger**: every push to `main` runs the unit tests, builds the signed APK and publishes a release.
+
+## Java core, Kotlin UI (after phase 5, at the owner's request)
+
+- **Split**: the owner wants "Java plus Kotlin", like SuperHealth. Java holds the engines and rules: `domain/pitch`, `scale`, `audio` (YIN, pitch tracker, hold analysis, metronome, synth, scale checker), `generator`, `planner`, `rank`, `library`, `drills` (checking and quiz), `goals`, `review`, `update` (release rules), the backup zip, `notation` layout and the Android `audio/` classes.
+- **Stays Kotlin**: Compose screens and ViewModels, Room/DataStore/repositories (KSP and coroutines), the Glance widget, the updater worker (coroutines), and every `@Serializable` model (records, program, player state, session run state, configs, backup data) because kotlinx.serialization needs Kotlin classes.
+- **Same sources folder**: Java and Kotlin both live in `src/main/java`; AGP compiles them together, so either side calls the other.
+- **API shape for Java**: Kotlin `copy(...)` became `withX(...)` methods; default arguments became overloads (Kotlin callers lost named arguments on Java methods, so calls are positional or use a dedicated method, e.g. `AudioEngine.setBeatsPerBar`); objects became `final` classes with static methods; nullable values use `org.jetbrains.annotations.Nullable` so Kotlin sees `T?`. Java value classes implement `equals`/`hashCode` so `StateFlow` still skips duplicates.
+- **Behaviour unchanged**: the port was done group by group, each committed only with all 96 unit tests green; the YIN accuracy numbers are identical to the Kotlin version. `InputStream.transferTo` is avoided (API 33) because minSdk is 26.
+
+## Name
+
+- **Super Sax**, application ID `app.supersax` (the owner had not installed a build yet, so the ID changed with the name).
+

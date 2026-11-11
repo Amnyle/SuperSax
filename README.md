@@ -1,6 +1,6 @@
 # Super Sax
 
-An Android app (Kotlin, Jetpack Compose, Material 3) that helps a beginner **alto saxophonist** set goals for,
+An Android app (Java core, Kotlin and Jetpack Compose UI, Material 3) that helps a beginner **alto saxophonist** set goals for,
 plan, run and track practice. Everything stays on the phone: no account, no analytics, no ads; the only network
 use is the optional update check on GitHub. English and French. The full specification is [`docs/SPEC.md`](docs/SPEC.md).
 
@@ -14,7 +14,7 @@ use is the optional update check on GitHub. English and French. The full specifi
   (landscape, large text), screen kept on, optional Do Not Disturb. End-of-session summary with tiredness and note.
 - **Adaptation**: +5 BPM after two clean runs, new scales unlock when the last two are solid, long tones grow only
   without early fatigue (and with low tuner drift), endurance cap grows over time.
-- **Tuner** (own YIN pitch detection in Kotlin): written note, cents needle, hold reports with the pitch trace,
+- **Tuner** (own YIN pitch detection in Java): written note, cents needle, hold reports with the pitch trace,
   per-note tendencies over weeks. **Match-the-note**, **metronome** (sample-accurate) with tempo trainer, **drone**.
 - **Phone drills** (finite, then "done for today"): note reading, scale recognition, 13 theory lessons with
   free-form quizzes, fingering trainer with a drawn key diagram. Scheduled at most 20 percent of sax time.
@@ -76,11 +76,11 @@ python3 tools/validate_lessons.py
 
 | Path | What |
 |---|---|
-| `app/src/main/java/app/supersax/domain/` | Pure Kotlin (no Android imports, enforced by a test): pitch and transposition, scales, program model, generator, adaptation, planner, session state machine, YIN, hold analysis, metronome/synth, rank, library (score, difficulty, matching, MusicXML), drills and lessons, weekly review, backup codec |
+| `app/src/main/java/app/supersax/domain/` | Pure logic in Java, serializable data models in Kotlin (no Android imports, enforced by a test): pitch and transposition, scales, program model, generator, adaptation, planner, session state machine, YIN, hold analysis, metronome/synth, rank, library (score, difficulty, matching, MusicXML), drills and lessons, weekly review, backup codec |
 | `.../data/` | Room database (schema in `app/schemas/`), repositories, DataStore settings, asset loader, backup, session manager, library and rank services |
-| `.../audio/` | AudioRecord capture, AudioTrack engine, MediaRecorder, Media3 player |
-| `.../notation/` | Staff layout (pure, tested) and the Compose Canvas staff, staff input |
-| `.../ui/` | Screens and ViewModels by feature; `AppContainer.kt` is the manual dependency injection |
+| `.../audio/` | Java: AudioRecord capture, AudioTrack engine, MediaRecorder, Media3 player |
+| `.../notation/` | Staff layout in Java (pure, tested); the Compose Canvas staff and staff input in Kotlin |
+| `.../ui/` | Kotlin: screens and ViewModels by feature; `AppContainer.kt` is the manual dependency injection |
 | `app/src/main/assets/` | Data files: generator config, exercises, rank thresholds, pieces, lessons, fingerings |
 | `tools/` | String-file helper (keeps EN/FR in sync), content validators, test summary |
 | `docs/` | Spec, progress, decisions, content licences, device checks, file formats, rendered widget images |
@@ -107,6 +107,8 @@ see [`docs/DEVICE_CHECKS.md`](docs/DEVICE_CHECKS.md).
 
 - Concert pitch is stored everywhere (scales, pieces, holds); the UI shows written alto pitch. Written keys above
   six sharps are respelled (concert E major is written D♭ major).
+- Java core + Kotlin UI: engines and rules (pitch, YIN, synth, generator, planner, rank, library, drills, goals,
+  review, backup zip, audio plumbing) are Java; Compose UI, ViewModels, Room/DataStore and serializable models are Kotlin.
 - AGP 9.5 / Kotlin 2.4 / compileSdk 37; manual DI; programs stored as JSON documents in Room; settings as one
   JSON document in DataStore; domain records double as the backup DTO layer.
 - YIN uses a 70 ms window with an FFT difference function and a noise-robust dip refinement (worst error
