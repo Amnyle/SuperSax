@@ -8,4 +8,6 @@ build/
 .externalNativeBuild
 .cxx
 .kotlin/
-SaxPractice-debug.apk
+*.jks
+*.keystore
+SaxPractice-*.apk

@@ -104,6 +104,7 @@ fun SettingsScreen(onBack: () -> Unit, onRerunOnboarding: () -> Unit, onPrograms
                     Text(stringResource(msg, backup.messageArg ?: ""), color = MaterialTheme.colorScheme.primary)
                 }
             }
+            SectionCard(stringResource(R.string.updates)) { UpdatesSection(s, vm::update) }
             Text(stringResource(R.string.privacy_note), style = MaterialTheme.typography.bodySmall)
         }
     }

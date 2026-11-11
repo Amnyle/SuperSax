@@ -139,3 +139,13 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Render checks**: `RenderCheck` draws the staff and the Canvas widgets to PNGs (copies in `docs/renders/`); this caught clipped bar lines and too-wide note spacing, now fixed.
 - **Fingering diagram orientation**: seen from the player (palm keys and the left pinky table on the left, side keys and right pinky keys on the right).
 - **Phases 3 and 4 were committed together** because they share wiring (container, navigation) and were finished at the same time; the build and tests were green at that commit.
+
+## In-app updates (after phase 5, at the owner's request)
+
+- **Network use, against the original spec**: the owner asked for in-app updates "like SuperHealth", which needs `INTERNET` and `REQUEST_INSTALL_PACKAGES`. The only network call is the GitHub releases check and the APK download; the daily check can be turned off in Settings, and the privacy note says so.
+- **Source**: GitHub releases of the public repository `Amnyle/SuperSax` (no account, no token), the same model as SuperHealth.
+- **Safety checks before installing**: complete download, same package name, same signing certificate as the installed app, newer version; otherwise the file is deleted and a plain message is shown.
+- **Install**: PackageInstaller session; on Android 12+ later updates can install without a prompt once Sax Practice installed the current version; Android asks once to allow installs from the app.
+- **Signing**: a dedicated release key (RSA 4096) kept out of the repository. GitHub Actions reads it from the secret `SAX_KEYSTORE_BASE64`; the keystore password is fixed in the workflow because the keystore file itself is the secret.
+- **Versions**: CI publishes `v1.0.<run number>` with versionCode 100 + run number; the first hand-built release is 1.0.0 (versionCode 100). Comparison is numeric part by part.
+- **Release trigger**: every push to `main` runs the unit tests, builds the signed APK and publishes a release.

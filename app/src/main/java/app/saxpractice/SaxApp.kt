@@ -11,5 +11,6 @@ class SaxApp : Application() {
         super.onCreate()
         container = AppContainer(this)
         container.appScope.launch { container.sessions.restore() }
+        container.appScope.launch { app.saxpractice.update.Updater.schedule(this@SaxApp, container.settings.current().updateCheck) }
     }
 }

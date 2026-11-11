@@ -1,8 +1,8 @@
 # Sax Practice
 
 An Android app (Kotlin, Jetpack Compose, Material 3) that helps a beginner **alto saxophonist** set goals for,
-plan, run and track practice. Everything stays on the phone: no account, **no internet permission**, no
-analytics, no ads. English and French. The full specification is [`docs/SPEC.md`](docs/SPEC.md).
+plan, run and track practice. Everything stays on the phone: no account, no analytics, no ads; the only network
+use is the optional update check on GitHub. English and French. The full specification is [`docs/SPEC.md`](docs/SPEC.md).
 
 ## What it does
 
@@ -28,6 +28,14 @@ analytics, no ads. English and French. The full specification is [`docs/SPEC.md`
   A–B loops), **overtone and altissimo verification**, experimental **scale checker**.
 - **Backup**: a `.zip` (data, imports, optional recordings) exported and imported through the system file picker.
 - Home-screen **widget** (start today's session) and opt-in **reminders** (off by default).
+
+## Install and update
+
+Install the APK from the [releases page](https://github.com/Amnyle/SuperSax/releases). After that the app updates
+itself: Settings → **App updates** checks GitHub every day (can be turned off), downloads the new release, checks
+its signature and installs it. Every push to `main` builds and publishes a new signed release
+(`.github/workflows/release.yml`); it needs the repository secret `SAX_KEYSTORE_BASE64` (the release signing key,
+never committed).
 
 ## Build, run, test
 

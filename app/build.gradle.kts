@@ -15,13 +15,29 @@ android {
         applicationId = "app.saxpractice"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        // Release builds get these from CI (-PversionCode=... -PversionName=...).
+        versionCode = (project.findProperty("versionCode") as String?)?.toInt() ?: 1
+        versionName = (project.findProperty("versionName") as String?) ?: "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        // The release key comes from the environment (a GitHub Actions secret); it is never committed.
+        // Every release must be signed with the same key, or Android refuses the update.
+        create("release") {
+            val store = System.getenv("SAX_KEYSTORE_FILE")
+            if (store != null) {
+                storeFile = file(store)
+                storePassword = System.getenv("SAX_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("SAX_KEY_ALIAS") ?: "saxpractice"
+                keyPassword = System.getenv("SAX_KEY_PASSWORD") ?: System.getenv("SAX_KEYSTORE_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
+            if (System.getenv("SAX_KEYSTORE_FILE") != null) signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }

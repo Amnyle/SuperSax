@@ -21,6 +21,8 @@ class MainActivity : ComponentActivity() {
     private var appliedLanguage: String = "system"
     /** Incremented each time the widget asks to start today's session. */
     private val startSignal = mutableIntStateOf(0)
+    /** Incremented when the update notification asks to open the update settings. */
+    private val updatesSignal = mutableIntStateOf(0)
 
     override fun attachBaseContext(newBase: Context) {
         val app = newBase.applicationContext as SaxApp
@@ -33,13 +35,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val initial = container.settings.currentBlocking()
         if (intent?.getBooleanExtra(EXTRA_START_SESSION, false) == true && savedInstanceState == null) startSignal.intValue++
+        if (intent?.getBooleanExtra(EXTRA_OPEN_UPDATES, false) == true && savedInstanceState == null) updatesSignal.intValue++
         setContent {
             val settings by container.settings.settings.collectAsStateWithLifecycle(initial)
             // Switching language recreates the activity so every string changes.
             LaunchedEffect(settings.language) { if (settings.language != appliedLanguage) recreate() }
             CompositionLocalProvider(LocalContainer provides container, LocalSettings provides settings) {
                 SaxTheme(settings.theme) {
-                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, onRecreate = { recreate() })
+                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, updatesSignal = updatesSignal.intValue, onRecreate = { recreate() })
                 }
             }
         }
@@ -48,9 +51,11 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         if (intent.getBooleanExtra(EXTRA_START_SESSION, false)) startSignal.intValue++
+        if (intent.getBooleanExtra(EXTRA_OPEN_UPDATES, false)) updatesSignal.intValue++
     }
 
     companion object {
         const val EXTRA_START_SESSION = "start_session"
+        const val EXTRA_OPEN_UPDATES = "open_updates"
     }
 }

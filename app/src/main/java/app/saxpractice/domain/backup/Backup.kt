@@ -55,6 +55,10 @@ data class SettingsRecord(
     val synthTimbre: SynthTimbre = SynthTimbre.SINE,
     val currentReedId: String? = null,
     val currentMouthpieceId: String? = null,
+    /** Daily check of GitHub releases for a newer version (the only network use of the app). */
+    val updateCheck: Boolean = true,
+    /** A version the player chose to skip. */
+    val updateSkip: String? = null,
 )
 
 /** The whole user dataset, as stored in `backup.json`. */

@@ -269,7 +269,7 @@
     <string name="backup_confirm_title">Replace all current data?</string>
     <string name="backup_confirm_body">The backup holds %1$d sessions, %2$d programs and %3$d recordings. Your current data will be replaced.</string>
     <string name="backup_replace">Replace</string>
-    <string name="privacy_note">Sax Practice has no internet access: no account, no analytics, no ads.</string>
+    <string name="privacy_note">No account, no analytics, no ads. The only network use is the optional update check on GitHub.</string>
     <string name="tools">Tools</string>
     <string name="progress">Progress</string>
     <string name="goals_sub">Time, tempo, songs and recordings</string>
@@ -559,4 +559,28 @@
     <string name="synth_timbre">Reference tone sound</string>
     <string name="timbre_sine">Clean sine</string>
     <string name="timbre_soft">Softer tone</string>
+    <string name="updates">App updates</string>
+    <string name="update_installed">Installed version: %1$s</string>
+    <string name="update_daily">Check for updates every day</string>
+    <string name="update_daily_hint">Asks GitHub for the latest release. This is the only time the app uses the internet.</string>
+    <string name="update_checking">Checking…</string>
+    <string name="update_up_to_date">You have the latest version.</string>
+    <string name="update_available_title">Sax Practice %1$s is available</string>
+    <string name="update_tap_to_install">Tap to update</string>
+    <string name="update_allow_hint">Android needs your permission once for Sax Practice to install its own updates.</string>
+    <string name="update_allow">Allow updates</string>
+    <string name="update_install">Update to %1$s</string>
+    <string name="update_skip">Skip this version</string>
+    <string name="update_downloading">Downloading… %1$d%%</string>
+    <string name="update_installing">Installing %1$s…</string>
+    <string name="update_check_now">Check now</string>
+    <string name="update_all_releases">All releases</string>
+    <string name="update_fail_network">Could not reach GitHub. Check the connection and try again.</string>
+    <string name="update_fail_no_release">No version has been published yet.</string>
+    <string name="update_fail_incomplete">The download was incomplete. Try again.</string>
+    <string name="update_fail_not_this_app">The downloaded file is not Sax Practice.</string>
+    <string name="update_fail_signature">This version is signed with a different key than the installed app. Uninstall once (export a backup first), then install it from the releases page.</string>
+    <string name="update_fail_not_newer">This version is not newer than the one installed.</string>
+    <string name="update_fail_install">Android could not install the update.</string>
+    <string name="update_fail_cancelled">Update cancelled. You can try again.</string>
 </resources>

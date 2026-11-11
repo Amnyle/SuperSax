@@ -58,3 +58,8 @@ Verified:
 Not done:
 - By-ear scale recognition (the spec lists it as a later addition "if time allows").
 - Nothing was run on a real phone or emulator (no KVM in the build container): audio latency, microphone behaviour, notifications, widget, Do Not Disturb, PDF and file pickers remain unverified on a device; see `docs/DEVICE_CHECKS.md`.
+
+## After phase 5: in-app updates
+
+Built: GitHub releases updater (check, download with progress, signature and version verification, PackageInstaller install, daily background check with a notification, skip a version), Settings → App updates, a release workflow that tests, signs and publishes every push to `main`.
+Verified: 96 unit tests (including version comparison and release selection), lint 0 errors, a locally signed release APK 1.0.0 (certificate checked with apksigner). Not verifiable here: the actual download and install on a phone, and the GitHub Actions run (it needs the signing secret first).
