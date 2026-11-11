@@ -7,10 +7,6 @@ import app.supersax.domain.drills.FingeringDrill
 import app.supersax.domain.drills.Lesson
 import app.supersax.domain.drills.QuestionType
 import app.supersax.domain.drills.Quiz
-import app.supersax.domain.drills.Quiz.intAnswer
-import app.supersax.domain.drills.Quiz.noteAnswer
-import app.supersax.domain.drills.Quiz.notesAnswer
-import app.supersax.domain.drills.Quiz.staffAnswer
 import app.supersax.domain.drills.SaxKey
 import app.supersax.domain.drills.ScaleRecognition
 import app.supersax.domain.pitch.Letter
@@ -43,10 +39,10 @@ class LearningTest {
                         assertTrue(Quiz.check(q, Answer.Text(accept.fr.first().uppercase() + " !"), "fr"), "${l.id}/${q.id}")
                         assertFalse(Quiz.check(q, Answer.Text("zzz"), "en"))
                     }
-                    QuestionType.NUMBER -> assertTrue(Quiz.check(q, Answer.Number(q.intAnswer()!!), "en"))
-                    QuestionType.NOTE -> assertTrue(Quiz.check(q, Answer.Note(q.noteAnswer()!!), "en"))
-                    QuestionType.NOTES -> assertTrue(Quiz.check(q, Answer.Notes(q.notesAnswer()), "en"))
-                    QuestionType.STAFF_NOTE -> assertNotNull(q.staffAnswer()).also { assertTrue(Quiz.check(q, Answer.StaffNote(it), "en")) }
+                    QuestionType.NUMBER -> assertTrue(Quiz.check(q, Answer.Number(Quiz.intAnswer(q)!!), "en"))
+                    QuestionType.NOTE -> assertTrue(Quiz.check(q, Answer.Note(Quiz.noteAnswer(q)!!), "en"))
+                    QuestionType.NOTES -> assertTrue(Quiz.check(q, Answer.Notes(Quiz.notesAnswer(q)), "en"))
+                    QuestionType.STAFF_NOTE -> assertNotNull(Quiz.staffAnswer(q)).also { assertTrue(Quiz.check(q, Answer.StaffNote(it), "en")) }
                 }
             }
         }
@@ -65,7 +61,7 @@ class LearningTest {
                 assertTrue(kotlin.math.abs(s.keySignature.fifths) <= ScaleRecognition.maxAccidentals(level), "$s at $level")
                 assertTrue(s.type in ScaleRecognition.types(level))
             }
-            val round = ScaleRecognition.round(level, seed = 42)
+            val round = ScaleRecognition.round(level, 42L)
             round.forEach { q ->
                 assertTrue(ScaleRecognition.checkName(q, q.scale.tonic, q.scale.type))
                 assertTrue(ScaleRecognition.checkBuild(q, q.notes.map { it.pitchClass }))
@@ -88,7 +84,7 @@ class LearningTest {
         assertEquals(setOf(SaxKey.OCT) + chart.forNote("D4")!!.keys, chart.forNote("D5")!!.keys)
         assertEquals(emptySet(), chart.forNote("C#5")!!.keys)
         assertTrue(FingeringDrill.checkKeys(chart.forNote("Bb4")!!, setOf(SaxKey.L1, SaxKey.R1)))
-        val round = FingeringDrill.round(chart, seed = 1)
+        val round = FingeringDrill.round(chart, 1L)
         assertTrue(round.none { it.first.altissimo })
     }
 }

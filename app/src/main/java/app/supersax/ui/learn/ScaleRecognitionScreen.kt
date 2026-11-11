@@ -63,7 +63,7 @@ class ScaleRecognitionViewModel(private val c: AppContainer) : ViewModel() {
     init {
         viewModelScope.launch {
             val level = lastLevel(c.progress.drills.first(), DrillKind.SCALE_RECOGNITION, default = (c.practice.playerNow().theoryLevel).coerceIn(1, 3))
-            _ui.value = ScaleUi(false, level, ScaleRecognition.round(level, seed = c.clock.nowMs()))
+            _ui.value = ScaleUi(false, level, ScaleRecognition.round(level, c.clock.nowMs()))
             shownAt = c.clock.elapsedMs()
         }
     }
@@ -82,7 +82,7 @@ class ScaleRecognitionViewModel(private val c: AppContainer) : ViewModel() {
         val u = _ui.value
         if (u.index + 1 < u.questions.size) { _ui.value = u.copy(index = u.index + 1, last = null); shownAt = c.clock.elapsedMs(); return }
         val mean = u.times.average().toLong()
-        val next = DrillRules.nextLevel(u.level, u.correct, u.questions.size, mean, fastMs = 15_000)
+        val next = DrillRules.nextLevel(u.level, u.correct, u.questions.size, mean, 15_000)
         _ui.value = u.copy(done = true, nextLevel = next)
         viewModelScope.launch { c.savePhoneDrill(DrillKind.SCALE_RECOGNITION, u.level, u.questions.size, u.correct, mean, startedAt, "next=$next") }
     }

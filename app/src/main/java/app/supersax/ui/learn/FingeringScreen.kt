@@ -48,7 +48,7 @@ data class FingeringUi(val questions: List<Pair<FingeringEntry, Boolean>> = empt
 
 class FingeringViewModel(private val c: AppContainer) : ViewModel() {
     val chart = c.content.fingerings
-    private val _ui = MutableStateFlow(FingeringUi(FingeringDrill.round(chart, seed = c.clock.nowMs())))
+    private val _ui = MutableStateFlow(FingeringUi(FingeringDrill.round(chart, c.clock.nowMs())))
     val ui = _ui.asStateFlow()
     private val startedAt = c.clock.nowMs()
 

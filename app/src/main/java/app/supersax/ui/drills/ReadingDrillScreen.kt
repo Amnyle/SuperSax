@@ -58,7 +58,7 @@ class ReadingDrillViewModel(private val c: AppContainer) : ViewModel() {
     init {
         viewModelScope.launch {
             val level = lastLevel(c.progress.drills.first(), DrillKind.READING, default = (c.practice.playerNow().readingLevel).coerceIn(1, 3))
-            _ui.value = ReadingUi(false, level, ReadingDrill.round(level, seed = c.clock.nowMs()))
+            _ui.value = ReadingUi(false, level, ReadingDrill.round(level, c.clock.nowMs()))
             shownAt = c.clock.elapsedMs()
         }
     }

@@ -36,10 +36,10 @@ class DrillsAndReviewTest {
         assertTrue(l5.any { it.alter != 0 })
         assertTrue(l5.none { it.letter == Letter.E && it.alter == 1 })
         assertTrue(l5.all { it.midi in 58..90 })
-        val round = ReadingDrill.round(2, seed = 7)
+        val round = ReadingDrill.round(2, 7L)
         assertEquals(DrillRules.READING_ROUND, round.size)
         round.zipWithNext().forEach { (a, b) -> assertTrue(a != b) }
-        assertEquals(round, ReadingDrill.round(2, seed = 7))
+        assertEquals(round, ReadingDrill.round(2, 7L))
         assertTrue(ReadingDrill.isCorrect(SpelledPitch.parse("Bb4"), PitchClass(Letter.B, -1)))
         assertFalse(ReadingDrill.isCorrect(SpelledPitch.parse("Bb4"), PitchClass(Letter.A, 1)))
     }
@@ -53,7 +53,7 @@ class DrillsAndReviewTest {
     }
 
     @Test fun matchRound() {
-        val r = MatchDrill.round(62, 74, seed = 3)
+        val r = MatchDrill.round(62, 74, 3L)
         assertEquals(DrillRules.MATCH_ROUND, r.size)
         assertTrue(r.all { it in 62..74 })
     }

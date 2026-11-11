@@ -53,7 +53,7 @@ class MatchNoteViewModel(private val c: AppContainer) : ViewModel() {
     init {
         viewModelScope.launch {
             val p = c.practice.playerNow()
-            val notes = MatchDrill.round(p.writtenLowMidi.coerceAtLeast(60), p.writtenHighMidi.coerceAtMost(84), seed = c.clock.nowMs())
+            val notes = MatchDrill.round(p.writtenLowMidi.coerceAtLeast(60), p.writtenHighMidi.coerceAtMost(84), c.clock.nowMs())
             _ui.value = MatchUi(notes)
             select(0)
         }
