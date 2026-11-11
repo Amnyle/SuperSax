@@ -79,7 +79,7 @@ fun PiecePanel(step: PlannedStep) {
         return
     }
     val section = piece.file.sections.firstOrNull { it.id == step.target.sectionId }
-    val shown = section?.let { s -> score.copy(measures = score.measures.subList((s.from - 1).coerceAtLeast(0), s.to.coerceAtMost(score.measures.size)), pickup = score.pickup && s.from == 1) } ?: score
+    val shown = section?.let { s -> score.withMeasures(score.measures.subList((s.from - 1).coerceAtLeast(0), s.to.coerceAtMost(score.measures.size)), score.pickup && s.from == 1) } ?: score
     val out by c.audio.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val instrument = app.supersax.ui.nav.LocalSettings.current.instrument

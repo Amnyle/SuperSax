@@ -145,6 +145,6 @@ fun missingText(m: Missing): String {
         is Missing.RangeLow -> stringResource(R.string.missing_low, naming.format(SpelledPitch.fromMidi(m.writtenMidi)), m.semitones)
         is Missing.RangeHigh -> stringResource(R.string.missing_high, naming.format(SpelledPitch.fromMidi(m.writtenMidi)), m.semitones)
         is Missing.Scale -> stringResource(if (m.isNextUnlock) R.string.missing_scale_next else R.string.missing_scale, scaleLabel(m.scaleKey))
-        Missing.NoNotes -> stringResource(R.string.missing_no_notes)
+        else -> stringResource(R.string.missing_no_notes)
     }
 }

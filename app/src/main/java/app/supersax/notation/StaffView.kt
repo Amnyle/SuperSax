@@ -81,14 +81,15 @@ private fun DrawScope.drawSystem(sys: StaffSystem, sp: Float, originY: Float, ty
     }
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { this.typeface = typeface; textSize = 4 * sp }
     sys.items.forEach { item ->
-        val c = if (highlightIndex >= 0 && itemIndex(item) == highlightIndex) highlight else color
+        val c = if (highlightIndex >= 0 && item.noteIndexOrNone() == highlightIndex) highlight else color
         when (item) {
             is StaffItem.Glyph -> {
                 paint.color = c.toArgb()
                 drawContext.canvas.nativeCanvas.drawText(item.text, px(item.x), py(item.y), paint)
             }
             is StaffItem.Line -> drawLine(c, Offset(px(item.x1), py(item.y1)), Offset(px(item.x2), py(item.y2)), strokeWidth = item.thickness * sp, cap = StrokeCap.Butt)
-            is StaffItem.Tie -> {
+            else -> {
+                item as StaffItem.Tie
                 val dir = if (item.above) -1 else 1
                 val y = py(item.y + dir * 0.6f)
                 val path = Path().apply {
@@ -99,10 +100,4 @@ private fun DrawScope.drawSystem(sys: StaffSystem, sp: Float, originY: Float, ty
             }
         }
     }
-}
-
-private fun itemIndex(i: StaffItem) = when (i) {
-    is StaffItem.Glyph -> i.noteIndex
-    is StaffItem.Line -> i.noteIndex
-    is StaffItem.Tie -> -1
 }
