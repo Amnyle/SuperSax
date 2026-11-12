@@ -55,14 +55,15 @@ fun TunerSlot(step: PlannedStep) {
     DisposableEffect(Unit) { onDispose { tuner.stop() } }
     LaunchedEffect(step.target.targetMidi) { tuner.targetMidi = step.target.targetMidi }
     if (!on) {
-        OutlinedButton(onClick = request, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.show_tuner)) }
+        OutlinedButton(onClick = request, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.show_coach)) }
         return
     }
     val reading by tuner.reading.collectAsStateWithLifecycle()
     val mic by c.mic.state.collectAsStateWithLifecycle()
     MicErrorBanner(mic) { tuner.stop(); c.mic.retry(hasMicPermission(context)); tuner.start(hasMicPermission(context)) }
     TunerDisplay(reading, large = false)
-    reading.lastReport?.let { HoldReportCard(it) }
+    app.supersax.ui.listen.PitchTrace(reading)
+    reading.lastReport?.let { app.supersax.ui.listen.SteadinessCard(it); HoldReportCard(it) }
     OutlinedButton(onClick = { tuner.stop(); on = false }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.hide_tuner)) }
 }
 

@@ -51,6 +51,8 @@ class ScreenTour {
         click("Use this program")
         waitFor("Start ·", substring = true); waitFor("This week"); shot("06-home")
         click("Training"); waitFor("On the phone"); shot("07-training")
+        click("Sight-reading play-along"); waitFor("New melody"); shot("27-play-along")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Solo practice"); waitFor("Learn the form"); shot("21-solo")
         click("Target the 3rd"); click("Play the backing"); waitFor("Aim for", substring = true); shot("22-solo-playing")
         click("Stop")

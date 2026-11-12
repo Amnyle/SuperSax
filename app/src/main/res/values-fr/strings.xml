@@ -914,4 +914,23 @@
     <string name="rhythm_pad">TAPE</string>
     <string name="rhythm_listen">L\'écouter d\'abord</string>
     <string name="rhythm_wrong">Pas tout à fait en rythme</string>
+    <string name="listen_runs_on">Écouter et compter mes passages</string>
+    <string name="listen_runs_off">Arrêter l\'écoute</string>
+    <string name="listen_runs_hint">Joue la gamme en montant et en descendant, puis fais une pause : chaque passage est vérifié et noté tout seul.</string>
+    <string name="listen_run_clean">Passage propre (%1$d notes par minute)</string>
+    <string name="listen_run_wrong">Note %1$d : attendu %2$s, entendu %3$s</string>
+    <string name="listen_run_short">Passage incomplet : joue toute la gamme en montant et en descendant</string>
+    <string name="show_coach">Lancer le coach de notes tenues</string>
+    <string name="coach_steadiness">Stabilité</string>
+    <string name="coach_hold_line">%1$d s tenues · %2$d %% juste</string>
+    <string name="coach_drift_line">Dérive %1$d cents</string>
+    <string name="trace_desc">Hauteur sur les dernières secondes, dans ou hors de la bande juste</string>
+    <string name="playalong_title">Déchiffrage en jouant</string>
+    <string name="playalong_sub">Joue une nouvelle mélodie ; l\'appli te suit note à note</string>
+    <string name="playalong_hint">Lis et joue la mélodie au sax. La note en surbrillance avance dès que tu la joues juste.</string>
+    <string name="playalong_now">Note %1$d sur %2$d</string>
+    <string name="playalong_wrong">C\'était %1$s : réessaie</string>
+    <string name="playalong_done">%1$d sur %2$d justes du premier coup</string>
+    <string name="playalong_time">%1$d secondes</string>
+    <string name="playalong_new">Nouvelle mélodie</string>
 </resources>

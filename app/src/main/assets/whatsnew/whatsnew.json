@@ -108,5 +108,18 @@
       "Lecture rythmique (7 niveaux) : lis une mesure, compte avec le métronome et tape le rythme, des noires aux doubles croches et au swing.",
       "L'exercice du jour inclut maintenant des questions d'oreille et de rythme."
     ]
+  },
+  {
+    "id": 9,
+    "en": [
+      "Scale runs by ear: in a scale block, tap \"Listen and count my runs\". Each run up and down is checked and logged by itself, and a wrong note is named.",
+      "Long-tone coach: a live pitch line inside the in-tune band and a steadiness score for every hold.",
+      "Sight-reading play-along: play a new melody and the app follows you note by note."
+    ],
+    "fr": [
+      "Gammes à l'oreille : dans un bloc de gammes, touche « Écouter et compter mes passages ». Chaque passage montant et descendant est vérifié et noté tout seul, et une fausse note est nommée.",
+      "Coach de notes tenues : une ligne de hauteur en direct dans la bande juste et un score de stabilité pour chaque tenue.",
+      "Déchiffrage en jouant : joue une nouvelle mélodie et l'appli te suit note à note."
+    ]
   }
 ]

@@ -229,3 +229,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Rhythm reading** (7 levels): one 4/4 bar built from rhythm cells (quarters/halves/whole, rests, eighths, dotted quarter + eighth, syncopation, sixteenths, swing eighths), shown on the staff; one bar of count-in, then taps on a large pad. Judging removes the phone's constant delay (median offset, at most 250 ms) before checking each note within 100 ms (75 ms with sixteenths); a missed or extra tap makes the bar wrong.
 - **Daily mix** now has 2 ear questions and 1 rhythm bar.
 
+## Update C: the app listens
+
+- **Scale runs by ear**: in a scale block the microphone cuts the playing into runs (a run ends after 0.7 s of silence once 4 notes were heard); each run is checked against the scale up and down (`ScaleChecker`), aligned to the octave played; clean = no wrong or missing note and at most one extra; the run is logged like the clean/mistake buttons (which stay for playing without the microphone) and the first wrong note is named in written pitch.
+- **Long-tone coach**: the long-tone tuner shows a live pitch trace inside the ±10 cent band and a steadiness score per hold (share in tune × 100, minus half the drift in cents); the per-note tuning map stays in the tuner history.
+- **Sight-reading play-along**: two bars of quarter notes generated at a note-reading level (mostly steps, small leaps); the app follows note by note: a note counts when held within 50 cents for 0.15 s; a different note held 0.3 s marks that note as a mistake; the result is right-first-time over total and the time taken (own drill kind, no stars).
+

@@ -82,6 +82,7 @@ object ExtraRoutes {
     const val SPEED = "reading_speed/{level}"
     fun speed(level: Int) = "reading_speed/$level"
     const val SOLO = "solo"
+    const val PLAY_ALONG = "play_along"
     const val PLAY = "play/{kind}/{level}?sax={sax}"
     fun play(kind: DrillKind, level: Int, sax: Boolean = false) = "play/${kind.name}/$level?sax=$sax"
     const val EAR = "ear_training"
@@ -115,6 +116,7 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
             nav.navigate(ExtraRoutes.speed(level)) { popUpTo(e.destination.id) { inclusive = true } }
         })
     }
+    composable(ExtraRoutes.PLAY_ALONG) { app.supersax.ui.listen.PlayAlongScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.SOLO) { SoloScreen(onBack = { nav.popBackStack() }, onSongPlayer = { nav.navigate(ExtraRoutes.SLOW_DOWN) }) }
     composable(ExtraRoutes.PLAY, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType },
         navArgument("sax") { type = NavType.BoolType; defaultValue = false })) { e ->
@@ -201,6 +203,7 @@ fun extraLogEntries(nav: NavHostController): List<HubEntry> = listOf(
 @Composable
 fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
     HubEntry(stringResource(R.string.solo_title), stringResource(R.string.solo_sub), Icons.Rounded.MusicNote) { nav.navigate(ExtraRoutes.SOLO) },
+    HubEntry(stringResource(R.string.playalong_title), stringResource(R.string.playalong_sub), Icons.AutoMirrored.Rounded.MenuBook) { nav.navigate(ExtraRoutes.PLAY_ALONG) },
     HubEntry(stringResource(R.string.tuner), stringResource(R.string.tuner_sub), Icons.Rounded.GraphicEq) { nav.navigate(ExtraRoutes.TUNER) },
     HubEntry(stringResource(R.string.metronome_drone), stringResource(R.string.metronome_sub), Icons.Rounded.Timer) { nav.navigate(ExtraRoutes.METRONOME) },
     HubEntry(stringResource(R.string.match_note), stringResource(R.string.match_sub), Icons.Rounded.Hearing) { nav.navigate(ExtraRoutes.MATCH) },

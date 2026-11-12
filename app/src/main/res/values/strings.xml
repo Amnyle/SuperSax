@@ -910,4 +910,23 @@
     <string name="rhythm_pad">TAP</string>
     <string name="rhythm_listen">Hear it first</string>
     <string name="rhythm_wrong">Not quite in time</string>
+    <string name="listen_runs_on">Listen and count my runs</string>
+    <string name="listen_runs_off">Stop listening</string>
+    <string name="listen_runs_hint">Play the scale up and down, then pause: each run is checked and logged by itself.</string>
+    <string name="listen_run_clean">Clean run (%1$d notes a minute)</string>
+    <string name="listen_run_wrong">Note %1$d: expected %2$s, heard %3$s</string>
+    <string name="listen_run_short">Incomplete run: play the whole scale up and down</string>
+    <string name="show_coach">Start the long-tone coach</string>
+    <string name="coach_steadiness">Steadiness</string>
+    <string name="coach_hold_line">%1$d s held · %2$d %% in tune</string>
+    <string name="coach_drift_line">Drift %1$d cents</string>
+    <string name="trace_desc">Pitch over the last seconds, inside or outside the in-tune band</string>
+    <string name="playalong_title">Sight-reading play-along</string>
+    <string name="playalong_sub">Play a new melody; the app follows you note by note</string>
+    <string name="playalong_hint">Read and play the melody on your sax. The highlighted note moves on as soon as you play it in tune.</string>
+    <string name="playalong_now">Note %1$d of %2$d</string>
+    <string name="playalong_wrong">That was %1$s: try again</string>
+    <string name="playalong_done">%1$d of %2$d right the first time</string>
+    <string name="playalong_time">%1$d seconds</string>
+    <string name="playalong_new">New melody</string>
 </resources>

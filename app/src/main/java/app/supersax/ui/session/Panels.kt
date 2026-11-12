@@ -35,6 +35,7 @@ fun ScalePanel(step: PlannedStep, run: SessionRun, vm: SessionViewModel) {
         val total = run.runs.count { it.scaleKey == key }
         Text(stringResource(R.string.runs_summary, total, streak), style = MaterialTheme.typography.bodyMedium)
         MetronomeSlot(bpm)
+        app.supersax.ui.listen.ScaleListenSlot(key) { clean -> vm.scaleRun(key, bpm, clean) }
     }
 }
 

@@ -180,7 +180,7 @@ data class ReedRecord(
 data class MouthpieceRecord(val id: String, val name: String, val note: String = "")
 
 @Serializable
-enum class DrillKind { READING, SCALE_RECOGNITION, FINGERING, MATCH_NOTE, THEORY_QUIZ, OVERTONE, ALTISSIMO, DAILY, READING_SPEED, EAR, RHYTHM }
+enum class DrillKind { READING, SCALE_RECOGNITION, FINGERING, MATCH_NOTE, THEORY_QUIZ, OVERTONE, ALTISSIMO, DAILY, READING_SPEED, EAR, RHYTHM, PLAY_ALONG }
 
 @Serializable
 data class DrillResultRecord(
