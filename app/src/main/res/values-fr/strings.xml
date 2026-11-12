@@ -1042,13 +1042,13 @@
     <string name="rhythm_v_late_ms">Note %1$d en retard de %2$d ms · %3$d pour cent</string>
     <string name="rhythm_v_short_pct">Note %1$d relâchée trop tôt (tenez les notes longues) · %2$d pour cent</string>
     <string name="sep_title">Retirer un instrument (IA)</string>
-    <string name="sep_body">Créez une version de ce morceau sans le sax (ou la mélodie principale, le piano, la guitare, la batterie ou la basse) pour jouer cette partie vous-même. Le morceau est envoyé à LALAL.AI, un service de séparation en ligne ; la nouvelle version apparaît dans vos morceaux avec la même tonalité, le même tempo et les mêmes mesures. LALAL.AI ne sépare le sax et les vents qu\'avec un modèle plus ancien : si le sax reste audible, essayez « Mélodie principale » — quand le sax joue l\'air, le modèle le plus récent l\'enlève souvent plus proprement.</string>
+    <string name="sep_body">Créez une version de ce morceau sans le sax (ou la mélodie, le piano, la guitare, la batterie ou la basse) pour jouer cette partie vous-même. Cela tourne en arrière-plan ; la nouvelle version apparaît sous ce morceau avec la même tonalité, le même tempo et les mêmes mesures.</string>
     <string name="sep_key_needed">Cela utilise votre propre compte LALAL.AI (payé à la minute d\'audio). Collez votre clé de licence une fois ; elle reste sur ce téléphone et n\'est jamais sauvegardée.</string>
     <string name="sep_get_key">Obtenir une clé sur lalal.ai</string>
     <string name="sep_key">Clé de licence</string>
     <string name="sep_save_key">Enregistrer la clé</string>
     <string name="sep_forget_key">Oublier la clé</string>
-    <string name="stem_wind">Sax et vents (IA plus ancienne)</string>
+    <string name="stem_wind">Sax et vents (LALAL.AI, ancien modèle)</string>
     <string name="stem_piano">Piano</string>
     <string name="stem_guitar">Guitare</string>
     <string name="stem_drums">Batterie</string>
@@ -1086,4 +1086,13 @@
         <item quantity="other">File IA : %1$d en cours ou en attente</item>
     </plurals>
     <string name="sep_offline">Le téléphone n\'a pas pu joindre lalal.ai (pas d\'internet, ou un DNS privé ou bloqueur de pubs dans Paramètres, Réseau). Touchez Réessayer une fois en ligne.</string>
+    <string name="stem_sax">Sax (le mieux : modèle sax de MVSEP)</string>
+    <string name="stem_winds">Tous les vents (MVSEP)</string>
+    <string name="stem_short_winds">vents</string>
+    <string name="sep_by_mvsep">Fait par MVSEP avec son modèle dédié au saxophone (BS Roformer), bien plus propre sur le sax que LALAL.AI.</string>
+    <string name="sep_by_lalal">Fait par LALAL.AI avec son modèle le plus récent.</string>
+    <string name="sep_mvsep_needed">Cela utilise votre propre compte MVSEP (mvsep.com ; gratuit avec une file d\'attente, ou payant pour la priorité). Copiez une fois votre jeton API depuis le site ; il reste sur ce téléphone et n\'est jamais sauvegardé.</string>
+    <string name="sep_get_mvsep">Obtenir un jeton sur mvsep.com</string>
+    <string name="sep_mvsep_token">Jeton API MVSEP</string>
+    <string name="sep_forget_mvsep">Oublier le jeton MVSEP</string>
 </resources>

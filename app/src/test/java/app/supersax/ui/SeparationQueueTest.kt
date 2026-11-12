@@ -9,6 +9,9 @@ import app.supersax.domain.song.SongSetup
 import app.supersax.separation.Lalal
 import app.supersax.separation.SeparationJob
 import app.supersax.separation.SeparationKey
+import app.supersax.separation.MvsepKey
+import app.supersax.separation.Mvsep
+import app.supersax.separation.Removal
 import app.supersax.separation.SeparationWorker
 import com.sun.net.httpserver.HttpServer
 import java.io.File
@@ -29,6 +32,8 @@ import kotlin.test.assertTrue
 class SeparationQueueTest {
     private val server = HttpServer.create(InetSocketAddress("127.0.0.1", 0), 0)
     private var uploads = 0
+    private var mvGets = 0
+    private var mvsepForm = ""
 
     private fun reply(ex: com.sun.net.httpserver.HttpExchange, text: String) {
         val b = text.toByteArray(); ex.sendResponseHeaders(200, b.size.toLong()); ex.responseBody.use { it.write(b) }
@@ -43,6 +48,17 @@ class SeparationQueueTest {
             val base = "http://127.0.0.1:${server.address.port}"
             reply(ex, """{"result":{"$t":{"source_id":"s","presets":{},"status":"success","result":{"duration":1,"tracks":[{"type":"back","label":"no_x","url":"$base/f/$t"}]}}}}""")
         }
+        server.createContext("/mv/separation/create") { ex ->
+            val body = String(ex.requestBody.readBytes(), Charsets.ISO_8859_1)
+            mvsepForm = body
+            reply(ex, """{"success":true,"data":{"link":"x","hash":"h-sax"}}""")
+        }
+        server.createContext("/mv/separation/get") { ex ->
+            mvGets++
+            val base = "http://127.0.0.1:${server.address.port}"
+            reply(ex, if (mvGets < 2) """{"success":true,"status":"processing","data":{"message":"Processing"}}"""
+                else """{"success":true,"status":"done","data":{"files":[{"type":"Saxophone","url":"$base/f/sax"},{"type":"Other","url":"$base/f/other"}]}}""")
+        }
         server.createContext("/f/") { ex -> val b = ByteArray(500) { 1 }; ex.sendResponseHeaders(200, b.size.toLong()); ex.responseBody.use { it.write(b) } }
         server.start()
     }
@@ -51,16 +67,18 @@ class SeparationQueueTest {
 
     @Test fun queueRunsInTheBackgroundAndLinksVersions() = runBlocking {
         Lalal.base = "http://127.0.0.1:${server.address.port}/api/v1/"
+        Mvsep.base = "http://127.0.0.1:${server.address.port}/mv/"
         val app = ApplicationProvider.getApplicationContext<SaxApp>()
         androidx.work.testing.WorkManagerTestInitHelper.initializeTestWorkManager(app)
         val c = app.container
         SeparationKey.set(c, "KEY")
+        MvsepKey.set(c, "TOKEN")
         val song = File(c.songsDir, "orig.m4a").apply { writeBytes(ByteArray(100) { 3 }) }
         val ref = AudioRefRecord("orig", android.net.Uri.fromFile(song).toString(), "Galaxy", 0)
         c.media.saveAudioRef(ref)
         c.songs.save("orig", SongSetup(analyzed = true, bpm = 128.0, keyTonic = 0))
-        c.separationQueue.add(ref, Lalal.Stem.WIND, "no sax")
-        c.separationQueue.add(ref, Lalal.Stem.LEAD, "no lead")
+        c.separationQueue.add(ref, Removal.SAX, "no sax")
+        c.separationQueue.add(ref, Removal.LEAD, "no lead")
         assertEquals(2, c.separationQueue.all().count { it.active })
 
         val result = TestListenableWorkerBuilder<SeparationWorker>(app).build().doWork()
@@ -68,7 +86,8 @@ class SeparationQueueTest {
 
         val jobs = c.separationQueue.all()
         assertTrue(jobs.all { it.step == SeparationJob.Step.DONE }, jobs.toString())
-        assertEquals(2, uploads)
+        assertEquals(1, uploads, "only the lead went to LALAL.AI")
+        assertTrue("name=\"sep_type\"\r\n\r\n61" in mvsepForm && "name=\"add_opt1\"\r\n\r\n3" in mvsepForm && "TOKEN" in mvsepForm, "sax uses MVSEP's sax model")
         val refs = c.media.audioRefs.first()
         val versions = refs.filter { it.title.startsWith("Galaxy (") }
         assertEquals(setOf("Galaxy (no sax)", "Galaxy (no lead)"), versions.map { it.title }.toSet())
@@ -76,6 +95,6 @@ class SeparationQueueTest {
             val s = c.songs.get(v.id)
             assertEquals("orig", s.parentId); assertEquals(128.0, s.bpm)
         }
-        assertEquals(setOf("WIND", "LEAD"), versions.map { c.songs.get(it.id).removed }.toSet())
+        assertEquals(setOf("SAX", "LEAD"), versions.map { c.songs.get(it.id).removed }.toSet())
     }
 }

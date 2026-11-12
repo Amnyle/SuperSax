@@ -1036,13 +1036,13 @@
     <string name="rhythm_v_late_ms">Note %1$d late by %2$d ms · %3$d percent</string>
     <string name="rhythm_v_short_pct">Note %1$d let go too soon (hold the long notes) · %2$d percent</string>
     <string name="sep_title">Remove an instrument (AI)</string>
-    <string name="sep_body">Make a version of this song without the sax (or the lead melody, piano, guitar, drums or bass) to play that part yourself. The song is sent to LALAL.AI, an online separation service; the new version appears in your song list with the same key, tempo and bars. LALAL.AI only separates sax and winds with an older model: if the sax stays audible, try \"Lead melody\" — when the sax plays the tune, the newest model often removes it more cleanly.</string>
+    <string name="sep_body">Make a version of this song without the sax (or the lead melody, piano, guitar, drums or bass) to play that part yourself. It runs in the background; the new version appears under this song with the same key, tempo and bars.</string>
     <string name="sep_key_needed">This uses your own LALAL.AI account (paid by the minute of audio). Paste your licence key once; it stays on this phone and is never backed up.</string>
     <string name="sep_get_key">Get a key at lalal.ai</string>
     <string name="sep_key">Licence key</string>
     <string name="sep_save_key">Save the key</string>
     <string name="sep_forget_key">Forget the key</string>
-    <string name="stem_wind">Sax and winds (older AI)</string>
+    <string name="stem_wind">Sax and winds (LALAL.AI, old model)</string>
     <string name="stem_piano">Piano</string>
     <string name="stem_guitar">Guitar</string>
     <string name="stem_drums">Drums</string>
@@ -1079,4 +1079,13 @@
         <item quantity="other">AI queue: %1$d running or waiting</item>
     </plurals>
     <string name="sep_offline">The phone could not reach lalal.ai (no internet, or a Private DNS or ad-blocker in Settings, Network). Tap Retry when online.</string>
+    <string name="stem_sax">Sax (best: MVSEP sax model)</string>
+    <string name="stem_winds">All winds (MVSEP)</string>
+    <string name="stem_short_winds">winds</string>
+    <string name="sep_by_mvsep">Done by MVSEP with its dedicated saxophone model (BS Roformer), much cleaner on sax than LALAL.AI.</string>
+    <string name="sep_by_lalal">Done by LALAL.AI with its newest model.</string>
+    <string name="sep_mvsep_needed">This uses your own MVSEP account (mvsep.com; free with a waiting queue, or paid for priority). Copy your API token from the site once; it stays on this phone and is never backed up.</string>
+    <string name="sep_get_mvsep">Get a token at mvsep.com</string>
+    <string name="sep_mvsep_token">MVSEP API token</string>
+    <string name="sep_forget_mvsep">Forget the MVSEP token</string>
 </resources>

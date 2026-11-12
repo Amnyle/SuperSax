@@ -45,6 +45,30 @@ object SeparationKey {
     fun set(c: AppContainer, key: String?) { if (key.isNullOrBlank()) file(c).delete() else file(c).writeText(key.trim()) }
 }
 
+/** The API token of MVSEP, kept like the LALAL.AI key. */
+object MvsepKey {
+    private fun file(c: AppContainer) = File(c.context.noBackupFilesDir, "mvsep_token")
+    fun get(c: AppContainer): String? = file(c).takeIf { it.exists() }?.readText()?.trim()?.takeIf { it.isNotEmpty() }
+    fun set(c: AppContainer, key: String?) { if (key.isNullOrBlank()) file(c).delete() else file(c).writeText(key.trim()) }
+}
+
+/**
+ * What a version leaves out, and which service does it. The sax comes from MVSEP's dedicated saxophone model
+ * (much better than LALAL.AI's old wind model); voice/lead, piano, guitar, drums and bass from LALAL.AI's newest.
+ * Names WIND, LEAD… are kept from the first version (stored in jobs and songs).
+ */
+enum class Removal(val mvsep: Mvsep.Model?, val lalal: Lalal.Stem?) {
+    SAX(Mvsep.Model.SAXOPHONE, null), WINDS(Mvsep.Model.WIND, null),
+    LEAD(null, Lalal.Stem.LEAD), PIANO(null, Lalal.Stem.PIANO), GUITAR(null, Lalal.Stem.GUITAR),
+    DRUMS(null, Lalal.Stem.DRUMS), BASS(null, Lalal.Stem.BASS), WIND(null, Lalal.Stem.WIND);
+    val isMvsep: Boolean get() = mvsep != null
+    companion object {
+        /** The choices offered (LALAL.AI's old wind model stays only for jobs made before). */
+        val offered = listOf(SAX, WINDS, LEAD, PIANO, GUITAR, DRUMS, BASS)
+        fun of(name: String?): Removal? = entries.firstOrNull { it.name == name }
+    }
+}
+
 /** Marker error: the phone could not reach the service. */
 const val OFFLINE = "offline"
 
@@ -54,7 +78,7 @@ data class SeparationJob(
     val id: String,
     val songId: String,
     val title: String,
-    /** A Lalal.Stem name. */
+    /** A [Removal] name. */
     val stem: String,
     val suffix: String,
     val addedAtMs: Long,
@@ -68,7 +92,7 @@ data class SeparationJob(
 ) {
     @Serializable enum class Step { QUEUED, UPLOADING, SEPARATING, DOWNLOADING, DONE, FAILED }
     val active: Boolean get() = step != Step.DONE && step != Step.FAILED
-    val stemValue: Lalal.Stem get() = Lalal.Stem.entries.firstOrNull { it.name == stem } ?: Lalal.Stem.WIND
+    val removal: Removal get() = Removal.of(stem) ?: Removal.WIND
 }
 
 /** The queue of separations, saved on the phone and worked through in the background (one at a time). */
@@ -90,7 +114,7 @@ class SeparationQueue(private val c: AppContainer) {
     suspend fun update(id: String, f: (SeparationJob) -> SeparationJob) = edit { l -> l.map { if (it.id == id) f(it) else it } }
 
     /** Adds a separation of [ref] (removing [stem]) and makes sure the background work runs. */
-    suspend fun add(ref: AudioRefRecord, stem: Lalal.Stem, suffix: String) {
+    suspend fun add(ref: AudioRefRecord, stem: Removal, suffix: String) {
         edit { it + SeparationJob(UUID.randomUUID().toString(), ref.id, ref.title, stem.name, suffix, c.clock.nowMs()) }
         kick(c.context)
     }
@@ -130,12 +154,13 @@ class SeparationWorker(context: Context, params: WorkerParameters) : CoroutineWo
     override suspend fun doWork(): Result {
         val c = (applicationContext as SaxApp).container
         val q = c.separationQueue
-        val key = SeparationKey.get(c) ?: return Result.success()
         val started = System.currentTimeMillis()
         while (true) {
             val job = q.all().firstOrNull { it.active } ?: return Result.success()
             if (System.currentTimeMillis() - started > 8 * 60_000L) return Result.retry()
             try {
+                val key = (if (job.removal.isMvsep) MvsepKey.get(c) else SeparationKey.get(c))
+                    ?: throw Lalal.ServiceException(if (job.removal.isMvsep) "no MVSEP API token" else "no LALAL.AI key")
                 step(c, q, key, job)
             } catch (e: java.io.IOException) {
                 // Network trouble: try again later from the same step.
@@ -155,24 +180,33 @@ class SeparationWorker(context: Context, params: WorkerParameters) : CoroutineWo
                 val uri = Uri.parse(ref.uri)
                 val ext = (uri.lastPathSegment ?: "").substringAfterLast('.', "m4a").take(5).ifBlank { "m4a" }
                 val length = runCatching { c.context.contentResolver.openAssetFileDescriptor(uri, "r")?.use { it.length } }.getOrNull() ?: -1L
+                val mv = job.removal.mvsep
                 val id = withContext(Dispatchers.IO) {
                     val input = c.context.contentResolver.openInputStream(uri) ?: throw Lalal.ServiceException("cannot read the song file")
-                    Lalal.upload(key, input, "${ref.title}.$ext", length)
+                    if (mv != null) Mvsep.create(key, input, "${ref.title}.$ext", mv) else Lalal.upload(key, input, "${ref.title}.$ext", length)
                 }
-                q.update(job.id) { it.copy(sourceId = id) }
+                // MVSEP starts the separation with the upload: its job hash is also the task.
+                q.update(job.id) { if (mv != null) it.copy(sourceId = id, taskId = id, step = SeparationJob.Step.SEPARATING) else it.copy(sourceId = id) }
             }
             job.taskId == null -> {
-                val task = withContext(Dispatchers.IO) { Lalal.split(key, job.sourceId, job.stemValue) }
+                val task = withContext(Dispatchers.IO) { Lalal.split(key, job.sourceId, job.removal.lalal ?: Lalal.Stem.WIND) }
                 q.update(job.id) { it.copy(taskId = task, step = SeparationJob.Step.SEPARATING, progress = 0) }
             }
             job.backTrack == null -> {
                 q.update(job.id) { it.copy(step = SeparationJob.Step.SEPARATING) }
                 while (true) {
-                    val s = withContext(Dispatchers.IO) { Lalal.check(key, job.taskId) }
-                    if (s.state == "success" && s.backTrack != null) { q.update(job.id) { it.copy(backTrack = s.backTrack) }; return }
-                    if (s.state == "error") throw Lalal.ServiceException(s.error ?: "separation failed")
-                    q.update(job.id) { it.copy(progress = s.progress) }
-                    delay(4000)
+                    if (job.removal.isMvsep) {
+                        val s = withContext(Dispatchers.IO) { Mvsep.get(job.taskId) }
+                        if (s.state == "success" && s.backTrack != null) { q.update(job.id) { it.copy(backTrack = s.backTrack) }; return }
+                        if (s.state == "error") throw Lalal.ServiceException(s.message ?: "separation failed")
+                        delay(5000)
+                    } else {
+                        val s = withContext(Dispatchers.IO) { Lalal.check(key, job.taskId) }
+                        if (s.state == "success" && s.backTrack != null) { q.update(job.id) { it.copy(backTrack = s.backTrack) }; return }
+                        if (s.state == "error") throw Lalal.ServiceException(s.error ?: "separation failed")
+                        q.update(job.id) { it.copy(progress = s.progress) }
+                        delay(4000)
+                    }
                 }
             }
             else -> {

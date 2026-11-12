@@ -297,7 +297,7 @@ fun VersionChips(versions: List<Pair<String, String?>>, current: String?, origin
         if (original != null) androidx.compose.material3.FilterChip(selected = current == original, onClick = { if (current != original) onOpen(original) },
             label = { Text(stringResource(R.string.version_original)) }, modifier = Modifier.heightIn(min = 40.dp))
         versions.forEach { (id, removed) ->
-            val stem = removed?.let { r -> app.supersax.separation.Lalal.Stem.entries.firstOrNull { it.name == r } }
+            val stem = app.supersax.separation.Removal.of(removed)
             androidx.compose.material3.FilterChip(selected = current == id, onClick = { if (current != id) onOpen(id) },
                 label = { Text(if (stem != null) stringResource(R.string.version_without, stemShort(stem)) else stringResource(R.string.version_ai)) },
                 leadingIcon = { Icon(Icons.Rounded.AutoAwesome, null, modifier = Modifier.size(16.dp)) },

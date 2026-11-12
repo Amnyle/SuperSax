@@ -244,5 +244,14 @@
     "fr": [
       "File IA : ajoutez autant de tâches « version sans… » que vous voulez, depuis n'importe quel morceau. Elles s'enchaînent en arrière-plan, même application fermée, et une notification arrive quand chacune est prête. Retrouvez-les dans Lecteur de morceaux, File IA."
     ]
+  },
+  {
+    "id": 21,
+    "en": [
+      "Much better sax removal: \"Sax\" now uses MVSEP's dedicated saxophone model (BS Roformer), far cleaner than before. It needs a free MVSEP account: paste its API token once. \"All winds\" removes every wind instrument; voice, piano, guitar, drums and bass still use LALAL.AI."
+    ],
+    "fr": [
+      "Suppression du sax bien meilleure : « Sax » utilise maintenant le modèle saxophone dédié de MVSEP (BS Roformer), bien plus propre qu'avant. Il faut un compte MVSEP gratuit : collez son jeton API une fois. « Tous les vents » retire tous les instruments à vent ; voix, piano, guitare, batterie et basse passent toujours par LALAL.AI."
+    ]
   }
 ]

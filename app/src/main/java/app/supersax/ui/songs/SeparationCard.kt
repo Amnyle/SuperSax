@@ -33,35 +33,40 @@ import app.supersax.domain.common.AudioRefRecord
 import app.supersax.separation.Lalal
 import app.supersax.separation.SeparationJob
 import app.supersax.separation.SeparationKey
+import app.supersax.separation.MvsepKey
+import app.supersax.separation.Removal
 import app.supersax.ui.components.SectionCard
 import app.supersax.ui.nav.LocalContainer
 import app.supersax.ui.theme.Sax
 import kotlinx.coroutines.launch
 
 @Composable
-fun stemName(s: Lalal.Stem): String = stringResource(when (s) {
-    Lalal.Stem.WIND -> R.string.stem_wind
-    Lalal.Stem.LEAD -> R.string.stem_lead
-    Lalal.Stem.PIANO -> R.string.stem_piano
-    Lalal.Stem.GUITAR -> R.string.stem_guitar
-    Lalal.Stem.DRUMS -> R.string.stem_drums
-    Lalal.Stem.BASS -> R.string.stem_bass
+fun stemName(s: Removal): String = stringResource(when (s) {
+    Removal.SAX -> R.string.stem_sax
+    Removal.WINDS -> R.string.stem_winds
+    Removal.WIND -> R.string.stem_wind
+    Removal.LEAD -> R.string.stem_lead
+    Removal.PIANO -> R.string.stem_piano
+    Removal.GUITAR -> R.string.stem_guitar
+    Removal.DRUMS -> R.string.stem_drums
+    Removal.BASS -> R.string.stem_bass
 })
 
 /** Short name of what is removed, for titles and buttons ("sax", "lead"). */
 @Composable
-fun stemShort(s: Lalal.Stem): String = stringResource(when (s) {
-    Lalal.Stem.WIND -> R.string.stem_short_wind
-    Lalal.Stem.LEAD -> R.string.stem_short_lead
-    Lalal.Stem.PIANO -> R.string.stem_short_piano
-    Lalal.Stem.GUITAR -> R.string.stem_short_guitar
-    Lalal.Stem.DRUMS -> R.string.stem_short_drums
-    Lalal.Stem.BASS -> R.string.stem_short_bass
+fun stemShort(s: Removal): String = stringResource(when (s) {
+    Removal.SAX, Removal.WIND -> R.string.stem_short_wind
+    Removal.WINDS -> R.string.stem_short_winds
+    Removal.LEAD -> R.string.stem_short_lead
+    Removal.PIANO -> R.string.stem_short_piano
+    Removal.GUITAR -> R.string.stem_short_guitar
+    Removal.DRUMS -> R.string.stem_short_drums
+    Removal.BASS -> R.string.stem_short_bass
 })
 
 /**
- * Remove an instrument from this song with the AI separation service: adds a job to the queue, which runs in the
- * background (the app can be closed). The new version appears under the song, with the same key, tempo and bars.
+ * Remove an instrument from this song with an AI separation service (MVSEP for the sax, LALAL.AI for the rest):
+ * adds a job to the queue, which runs in the background. The new version appears under the song.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -69,36 +74,43 @@ fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit, onQueue: () ->
     val c = LocalContainer.current
     val jobs by c.separationQueue.jobs.collectAsStateWithLifecycle(emptyList())
     val mine = jobs.filter { it.songId == ref.id }
-    var hasKey by remember { mutableStateOf(SeparationKey.get(c) != null) }
-    var stem by rememberSaveable { mutableStateOf(Lalal.Stem.WIND) }
+    var stem by rememberSaveable { mutableStateOf(Removal.SAX) }
+    var keys by remember { mutableStateOf(0) } // bumps after a key is saved or forgotten
+    val hasKey = remember(stem, keys) { if (stem.isMvsep) MvsepKey.get(c) != null else SeparationKey.get(c) != null }
     var keyText by rememberSaveable { mutableStateOf("") }
     val uri = LocalUriHandler.current
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     val askNotify = app.supersax.ui.audio.rememberNotificationRequest()
     SectionCard(stringResource(R.string.sep_title)) {
         Text(stringResource(R.string.sep_body), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary)
-        if (!hasKey) {
-            Text(stringResource(R.string.sep_key_needed), style = MaterialTheme.typography.bodySmall)
-            TextButton(onClick = { uri.openUri("https://www.lalal.ai/api/") }) { Text(stringResource(R.string.sep_get_key)) }
-            OutlinedTextField(keyText, { keyText = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text(stringResource(R.string.sep_key)) },
-                visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
-            Button(onClick = { SeparationKey.set(c, keyText); hasKey = SeparationKey.get(c) != null; keyText = "" }, enabled = keyText.isNotBlank(),
-                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.sep_save_key)) }
-            return@SectionCard
-        }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Lalal.Stem.entries.forEach { s -> FilterChip(selected = stem == s, onClick = { stem = s }, label = { Text(stemName(s)) }, modifier = Modifier.heightIn(min = 44.dp)) }
+            Removal.offered.forEach { s -> FilterChip(selected = stem == s, onClick = { stem = s }, label = { Text(stemName(s)) }, modifier = Modifier.heightIn(min = 44.dp)) }
         }
-        val suffix = stringResource(R.string.sep_suffix, stemShort(stem))
-        Button(onClick = { askNotify(); scope.launch { c.separationQueue.add(ref, stem, suffix) } }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
-            Text(stringResource(R.string.queue_add, stemShort(stem)))
+        Text(stringResource(if (stem.isMvsep) R.string.sep_by_mvsep else R.string.sep_by_lalal), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        if (!hasKey) {
+            Text(stringResource(if (stem.isMvsep) R.string.sep_mvsep_needed else R.string.sep_key_needed), style = MaterialTheme.typography.bodySmall)
+            TextButton(onClick = { uri.openUri(if (stem.isMvsep) "https://mvsep.com/user-api" else "https://www.lalal.ai/api/") }) {
+                Text(stringResource(if (stem.isMvsep) R.string.sep_get_mvsep else R.string.sep_get_key))
+            }
+            OutlinedTextField(keyText, { keyText = it }, Modifier.fillMaxWidth(), singleLine = true,
+                label = { Text(stringResource(if (stem.isMvsep) R.string.sep_mvsep_token else R.string.sep_key)) },
+                visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
+            Button(onClick = { if (stem.isMvsep) MvsepKey.set(c, keyText) else SeparationKey.set(c, keyText); keyText = ""; keys++ }, enabled = keyText.isNotBlank(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.sep_save_key)) }
+        } else {
+            val suffix = stringResource(R.string.sep_suffix, stemShort(stem))
+            Button(onClick = { askNotify(); scope.launch { c.separationQueue.add(ref, stem, suffix) } }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
+                Text(stringResource(R.string.queue_add, stemShort(stem)))
+            }
+            Text(stringResource(R.string.queue_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
         }
-        Text(stringResource(R.string.queue_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
         mine.sortedByDescending { it.addedAtMs }.take(4).forEach { j -> QueueRow(j, onOpen) }
         Row {
             TextButton(onClick = onQueue) { Text(stringResource(R.string.queue_open)) }
-            TextButton(onClick = { SeparationKey.set(c, null); hasKey = false }) { Text(stringResource(R.string.sep_forget_key)) }
+            if (hasKey) TextButton(onClick = { if (stem.isMvsep) MvsepKey.set(c, null) else SeparationKey.set(c, null); keys++ }) {
+                Text(stringResource(if (stem.isMvsep) R.string.sep_forget_mvsep else R.string.sep_forget_key))
+            }
         }
     }
 }
@@ -108,7 +120,7 @@ fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit, onQueue: () ->
 fun QueueRow(j: SeparationJob, onOpen: (String) -> Unit, showTitle: Boolean = false, onRetry: (() -> Unit)? = null, onRemove: (() -> Unit)? = null) {
     androidx.compose.foundation.layout.Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         if (showTitle) Text(j.title, style = MaterialTheme.typography.titleSmall, maxLines = 2)
-        val what = stemShort(j.stemValue)
+        val what = stemShort(j.removal)
         Text(stringResource(when (j.step) {
             SeparationJob.Step.QUEUED -> R.string.queue_waiting
             SeparationJob.Step.UPLOADING -> R.string.queue_uploading
