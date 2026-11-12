@@ -16,7 +16,7 @@ data class DrillLesson(
     val tip: LocalizedText? = null,
 ) {
     companion object {
-        private val NOTE = Regex("\\{([A-G](?:#|b)?)}")
+        private val NOTE = Regex("\\{([A-G](?:#|b)?)\\}")
 
         /** Replaces {C}, {F#}, {Bb}… with note names in the player's naming. */
         fun notes(text: String, naming: NoteNaming): String = NOTE.replace(text) { naming.format(PitchClass.parse(it.groupValues[1])) }
