@@ -105,6 +105,9 @@ class ScreenTour {
         click("Got it")
         rule.waitUntil(10_000) { rule.onAllNodesWithText("What's new").fetchSemanticsNodes().isEmpty() }
         click("Progress"); waitFor("Rank"); shot("08-progress")
+        click("Stats & badges"); waitFor("Practice calendar"); shot("28-stats")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        waitFor("Rank")
         click("Home"); waitFor("Start ·", substring = true)
         rule.onAllNodesWithText("Settings").fetchSemanticsNodes()
         rule.activityRule.scenario.onActivity { }

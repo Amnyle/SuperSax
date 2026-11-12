@@ -235,3 +235,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Long-tone coach**: the long-tone tuner shows a live pitch trace inside the ±10 cent band and a steadiness score per hold (share in tune × 100, minus half the drift in cents); the per-note tuning map stays in the tuner history.
 - **Sight-reading play-along**: two bars of quarter notes generated at a note-reading level (mostly steps, small leaps); the app follows note by note: a note counts when held within 50 cents for 0.15 s; a different note held 0.3 s marks that note as a mistake; the result is right-first-time over total and the time taken (own drill kind, no stars).
 
+
+## Update D: stats and badges
+
+- **Stats & badges** (Progress): computed on the fly from the logs by pure Java (`domain/stats/Stats`, `Badges`), nothing new is stored. Calendar heatmap of the last 17 weeks (minutes of sax + phone per day, Monday on top), minutes per week split sax/phone (8 weeks), best clean tempo per scale per day (from the session runs), weekly average share in tune of tuner holds.
+- **Streaks** here count saxophone days (a session of at least 1 minute); the daily-exercise streak stays separate. The current streak stays alive until today ends.
+- **Badges**: 20 fixed achievements (sessions, streaks, hours, scales, tempo, long tones, drill stars, daily habit, speed reading, play-along, first take). Each shows progress towards its target; nothing is lost if data is deleted, they are recomputed. The existing Goals screen stays the place for user-set goals.

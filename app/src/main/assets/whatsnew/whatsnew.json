@@ -121,5 +121,16 @@
       "Coach de notes tenues : une ligne de hauteur en direct dans la bande juste et un score de stabilité pour chaque tenue.",
       "Déchiffrage en jouant : joue une nouvelle mélodie et l'appli te suit note à note."
     ]
+  },
+  {
+    "id": 10,
+    "en": [
+      "Stats & badges in Progress: a practice calendar, minutes per week, your clean tempo per scale over time and your tuning on long tones.",
+      "20 badges to earn, from your first session to 30 days in a row, with progress bars for the ones still ahead."
+    ],
+    "fr": [
+      "Statistiques et badges dans Progrès : un calendrier de pratique, les minutes par semaine, votre tempo propre par gamme dans le temps et votre justesse sur les notes tenues.",
+      "20 badges à gagner, de la première séance à 30 jours d'affilée, avec une barre de progression pour ceux à venir."
+    ]
   }
 ]

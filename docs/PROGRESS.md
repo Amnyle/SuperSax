@@ -90,3 +90,4 @@ Not verifiable here: YouTube search and download (YouTube is not reachable from 
 Built: music-quality time stretching and key shift for the song player with clicks in the same stream; no breathing block; no repeated scale in a session; range rank no longer seeded by onboarding; fingering chart sheet; new logo.
 Verified: `testDebugUnitTest` **124 tests, 0 failures** (new: time stretcher keeps pitch, loudness and chords and is transparent at 100 percent; renderer passes samples through untouched, places clicks on the exact sample at any speed, loops and stops, shifts the key without changing the tempo; planner never repeats a scale; no breathing block); lint 0 errors. Not verifiable here: the sound on a phone.
 
+- Update D: Stats & badges screen (heatmap, weekly minutes, tempo per scale, tuning trend, 20 badges).

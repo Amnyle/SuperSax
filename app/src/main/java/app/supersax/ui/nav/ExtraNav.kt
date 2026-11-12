@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.compose.material.icons.rounded.Leaderboard
+import androidx.compose.material.icons.rounded.Insights
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.LocalFireDepartment
@@ -95,6 +96,7 @@ object ExtraRoutes {
     const val SONG = "song/{id}"
     fun song(id: String) = "song/$id"
     const val SCALE_CHECKER = "scale_checker"
+    const val STATS = "stats"
     fun piece(id: String) = "piece/$id"
     fun pdf(file: String) = "pdf/$file"
     fun recordings(pieceId: String? = null) = if (pieceId == null) "recordings" else "recordings?piece=$pieceId"
@@ -175,6 +177,7 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.SONG, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
         SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() })
     }
+    composable(ExtraRoutes.STATS) { app.supersax.ui.stats.StatsScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.SCALE_CHECKER) { ScaleCheckerScreen(onBack = { nav.popBackStack() }) }
 }
 
@@ -189,6 +192,7 @@ fun extraPhoneDrillRoute(type: ExerciseType): String? = when (type) {
 /** Progress: where you stand, and what you logged. */
 @Composable
 fun extraProgressEntries(nav: NavHostController): List<HubEntry> = listOf(
+    HubEntry(stringResource(R.string.stats_title), stringResource(R.string.stats_sub), Icons.Rounded.Insights) { nav.navigate(ExtraRoutes.STATS) },
     HubEntry(stringResource(R.string.rank), stringResource(R.string.rank_sub), Icons.Rounded.Leaderboard) { nav.navigate(ExtraRoutes.RANK) },
     HubEntry(stringResource(R.string.weekly_review), stringResource(R.string.weekly_review_sub), Icons.Rounded.Summarize) { nav.navigate(ExtraRoutes.REVIEW) },
 )
