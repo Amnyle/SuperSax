@@ -141,7 +141,7 @@ public final class Groove {
                 double at = Math.abs(frac - 0.5) < 1e-9 ? Math.floor(sn.start) + swingOffset(style.feel) : sn.start;
                 double len = sn.beats;
                 if (Math.abs(frac) < 1e-9 && Math.abs(len - 0.5) < 1e-9) len = swingOffset(style.feel); // long-short eighths
-                v.lead(at * beat, Math.max(0.08, len * beat * 0.95), sn.midi);
+                v.lead(at * beat, Math.max(0.08, len * beat * (len <= 0.5 ? 0.98 : 0.92)), sn.midi, sn.vel);
             }
         } else if (calls != null && !calls.isEmpty()) {
             for (int c = 0; c < choruses; c++) {
@@ -200,7 +200,8 @@ public final class Groove {
         void tom(double t, int which, double v);
         void bass(double t, double dur, double midi, double v);
         void chord(double t, double dur, int[] notes, double v);
-        void lead(double t, double dur, double midi);
+        void lead(double t, double dur, double midi, double vel);
+        default void lead(double t, double dur, double midi) { lead(t, dur, midi, 1.0); }
     }
 
     /** Writes the parts: grooves per feel, with variations from one chorus to the next and a fill to close each chorus. */
@@ -448,9 +449,9 @@ public final class Groove {
             }
         }
 
-        @Override public void lead(double t, double dur, double midi) {
-            if (lead == null) { synth.lead(t, dur, midi); return; }
-            lead.play(stems[Part.LEAD.ordinal()], rate, (int) Math.round(t * rate), midi, 0.55, dur, 0.06);
+        @Override public void lead(double t, double dur, double midi, double vel) {
+            if (lead == null) { synth.lead(t, dur, midi, vel); return; }
+            lead.play(stems[Part.LEAD.ordinal()], rate, (int) Math.round(t * rate), midi, 0.55 * vel, dur, 0.07);
         }
     }
 
@@ -588,7 +589,7 @@ public final class Groove {
         }
 
         /** Reedy lead voice with vibrato and a little breath, for the call phrases. */
-        @Override public void lead(double t, double dur, double midi) {
+        @Override public void lead(double t, double dur, double midi, double vel) {
             to(Part.LEAD);
             double f = hz(midi);
             int s0 = (int) (t * rate), len = (int) (dur * rate);
@@ -600,7 +601,7 @@ public final class Groove {
                 phase += 2 * Math.PI * fr / rate;
                 lp += 0.2 * ((rnd.nextDouble() * 2 - 1) - lp);
                 double v = Math.sin(phase) + 0.45 * Math.sin(2 * phase) + 0.3 * Math.sin(3 * phase) + 0.15 * Math.sin(4 * phase) + 0.06 * lp;
-                out[s0 + i] += (float) (0.16 * env * v);
+                out[s0 + i] += (float) (0.16 * vel * env * v);
             }
         }
     }

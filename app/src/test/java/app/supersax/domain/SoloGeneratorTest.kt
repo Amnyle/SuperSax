@@ -18,7 +18,7 @@ class SoloGeneratorTest {
             // no overlaps, nothing past the end
             s.zipWithNext().forEach { (a, b) -> assertTrue(a.start + a.beats <= b.start + 1e-9, "$st $key $lv $seed overlap at ${a.start}") }
             assertTrue(s.last().start + s.last().beats <= bars * 4 + 1e-9)
-            val range = when (lv) { Level.EASY -> 62..74; Level.MEDIUM -> 60..79; Level.HARD -> 58..84; Level.EXTREME -> 58..89 }
+            val range = when (lv) { Level.EASY -> 60..77; Level.MEDIUM -> 58..81; Level.HARD -> 58..84; Level.EXTREME -> 58..89 }
             s.mapNotNull { it.midi }.forEach { assertTrue(it + 9 in (range.first - 1)..(range.last + 1), "$st $lv written ${it + 9}") }
             val last = s.last { it.midi != null }
             assertEquals(k.semitone, Math.floorMod(last.midi!!, 12), "$st $key $lv $seed ends on the root")

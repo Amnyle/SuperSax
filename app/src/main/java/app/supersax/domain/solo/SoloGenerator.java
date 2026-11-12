@@ -14,27 +14,29 @@ import java.util.Random;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Writes a solo idea over a backing style, the way teachers build one: short phrases with space between them, a
- * rhythm motif that comes back, chord tones on the strong beats, steps and the odd leap in between, and an ending on
- * the key's root. Difficulty sets the rhythms, the notes allowed and the range:
- * EASY quarters and halves on the pentatonic, chord tones on the beat, one octave, lots of space;
- * MEDIUM adds eighths and the blue note, a motif repeated on new notes;
- * HARD swing-eighth lines on each chord's scale, 3rds and 7ths targeted, chromatic approach notes;
- * EXTREME sixteenths, enclosures around the targets, 9ths and 13ths, the full range.
+ * Writes a solo idea over a backing style the way players build one: from vocabulary (licks and riffs), placed in a
+ * form (call, repeat of the call, answer, ending on a 12-bar blues; a riff and its variations in funk; a line through
+ * each ii–V–I in jazz), each phrase starting near where the last one ended, with space between phrases.
+ * EASY: quarter and half notes on the pentatonic, two-bar calls, two bars of space to answer.
+ * MEDIUM: classic eighth-note blues licks with the blue note and the ♭3→3 slide.
+ * HARD: swing-eighth lines on each chord's scale (arpeggios, approach notes into the 3rd), so the line follows the chords.
+ * EXTREME: sixteenth-note runs, enclosures (above, below, target), double-time lines through the chords.
  */
 public final class SoloGenerator {
     private SoloGenerator() {}
 
     public enum Level { EASY, MEDIUM, HARD, EXTREME }
 
-    /** One note (or rest when midi is null) of the solo: start and length in beats from the start of the solo, concert pitch. */
+    /** One note (or rest when midi is null): start and length in beats from the start of the solo, concert pitch, loudness. */
     public static final class Note {
-        public final double start, beats;
+        public final double start, beats, vel;
         public final @Nullable Integer midi;
-        Note(double start, double beats, @Nullable Integer midi) { this.start = start; this.beats = beats; this.midi = midi; }
+        Note(double start, double beats, @Nullable Integer midi) { this(start, beats, midi, 1.0); }
+        Note(double start, double beats, @Nullable Integer midi, double vel) { this.start = start; this.beats = beats; this.midi = midi; this.vel = vel; }
         public double getStart() { return start; }
         public double getBeats() { return beats; }
         public @Nullable Integer getMidi() { return midi; }
+        public double getVel() { return vel; }
     }
 
     /** Bars the solo lasts: one chorus, at least 8 bars. The rest of the loop is left for the player. */
@@ -43,87 +45,129 @@ public final class SoloGenerator {
     /** Written range (alto) per level. */
     static int[] writtenRange(Level l) {
         switch (l) {
-            case EASY: return new int[]{62, 74};
-            case MEDIUM: return new int[]{60, 79};
+            case EASY: return new int[]{60, 77};
+            case MEDIUM: return new int[]{58, 81};
             case HARD: return new int[]{58, 84};
             default: return new int[]{58, 89};
         }
     }
 
-    /** Rhythm cells of one bar (beats; negative = rest). Higher levels build bars beat by beat. */
-    private static final double[][] EASY_BARS = {{2, 2}, {1, 1, 2}, {4}, {1, 1, 1, 1}, {2, 1, 1}, {-1, 1, 2}, {3, 1}, {1, 2, 1}};
-    private static final double[][] MEDIUM_BARS = {{0.5, 0.5, 1, 2}, {1, 0.5, 0.5, 2}, {0.5, 0.5, 0.5, 0.5, 2}, {-0.5, 0.5, 1, 1, 1},
-        {1.5, 0.5, 2}, {1, 1, 0.5, 0.5, 1}, {2, 0.5, 0.5, 1}, {-1, 0.5, 0.5, 2}};
-    private static final double[][] HARD_BEATS = {{0.5, 0.5}, {0.5, 0.5}, {0.5, 0.5}, {1}, {-0.5, 0.5}};
-    private static final double[][] EXTREME_BEATS = {{0.25, 0.25, 0.25, 0.25}, {0.5, 0.5}, {0.5, 0.25, 0.25}, {0.25, 0.25, 0.5}, {0.5, 0.5}, {1}};
+    // --- vocabulary -----------------------------------------------------------------------------
+    // Key licks: "semitones above the key root:beats", r = rest. Chord licks: "scale step of the chord (0 = root,
+    // 2 = 3rd, 7 = octave; a = a half step below, b = a half step above):beats".
 
-    private static double[] barRhythm(Level l, Random rnd, boolean phraseEnd) {
-        if (l == Level.EASY) return EASY_BARS[rnd.nextInt(EASY_BARS.length)];
-        if (l == Level.MEDIUM) return MEDIUM_BARS[rnd.nextInt(MEDIUM_BARS.length)];
-        double[][] cells = l == Level.HARD ? HARD_BEATS : EXTREME_BEATS;
-        List<Double> out = new ArrayList<>();
-        int beats = phraseEnd ? 2 : 4;
-        for (int b = 0; b < beats; b++) for (double d : cells[rnd.nextInt(cells.length)]) out.add(d);
-        if (phraseEnd) out.add(2.0);
-        double[] a = new double[out.size()];
-        for (int i = 0; i < a.length; i++) a[i] = out.get(i);
-        return a;
-    }
+    private static final String[] BLUES_EASY = {
+        "0:1 3:1 5:2 3:1 0:1 r:2", "7:2 10:1 7:1 5:1 3:1 0:2", "12:2 10:2 7:3 r:1", "3:1 5:1 7:2 5:1 3:1 0:2",
+        "r:1 0:1 3:1 0:1 -2:2 0:2", "7:1 7:1 10:2 7:2 r:2", "5:2 3:2 0:3 r:1", "r:2 7:1 5:1 3:2 0:2",
+    };
+    private static final String[] BLUES_EASY_END = {"3:2 -2:2 0:4", "7:1 5:1 3:1 0:1 0:4", "r:1 3:1 5:2 0:4"};
+    private static final String[] BLUES_MEDIUM = {
+        "r:.5 3:.5 5:.5 6:.5 7:1 5:1 3:.5 0:1.5 r:2", "12:.5 10:.5 7:.5 10:.5 7:1 5:1 3:2 0:2",
+        "7:.5 6:.5 5:.5 3:.5 0:1 -2:1 0:2 r:2", "3:.5 4:.5 7:1 9:1 7:1 4:.5 3:.5 0:1 r:2",
+        "0:1 3:.5 0:.5 3:1 5:1 6:.5 5:.5 3:.5 0:.5 0:2", "r:1 10:.5 12:.5 10:1 7:1 5:.5 7:.5 5:.5 3:.5 0:2",
+        "7:.5 7:.5 r:.5 7:.5 10:1 7:1 5:1 3:1 r:2", "r:.5 0:.5 3:.5 5:.5 3:.5 0:.5 -2:1 0:2 r:2",
+    };
+    private static final String[] BLUES_MEDIUM_END = {"3:.5 4:.5 0:1 -2:1 -5:1 0:4", "6:.5 5:.5 3:.5 0:.5 -2:1 3:.5 4:.5 0:4",
+        "10:.5 7:.5 5:.5 3:.5 5:.5 3:.5 0:1 0:4"};
+    private static final String[] MAJOR_EASY = {"4:1 2:1 0:2 r:4", "7:2 9:1 7:1 4:2 r:2", "0:1 2:1 4:1 7:1 9:2 7:2", "r:1 4:1 7:1 4:1 2:2 r:2"};
+    private static final String[] MAJOR_EASY_END = {"4:2 2:2 0:4", "7:1 4:1 2:2 0:4"};
+    private static final String[] MAJOR_MEDIUM = {"r:.5 0:.5 2:.5 4:.5 7:.5 9:.5 7:.5 4:.5 2:1 0:1 r:2", "9:.5 7:.5 4:.5 2:.5 3:.5 4:.5 7:1 4:2 r:2",
+        "4:1 5:.5 4:.5 2:.5 0:.5 -1:1 0:2 r:2", "r:1 7:.5 9:.5 12:1 9:.5 7:.5 4:1 2:1 r:2"};
+    private static final String[] MAJOR_MEDIUM_END = {"4:.5 2:.5 0:1 -1:1 2:1 0:4", "9:.5 7:.5 4:.5 2:.5 3:.5 4:.5 2:1 0:4"};
+    private static final String[] FUNK_EASY = {"0:1 r:1 3:1 5:1", "7:1 r:1 5:1 3:1", "0:1 0:1 r:1 3:1"};
+    private static final String[] BLUES_SHORT = {"7:.5 5:.5 3:.5 0:.5 0:2", "r:.5 10:.5 7:.5 5:.5 7:2", "3:.5 4:.5 0:1 r:2"};
+    private static final String[] MAJOR_SHORT = {"4:.5 2:.5 0:1 r:2", "7:.5 9:.5 7:1 r:2"};
+    private static final String[] FUNK_MEDIUM = {"r:.5 0:.5 3:.5 0:.5 r:.5 5:.5 6:.5 7:.5", "0:.5 r:.5 10:.5 0:.5 r:.5 3:.5 r:.5 5:.5",
+        "7:.5 7:.5 r:.5 10:.5 r:.5 7:.5 5:.5 3:.5"};
+    private static final String[] FUNK_HARD = {"0:.25 r:.25 0:.25 3:.25 r:.5 5:.5 7:.25 10:.25 r:.5 12:.5 10:.5",
+        "r:.25 7:.25 10:.25 7:.25 5:.5 3:.5 r:.5 0:.25 3:.25 5:.5 r:.5", "12:.25 10:.25 7:.25 5:.25 6:.25 5:.25 3:.5 0:.5 r:.5 -2:.25 0:.75"};
+    private static final String[] FUNK_END = {"0:.25 3:.25 5:.25 6:.25 7:.5 5:.5 3:.5 0:1.5"};
+    private static final String[] FUNK_EASY_END = {"3:1 5:1 0:2"};
+    private static final String[] LINE_HARD = {
+        "0:.5 1:.5 2:.5 4:.5 6:.5 4:.5 2:.5 0:.5", "2a:.5 2:.5 4:.5 6:.5 8:.5 6:.5 4:.5 2:.5", "7:.5 6:.5 5:.5 4:.5 3:.5 2:.5 1:.5 2:.5",
+        "r:.5 4:.5 5:.5 6:.5 7:1 6:.5 4:.5", "6:.5 4:.5 2:.5 0:.5 -1:.5 0:.5 2:1", "4:.5 3:.5 2:.5 2a:.5 2:1 r:1",
+        "9:.5 7:.5 6:.5 4:.5 2:1 r:1", "r:1 2:.5 4:.5 6:.5 5:.5 4:.5 2:.5",
+    };
+    private static final String[] LINE_HARD_END = {"4:.5 3:.5 2:.5 1:.5 2:2", "6:.5 4:.5 2a:.5 2:.5 0:2", "r:.5 2:.5 4:.5 6:.5 4:2"};
+    private static final String[] LINE_EXTREME = {
+        "0:.25 1:.25 2:.25 4:.25 6:.25 4:.25 2:.25 1:.25 2a:.5 2:.5 4:.5 6:.5", "7:.25 6:.25 5:.25 4:.25 3:.25 2:.25 1:.25 0:.25 2b:.25 2a:.25 2:.5 r:1",
+        "4:.5 6:.25 8:.25 9:.5 8:.25 6:.25 4:.25 3:.25 2:.25 1:.25 2:1", "r:.5 2:.25 4:.25 6:.25 8:.25 10:.25 9:.25 8:.25 6:.25 4:.25 2:.25 1:.5 2:.5",
+        "9:.25 8:.25 7:.25 6:.25 7b:.25 7a:.25 7:.5 6:.25 4:.25 2:.25 0:.25 -1:1",
+    };
+    private static final String[] LINE_EXTREME_END = {"4:.25 3:.25 2:.25 1:.25 0:.25 -1:.25 0:.5 2:2", "2b:.25 2a:.25 2:.5 4:.5 6:.5 4:2"};
 
-    /** Pitch classes (semitones above the concert key) allowed over [ch]. */
-    static int[] pool(Groove.Style style, Groove.Chord ch, Level l) {
-        boolean bluesy = style != Groove.Style.JAZZ_251;
-        if (l == Level.EASY) return bluesy ? new int[]{0, 3, 5, 7, 10} : new int[]{0, 2, 4, 7, 9};
-        if (l == Level.MEDIUM) return bluesy ? new int[]{0, 3, 5, 6, 7, 10} : new int[]{0, 2, 4, 7, 9, 11};
-        int r = ch.semitones;
-        int[] mode;
-        switch (ch.quality) {
-            case MIN7: mode = new int[]{0, 2, 3, 5, 7, 9, 10}; break;
-            case MAJ7: mode = new int[]{0, 2, 4, 5, 7, 9, 11}; break;
-            default: mode = bluesy ? new int[]{0, 2, 3, 4, 5, 7, 9, 10} : new int[]{0, 2, 4, 5, 7, 9, 10};
+    /** A parsed lick: per note {beats, value, chromatic offset} with value = Integer.MIN_VALUE for a rest. */
+    private static final class Lick {
+        final double[] beats; final int[] value; final int[] chroma; final boolean chord;
+        Lick(String s, boolean chord) {
+            String[] tok = s.trim().split("\\s+");
+            beats = new double[tok.length]; value = new int[tok.length]; chroma = new int[tok.length];
+            this.chord = chord;
+            for (int i = 0; i < tok.length; i++) {
+                String[] p = tok[i].split(":");
+                beats[i] = Double.parseDouble(p[1]);
+                String v = p[0];
+                if (v.equals("r")) { value[i] = Integer.MIN_VALUE; continue; }
+                if (v.endsWith("a")) { chroma[i] = -1; v = v.substring(0, v.length() - 1); }
+                else if (v.endsWith("b")) { chroma[i] = 1; v = v.substring(0, v.length() - 1); }
+                value[i] = Integer.parseInt(v);
+            }
         }
-        int[] out = new int[mode.length];
-        for (int i = 0; i < mode.length; i++) out[i] = (mode[i] + r) % 12;
-        return out;
+        double length() { double s = 0; for (double b : beats) s += b; return s; }
     }
 
-    /** Chord tones to land on (semitones above the key), most wanted first. */
-    static int[] targets(Groove.Chord ch, Level l) {
-        int r = ch.semitones;
-        int third = ch.quality.tones[1][1], seventh = ch.quality.tones[3][1];
-        int[] rel;
-        switch (l) {
-            case EASY: rel = new int[]{0, 7, third}; break;
-            case MEDIUM: rel = new int[]{third, 0, 7, seventh}; break;
-            case HARD: rel = new int[]{third, seventh, 7}; break;
-            default: rel = ch.quality == Groove.Quality.DOM7 ? new int[]{third, seventh, 14, 21} : new int[]{third, seventh, 14};
+    private static final int[] MIXO = {0, 2, 4, 5, 7, 9, 10}, DORIAN = {0, 2, 3, 5, 7, 9, 10}, IONIAN = {0, 2, 4, 5, 7, 9, 11};
+
+    /** Semitones above the key root of note [i] of [l] over chord [ch] (unplaced octave). */
+    private static int semis(Lick l, int i, Groove.Chord ch, boolean minorStyle) {
+        int v = l.value[i];
+        if (!l.chord) {
+            // Over IV, or in a minor key, the major 3rd of the key clashes: use the ♭3.
+            if ((ch.semitones == 5 || minorStyle) && Math.floorMod(v, 12) == 4) v -= 1;
+            if (minorStyle && Math.floorMod(v, 12) == 9) v -= 1;
+            return v;
         }
-        int[] out = new int[rel.length];
-        for (int i = 0; i < rel.length; i++) out[i] = (rel[i] + r) % 12;
-        return out;
+        int[] scale = ch.quality == Groove.Quality.MIN7 ? DORIAN : ch.quality == Groove.Quality.MAJ7 ? IONIAN : MIXO;
+        return ch.semitones + Math.floorDiv(v, 7) * 12 + scale[Math.floorMod(v, 7)] + l.chroma[i];
     }
 
-    private static boolean in(int pc, int[] set) { for (int s : set) if (s == pc) return true; return false; }
+    // --- form -----------------------------------------------------------------------------------
 
-    /** Nearest pitch to [from] whose class (relative to [key]) is in [set], within [lo, hi]; random tie-break. */
-    private static int nearest(int from, int key, int[] set, int lo, int hi, Random rnd) {
-        int best = -1, bestD = 99;
-        for (int m = lo; m <= hi; m++) {
-            if (!in(Math.floorMod(m - key, 12), set)) continue;
-            int d = Math.abs(m - from) + (rnd.nextInt(3) == 0 ? 1 : 0);
-            if (d < bestD) { bestD = d; best = m; }
+    private enum Part { CALL, REPEAT, ANSWER, LINE, LINE_END, RIFF, RIFF_AGAIN, RIFF_OTHER, END, REST }
+
+    /** What happens in each bar (a part starting on a bar may last more than one bar; following bars are SKIP = null). */
+    private static Part[] plan(Groove.Style style, Level l, int bars, Random rnd) {
+        Part[] p = new Part[bars];
+        java.util.Arrays.fill(p, Part.REST);
+        if (style == Groove.Style.FUNK) {
+            boolean busy = l.ordinal() >= 2;
+            p[0] = Part.RIFF; p[1] = busy ? Part.RIFF_AGAIN : Part.REST; p[2] = Part.RIFF_OTHER; p[3] = Part.REST;
+            p[4] = Part.RIFF_AGAIN; p[5] = busy ? Part.RIFF_OTHER : Part.REST; p[6] = Part.END; p[7] = Part.REST;
+            return p;
         }
-        return best < 0 ? Math.max(lo, Math.min(hi, from)) : best;
+        boolean lines = l.ordinal() >= 2;
+        if (bars == 12) {
+            // A, A, B and the ending: the classic 12-bar shape.
+            p[0] = Part.CALL; p[1] = null;
+            p[4] = Part.REPEAT; p[5] = null;
+            p[8] = Part.ANSWER; p[9] = null;
+            p[10] = Part.END; p[11] = null;
+            if (lines) { p[2] = Part.LINE_END; p[6] = Part.LINE_END; if (l == Level.EXTREME) { p[2] = Part.LINE; p[3] = Part.LINE_END; } }
+            else if (l == Level.MEDIUM && rnd.nextBoolean()) p[3] = Part.LINE_END;
+            return p;
+        }
+        // Jazz ii–V–I, twice: a line through ii and V landing on I, space, then a second line and the ending.
+        if (lines) {
+            p[0] = Part.LINE; p[1] = Part.LINE; p[2] = Part.LINE_END;
+            p[4] = Part.LINE; p[5] = Part.LINE; p[6] = Part.END; p[7] = null;
+            if (l == Level.EXTREME) p[3] = Part.LINE_END;
+        } else {
+            p[0] = Part.CALL; p[1] = null; p[4] = Part.REPEAT; p[5] = null; p[6] = Part.END; p[7] = null;
+        }
+        return p;
     }
 
-    /** The next pitch of [set] above (dir > 0) or below [from], [steps] scale steps away. */
-    private static int step(int from, int key, int[] set, int dir, int steps) {
-        int m = from;
-        for (int s = 0; s < steps; s++) {
-            do { m += dir; } while (!in(Math.floorMod(m - key, 12), set) && Math.abs(m - from) < 13);
-        }
-        return m;
-    }
+    // --- generation -----------------------------------------------------------------------------
 
     /**
      * A solo over [style] in the concert key [key] (pitch class), for an alto saxophone, at [level]. The same seed
@@ -135,103 +179,165 @@ public final class SoloGenerator {
         int[] range = writtenRange(level);
         int lo = range[0] - 9, hi = range[1] - 9;
         int bars = bars(style);
-        // The last bar on the I chord: the solo resolves there.
-        int endBar = bars - 1;
-        for (int b = bars - 1; b >= 0; b--) if (style.form.get(b % style.bars()).semitones == 0) { endBar = b; break; }
+        boolean minor = style.minor;
+        boolean major = style == Groove.Style.JAZZ_251;
+        boolean funk = style == Groove.Style.FUNK;
+        String[] calls, ends, riffs = null;
+        boolean chordLines = level.ordinal() >= 2 && !funk;
+        switch (level) {
+            case EASY: calls = major ? MAJOR_EASY : BLUES_EASY; ends = funk ? FUNK_EASY_END : major ? MAJOR_EASY_END : BLUES_EASY_END; riffs = FUNK_EASY; break;
+            case MEDIUM: calls = major ? MAJOR_MEDIUM : BLUES_MEDIUM; ends = funk ? FUNK_END : major ? MAJOR_MEDIUM_END : BLUES_MEDIUM_END; riffs = FUNK_MEDIUM; break;
+            default: calls = major ? MAJOR_MEDIUM : BLUES_MEDIUM; ends = funk ? FUNK_END : major ? MAJOR_MEDIUM_END : BLUES_MEDIUM_END; riffs = FUNK_HARD;
+        }
+        String[] lines = level == Level.EXTREME ? LINE_EXTREME : LINE_HARD;
+        String[] lineEnds = level == Level.EXTREME ? LINE_EXTREME_END : LINE_HARD_END;
+        Part[] plan = plan(style, level, bars, rnd);
+
         List<Note> out = new ArrayList<>();
-        int pitch = nearest((lo + hi) / 2, k, new int[]{0}, lo, hi, rnd);
-        int dir = rnd.nextBoolean() ? 1 : -1;
-        double[][] motif = new double[2][];
-        boolean reuse = level == Level.EASY || level == Level.MEDIUM || rnd.nextBoolean();
-        int phraseLen = level == Level.EXTREME ? 4 : 2;
+        int[] last = {k + 12 * Math.floorDiv(lo + hi - 2 * k, 24)};  // start around the middle of the range, on the root
+        Lick call = null, riff = null;
+        String callStr = null, riffStr = null;
+        double t = 0;
         for (int bar = 0; bar < bars; bar++) {
-            Groove.Chord ch = style.form.get(bar % style.bars());
+            Part part = plan[bar];
+            if (part == null) continue; // inside a two-bar part
             double t0 = bar * 4;
-            int inPhrase = bar % (phraseLen * 2);
-            // Phrases of [phraseLen] bars; easy and medium leave the next bars free (space to answer).
-            boolean rest = (level == Level.EASY || level == Level.MEDIUM) && inPhrase >= phraseLen && bar != endBar;
-            if (bar > endBar) rest = true;
-            if (rest) { out.add(new Note(t0, 4, null)); continue; }
-            if (bar == endBar) {
-                int root = nearest(pitch, k, new int[]{0}, lo, hi, rnd);
-                if (level != Level.EASY) {
-                    int approach = root + (rnd.nextBoolean() ? 1 : -1);
-                    if (level == Level.HARD || level == Level.EXTREME) {
-                        out.add(new Note(t0 - 0.5, 0.5, approach)); // replaces nothing: the bar before ends on a rest or long note
-                    }
-                }
-                out.add(new Note(t0, 3, root));
-                out.add(new Note(t0 + 3, 1, null));
-                pitch = root;
-                continue;
+            if (t < t0 - 1e-9) { out.add(new Note(t, t0 - t, null)); t = t0; }
+            if (t > t0 + 1e-9) continue;
+            Lick lick;
+            switch (part) {
+                case CALL:
+                    callStr = chordLines ? pick(lines, rnd) + " " + pick(lineEnds, rnd) : pick(calls, rnd);
+                    call = new Lick(callStr, chordLines);
+                    lick = call; break;
+                case REPEAT:
+                    if (call == null) { lick = new Lick(pick(calls, rnd), false); break; }
+                    // Same start, new ending (from medium on, half the time): the call is answered by itself.
+                    if (level != Level.EASY && rnd.nextBoolean()) {
+                        String end = chordLines ? pick(lineEnds, rnd) : pick(major ? MAJOR_SHORT : BLUES_SHORT, rnd);
+                        lick = new Lick(firstBar(callStr) + " " + end, chordLines);
+                    } else lick = call;
+                    break;
+                case ANSWER:
+                    lick = chordLines ? new Lick(pickOther(lines, callStr, rnd) + " " + pick(lineEnds, rnd), true) : new Lick(pickOther(calls, callStr, rnd), false);
+                    break;
+                case LINE: lick = new Lick(pick(lines, rnd), true); break;
+                case LINE_END: lick = chordLines ? new Lick(pick(lineEnds, rnd), true) : new Lick(pick(major ? MAJOR_SHORT : BLUES_SHORT, rnd), false); break;
+                case RIFF: riffStr = pick(riffs, rnd); riff = new Lick(riffStr, false); lick = riff; break;
+                case RIFF_AGAIN: lick = riff != null ? riff : new Lick(pick(riffs, rnd), false); break;
+                case RIFF_OTHER: lick = new Lick(pickOther(riffs, riffStr, rnd), false); break;
+                case END: lick = new Lick(pick(ends, rnd), false); break;
+                default: out.add(new Note(t0, 4, null)); t = t0 + 4; continue;
             }
-            boolean phraseEnd = (inPhrase % phraseLen) == phraseLen - 1 || bar + 1 == endBar;
-            double[] rhythm;
-            int slot = inPhrase % phraseLen;
-            if (reuse && slot < 2 && motif[slot] != null && bar >= phraseLen * 2) rhythm = motif[slot];
-            else {
-                rhythm = barRhythm(level, rnd, phraseEnd && level.ordinal() >= 2);
-                if (bar < 2 && slot < 2) motif[slot] = rhythm;
-            }
-            int[] pool = pool(style, ch, level);
-            int[] targets = targets(ch, level);
-            double t = t0;
-            List<Note> barNotes = new ArrayList<>();
-            for (int i = 0; i < rhythm.length; i++) {
-                double d = Math.abs(rhythm[i]);
-                if (rhythm[i] < 0) { barNotes.add(new Note(t, d, null)); t += d; continue; }
-                boolean strong = Math.abs(t - Math.rint(t)) < 1e-9 && ((int) Math.rint(t - t0)) % 2 == 0;
-                int next;
-                if (strong || (i == rhythm.length - 1 && d >= 1)) {
-                    // Land on a chord tone near where the line is going.
-                    int[] want = Arrays.copyOf(targets, rnd.nextInt(targets.length) + 1);
-                    next = nearest(pitch + dir * 2, k, want, lo, hi, rnd);
-                } else {
-                    double r = rnd.nextDouble();
-                    if (r < 0.25) dir = -dir;
-                    int steps = r < 0.85 ? 1 : 2;
-                    next = step(pitch, k, pool, dir, steps);
-                    if (rnd.nextDouble() < (level == Level.EASY ? 0.05 : 0.12)) next = nearest(pitch + dir * 5, k, targets, lo, hi, rnd); // a leap
-                }
-                if (next < lo || next > hi) { dir = -dir; next = step(pitch, k, pool, dir, 1); }
-                next = Math.max(lo, Math.min(hi, next));
-                // Chromatic approach into the next strong beat (hard and extreme).
-                if (level.ordinal() >= 2 && i + 1 < rhythm.length && rhythm[i + 1] > 0 && d <= 0.5 && rnd.nextDouble() < 0.3) {
-                    double tn = t + d;
-                    if (Math.abs(tn - Math.rint(tn)) < 1e-9 && ((int) Math.rint(tn - t0)) % 2 == 0) {
-                        int tgt = nearest(next, k, targets, lo, hi, rnd);
-                        next = tgt + (rnd.nextBoolean() ? 1 : -1);
-                        if (level == Level.EXTREME && i > 0 && !barNotes.isEmpty() && barNotes.get(barNotes.size() - 1).midi != null
-                            && barNotes.get(barNotes.size() - 1).beats <= 0.5) {
-                            // Enclosure: the note before goes to the other side of the target.
-                            Note prev = barNotes.remove(barNotes.size() - 1);
-                            barNotes.add(new Note(prev.start, prev.beats, tgt + (next > tgt ? -1 : 2)));
-                        }
-                    }
-                }
-                barNotes.add(new Note(t, d, next));
-                dir = next > pitch ? 1 : next < pitch ? -1 : dir;
-                pitch = next;
-                t += d;
-            }
-            out.addAll(barNotes);
+            t = place(out, lick, t0, style, k, minor, lo, hi, last, part == Part.END, level);
         }
-        // An approach note added before the last bar overlaps the bar before: shorten what was there.
-        out.sort((a, b) -> Double.compare(a.start, b.start));
-        List<Note> clean = new ArrayList<>();
-        for (Note n : out) {
-            if (!clean.isEmpty()) {
-                Note p = clean.get(clean.size() - 1);
+        if (t < bars * 4 - 1e-9) out.add(new Note(t, bars * 4 - t, null));
+        return clean(out, bars, lo, hi);
+    }
+
+    private static String pick(String[] a, Random rnd) { return a[rnd.nextInt(a.length)]; }
+
+    /** Another entry than [not] (when [not] starts it). */
+    private static String pickOther(String[] a, @Nullable String not, Random rnd) {
+        for (int i = 0; i < 12; i++) { String s = pick(a, rnd); if (not == null || !not.startsWith(s)) return s; }
+        return pick(a, rnd);
+    }
+
+    /** The tokens of a lick that fill its first bar (4 beats), padded with a rest. */
+    private static String firstBar(String lick) {
+        StringBuilder b = new StringBuilder();
+        double sum = 0;
+        for (String tok : lick.trim().split("\\s+")) {
+            double d = Double.parseDouble(tok.split(":")[1]);
+            if (sum + d > 4 + 1e-9) break;
+            if (b.length() > 0) b.append(' ');
+            b.append(tok);
+            sum += d;
+        }
+        if (sum < 4 - 1e-9) b.append(" r:").append(4 - sum);
+        return b.toString();
+    }
+
+    /**
+     * Writes [lick] from beat [t0], each note over the chord of its bar, the whole lick shifted by octaves to start near
+     * the previous note and stay in range. Returns the beat after it. [end]: the last note is the key's root.
+     */
+    private static double place(List<Note> out, Lick lick, double t0, Groove.Style style, int k, boolean minor, int lo, int hi,
+                                int[] last, boolean end, Level level) {
+        int n = lick.beats.length;
+        int[] rel = new int[n];
+        double tt = t0;
+        int first = Integer.MIN_VALUE, top = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) {
+            Groove.Chord ch = style.form.get(((int) Math.floor(tt / 4 + 1e-9)) % style.bars());
+            if (lick.value[i] != Integer.MIN_VALUE) {
+                rel[i] = semis(lick, i, ch, minor);
+                if (first == Integer.MIN_VALUE) first = rel[i];
+                top = Math.max(top, rel[i]);
+            }
+            tt += lick.beats[i];
+        }
+        // Octave for the whole lick: fits the range, starts close to the last note.
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for (int i = 0; i < n; i++) if (lick.value[i] != Integer.MIN_VALUE) { min = Math.min(min, rel[i]); max = Math.max(max, rel[i]); }
+        int shift = 0;
+        if (first != Integer.MIN_VALUE) {
+            int best = Integer.MAX_VALUE;
+            for (int o = -4; o <= 6; o++) {
+                int s = k + 12 * o;
+                boolean fits = min + s >= lo && max + s <= hi;
+                int mid = (lo + hi) / 2;
+                int cost = Math.abs(first + s - last[0]) + Math.abs((min + max) / 2 + s - mid) / 2 + (fits ? 0 : 100);
+                if (cost < best) { best = cost; shift = s; }
+            }
+        }
+        boolean swing = style.feel != Groove.Feel.SIXTEENTHS;
+        double t = t0;
+        int lastIdx = -1;
+        for (int i = 0; i < n; i++) if (lick.value[i] != Integer.MIN_VALUE) lastIdx = i;
+        for (int i = 0; i < n; i++) {
+            double d = lick.beats[i];
+            if (lick.value[i] == Integer.MIN_VALUE) { out.add(new Note(t, d, null)); t += d; continue; }
+            int midi = rel[i] + shift;
+            if (end && i == lastIdx) midi = nearestRoot(midi, k, lo, hi);
+            double frac = t - Math.floor(t);
+            double vel = 0.85;
+            if (swing && Math.abs(frac - 0.5) < 1e-9 && d <= 0.5) vel = 1.0;         // swing: accent the off-beats
+            if (rel[i] == top) vel += 0.1;                                             // the peak of the phrase
+            if (i == lastIdx) vel -= 0.1;                                              // phrase endings relax
+            if (level == Level.EASY) vel = 0.9;
+            out.add(new Note(t, d, midi, vel));
+            last[0] = midi;
+            t += d;
+        }
+        return t;
+    }
+
+    private static int nearestRoot(int midi, int k, int lo, int hi) {
+        int best = midi, bd = 99;
+        for (int m = lo; m <= hi; m++) if (Math.floorMod(m - k, 12) == 0 && Math.abs(m - midi) < bd) { bd = Math.abs(m - midi); best = m; }
+        return best;
+    }
+
+    /** Cuts what runs past the solo, joins overlaps, and brings any note outside the range back an octave. */
+    private static List<Note> clean(List<Note> in, int bars, int lo, int hi) {
+        in.sort((a, b) -> Double.compare(a.start, b.start));
+        List<Note> out = new ArrayList<>();
+        for (Note n : in) {
+            if (n.start >= bars * 4 - 1e-9) continue;
+            double len = Math.min(n.beats, bars * 4 - n.start);
+            Integer m = n.midi;
+            if (m != null) { while (m < lo) m += 12; while (m > hi) m -= 12; }
+            if (!out.isEmpty()) {
+                Note p = out.get(out.size() - 1);
                 if (p.start + p.beats > n.start + 1e-9) {
-                    clean.remove(clean.size() - 1);
-                    if (n.start - p.start > 1e-9) clean.add(new Note(p.start, n.start - p.start, p.midi));
+                    out.remove(out.size() - 1);
+                    if (n.start - p.start > 1e-9) out.add(new Note(p.start, n.start - p.start, p.midi, p.vel));
                 }
             }
-            // Approach and enclosure notes can step just outside the range: bring them back an octave.
-            if (n.midi != null && (n.midi < lo || n.midi > hi)) n = new Note(n.start, n.beats, n.midi < lo ? n.midi + 12 : n.midi - 12);
-            clean.add(n);
+            out.add(new Note(n.start, len, m, n.vel));
         }
-        return clean;
+        return out;
     }
 
     // --- display -----------------------------------------------------------------------------

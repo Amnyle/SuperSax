@@ -160,5 +160,16 @@
       "Idées de solo : dans Solo, choisissez Facile, Moyen, Difficile ou Extrême et touchez Générer un solo. Le sax joue l'idée sur l'orchestre, écrite sur la portée pour alto, puis c'est à vous. Touchez Nouvelle idée pour en avoir une autre.",
       "Corrigé : ouvrir un niveau d'un exercice sur téléphone (sa leçon) fermait l'application. Si l'application s'arrête, elle affiche maintenant un rapport à copier et envoyer."
     ]
+  },
+  {
+    "id": 13,
+    "en": [
+      "Better solo ideas: they are now built like real solos, from blues licks, funk riffs and jazz lines, in a form (a call, its repeat, an answer, an ending on the root on a blues), with each phrase starting where the last one ended.",
+      "Hard and Extreme follow the chords: arpeggios, approach notes into the 3rd, enclosures. The sax accents the swung off-beats and the top of each phrase."
+    ],
+    "fr": [
+      "De meilleures idées de solo : elles sont construites comme de vrais solos, avec des plans blues, des riffs funk et des lignes jazz, dans une forme (un appel, sa reprise, une réponse, une fin sur la tonique sur un blues), chaque phrase partant de là où la précédente s'arrête.",
+      "Difficile et Extrême suivent les accords : arpèges, notes d'approche vers la tierce, encerclements. Le sax accentue les contretemps swing et le sommet de chaque phrase."
+    ]
   }
 ]
