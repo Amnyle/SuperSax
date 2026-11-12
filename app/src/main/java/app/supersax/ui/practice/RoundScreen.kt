@@ -106,6 +106,8 @@ abstract class RoundViewModel(protected val c: AppContainer) : ViewModel() {
 /** Full-screen round: progress at the top, the question, a feedback panel with Continue, then [result]. */
 @Composable
 fun RoundScreen(vm: RoundViewModel, ui: RoundUi, onClose: () -> Unit, result: @Composable () -> Unit) {
+    val container = app.supersax.ui.nav.LocalContainer.current
+    androidx.compose.runtime.LaunchedEffect(Unit) { container.preloadBand() }
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).statusBarsPadding().navigationBarsPadding()) {
         if (ui.loading) return@Column
         if (ui.done) {

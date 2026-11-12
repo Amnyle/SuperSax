@@ -149,5 +149,16 @@
       "Lecture rythmique refaite : tenez le bouton pendant toute la durée de chaque note. Une frise montre les notes, un curseur et ce que vous avez tenu, et une note de sax sonne pendant l'appui. Chaque note devient verte ou rouge avec la raison.",
       "Une leçon avant chaque niveau de lecture de notes, gammes, doigtés, oreille et rythme. Relisez-la quand vous voulez avec le bouton livre."
     ]
+  },
+  {
+    "id": 12,
+    "en": [
+      "Solo ideas: in Solo practice, pick Easy, Medium, Hard or Extreme and tap Generate a solo. The sax plays the idea over the band, written on the staff for alto, then it's your turn. Tap New idea for a different one.",
+      "Fixes for phone exercises; if the app ever stops, it now shows a report you can copy and send."
+    ],
+    "fr": [
+      "Idées de solo : dans Solo, choisissez Facile, Moyen, Difficile ou Extrême et touchez Générer un solo. Le sax joue l'idée sur l'orchestre, écrite sur la portée pour alto, puis c'est à vous. Touchez Nouvelle idée pour en avoir une autre.",
+      "Corrections des exercices sur téléphone ; si l'application s'arrête, elle affiche maintenant un rapport à copier et envoyer."
+    ]
   }
 ]

@@ -9,6 +9,7 @@ class SaxApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        CrashLog.install(this)
         container = AppContainer(this)
         container.appScope.launch { container.sessions.restore() }
         container.appScope.launch { app.supersax.update.Updater.schedule(this@SaxApp, container.settings.current().updateCheck) }

@@ -56,6 +56,8 @@ class ScreenTour {
         click("Solo practice"); waitFor("Learn the form"); shot("21-solo")
         click("Target the 3rd"); click("Play the backing"); waitFor("Aim for", substring = true); shot("22-solo-playing")
         click("Stop")
+        click("Medium"); click("Generate a solo"); waitFor("New idea"); waitFor("The sax plays the idea", substring = true); shot("31-solo-idea")
+        click("Stop")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Note reading"); waitFor("Notes on the staff (E to F)"); shot("09-levels")
         click("Start"); waitFor("0 right"); click("C"); shot("23-speed")

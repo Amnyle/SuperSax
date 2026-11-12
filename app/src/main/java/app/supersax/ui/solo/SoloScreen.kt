@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.runtime.remember
+import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.automirrored.rounded.VolumeOff
 import androidx.compose.material.icons.rounded.CheckCircle
@@ -99,7 +101,16 @@ data class SoloUi(
     val seed: Long = 1,
     /** Volume of each part (Groove.Part order). */
     val gains: List<Float> = listOf(1f, 1f, 1f, 1f),
-)
+    /** Difficulty of generated solos. */
+    val soloLevel: app.supersax.domain.solo.SoloGenerator.Level = app.supersax.domain.solo.SoloGenerator.Level.EASY,
+    /** Seed of the solo idea shown and played (null: none). */
+    val soloSeed: Long? = null,
+    /** Bar of the whole loop being heard (the solo, then the player's turn). */
+    val loopBar: Int = 0,
+) {
+    val solo: List<app.supersax.domain.solo.SoloGenerator.Note>? get() =
+        soloSeed?.let { app.supersax.domain.solo.SoloGenerator.generate(style, PitchClass.parse(key), soloLevel, it) }
+}
 
 class SoloViewModel(private val c: AppContainer) : ViewModel() {
     private val player = LoopPlayer()
@@ -121,8 +132,9 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
             while (isActive) {
                 val u = _ui.value
                 if (u.playing) {
-                    val bar = (player.positionSec() / (4 * 60.0 / u.bpm)).toInt() % u.style.bars()
-                    if (bar != u.bar) _ui.value = u.copy(bar = bar)
+                    val loopBar = (player.positionSec() / (4 * 60.0 / u.bpm)).toInt()
+                    val bar = loopBar % u.style.bars()
+                    if (bar != u.bar || loopBar != u.loopBar) _ui.value = u.copy(bar = bar, loopBar = loopBar)
                 }
                 delay(40)
             }
@@ -134,8 +146,9 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val concert = PitchClass.parse(u.key)
             val bass = (concert.semitone + 36).let { if (it < 40) it + 12 else it }
-            val calls = if (u.step.calls) (0 until u.style.bars() / 4).map { Blues.callPhrase(u.seed + it) } else null
-            val mix = withContext(Dispatchers.Default) { Groove.render(u.style, bass, u.bpm.toDouble(), RATE, calls, bass + 24, c.band) }
+            val solo = u.solo
+            val calls = if (solo == null && u.step.calls) (0 until u.style.bars() / 4).map { Blues.callPhrase(u.seed + it) } else null
+            val mix = withContext(Dispatchers.Default) { Groove.render(u.style, bass, u.bpm.toDouble(), RATE, calls, bass + 24, c.band, solo) }
             runCatching { player.play(mix, u.gains.toFloatArray()) }
             _ui.value = _ui.value.copy(playing = true, preparing = false, bar = 0)
         }
@@ -189,6 +202,17 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
     }
     fun setBpm(b: Int) = change { it.copy(bpm = b) }
 
+    /** A new solo idea at [level], played by the sax over the backing (the backing starts if it was stopped). */
+    fun generateSolo(level: app.supersax.domain.solo.SoloGenerator.Level) {
+        val u = _ui.value.copy(soloLevel = level, soloSeed = kotlin.random.Random.nextLong(1, Long.MAX_VALUE))
+        _ui.value = u
+        render(u)
+    }
+
+    fun setSoloLevel(level: app.supersax.domain.solo.SoloGenerator.Level) { _ui.value = _ui.value.copy(soloLevel = level) }
+
+    fun clearSolo() = change { it.copy(soloSeed = null) }
+
     /** Turns one part up or down while it plays (saved for next time). */
     fun setGain(part: Groove.Part, g: Float) {
         val gains = _ui.value.gains.toMutableList().also { it[part.ordinal] = g }
@@ -224,6 +248,8 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
 @Composable
 fun SoloScreen(onBack: () -> Unit, onSongPlayer: () -> Unit) {
     val vm = appViewModel { SoloViewModel(it) }
+    val container = app.supersax.ui.nav.LocalContainer.current
+    androidx.compose.runtime.LaunchedEffect(Unit) { container.preloadBand() }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val naming = LocalSettings.current.noteNaming
     DisposableEffect(Unit) { onDispose { vm.stop() } }
@@ -267,6 +293,7 @@ fun SoloScreen(onBack: () -> Unit, onSongPlayer: () -> Unit) {
                 }
                 if (!ui.recording) Text(stringResource(R.string.solo_take_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
             }
+            SoloIdeaCard(ui, vm)
             // The bars with the chords, the current one in amber.
             SectionCard {
                 (0 until ui.style.bars() / 4).forEach { row ->
@@ -293,9 +320,9 @@ fun SoloScreen(onBack: () -> Unit, onSongPlayer: () -> Unit) {
                 }
                 Text(stringResource(R.string.solo_written_note), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
             }
-            BandMixCard(ui.gains, ui.step.calls, vm::setGain)
+            BandMixCard(ui.gains, ui.step.calls || ui.soloSeed != null, vm::setGain)
             // What to do right now.
-            if (ui.playing) LiveCue(ui, written, naming)
+            if (ui.playing && ui.soloSeed == null) LiveCue(ui, written, naming)
             // Notes for this step.
             NotesCard(ui.step, written, naming)
             if (ui.takes.isNotEmpty()) SectionCard(stringResource(R.string.solo_takes)) {
@@ -445,4 +472,63 @@ fun BandMixCard(gains: List<Float>, calls: Boolean, onGain: (Groove.Part, Float)
         }
         Text(stringResource(R.string.band_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
     }
+}
+
+/** Generated solo ideas: pick a difficulty, generate, regenerate; the sax plays it over the band, then it's your turn. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun SoloIdeaCard(ui: SoloUi, vm: SoloViewModel) {
+    val levels = app.supersax.domain.solo.SoloGenerator.Level.entries
+    SectionCard(stringResource(R.string.idea_title)) {
+        Text(stringResource(R.string.idea_body), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            levels.forEach { l ->
+                FilterChip(selected = ui.soloLevel == l, onClick = { vm.setSoloLevel(l) }, modifier = Modifier.heightIn(min = 48.dp),
+                    label = { Text(stringResource(ideaLevelName(l))) })
+            }
+        }
+        Text(stringResource(ideaLevelHint(ui.soloLevel)), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Button(
+                onClick = { vm.generateSolo(ui.soloLevel) }, enabled = !ui.preparing, modifier = Modifier.weight(1f).heightIn(min = 52.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent),
+            ) {
+                Icon(if (ui.soloSeed == null) Icons.Rounded.AutoAwesome else Icons.Rounded.Refresh, null)
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(if (ui.soloSeed == null) R.string.idea_generate else R.string.idea_new))
+            }
+            if (ui.soloSeed != null) TextButton(onClick = vm::clearSolo) { Text(stringResource(R.string.idea_clear)) }
+        }
+        val solo = ui.solo ?: return@SectionCard
+        val soloBars = app.supersax.domain.solo.SoloGenerator.bars(ui.style)
+        if (ui.playing) {
+            val saxTurn = ui.loopBar < soloBars
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.size(12.dp).clip(CircleShape).background(if (saxTurn) Sax.colors.accent else Sax.colors.good))
+                Spacer(Modifier.width(8.dp))
+                Text(if (saxTurn) stringResource(R.string.idea_sax_turn, ui.loopBar + 1, soloBars)
+                    else stringResource(R.string.idea_your_turn, ui.loopBar - soloBars + 1, soloBars),
+                    style = MaterialTheme.typography.titleSmall, color = if (saxTurn) Sax.colors.accentInk else Sax.colors.good)
+            }
+        }
+        val score = remember(ui.soloSeed, ui.soloLevel, ui.style, ui.key, ui.bpm) {
+            app.supersax.domain.solo.SoloGenerator.toScore(solo, ui.style, PitchClass.parse(ui.key), ui.bpm)
+        }
+        app.supersax.notation.StaffView(score, staffSpace = 8.dp, showTime = false, description = stringResource(R.string.idea_staff_desc))
+        Text(stringResource(R.string.idea_written), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+    }
+}
+
+private fun ideaLevelName(l: app.supersax.domain.solo.SoloGenerator.Level) = when (l) {
+    app.supersax.domain.solo.SoloGenerator.Level.EASY -> R.string.idea_easy
+    app.supersax.domain.solo.SoloGenerator.Level.MEDIUM -> R.string.idea_medium
+    app.supersax.domain.solo.SoloGenerator.Level.HARD -> R.string.idea_hard
+    app.supersax.domain.solo.SoloGenerator.Level.EXTREME -> R.string.idea_extreme
+}
+
+private fun ideaLevelHint(l: app.supersax.domain.solo.SoloGenerator.Level) = when (l) {
+    app.supersax.domain.solo.SoloGenerator.Level.EASY -> R.string.idea_easy_hint
+    app.supersax.domain.solo.SoloGenerator.Level.MEDIUM -> R.string.idea_medium_hint
+    app.supersax.domain.solo.SoloGenerator.Level.HARD -> R.string.idea_hard_hint
+    app.supersax.domain.solo.SoloGenerator.Level.EXTREME -> R.string.idea_extreme_hint
 }

@@ -52,7 +52,13 @@ class AppContainer(val context: Context) {
     val media by lazy { MediaRepository(db, recordingsDir) }
     val songs by lazy { app.supersax.data.repo.SongRepository(db) }
     /** Recorded instruments for backing tracks and the ear trainer (loaded on first use, ~12 MB). */
-    val band: app.supersax.domain.audio.Band by lazy { app.supersax.domain.audio.Band.load { context.assets.open("sounds/$it.bin") } }
+    private val bandLazy = lazy { app.supersax.domain.audio.Band.load { context.assets.open("sounds/$it.bin") } }
+    /** Blocks while the files load the first time: use off the main thread (see [preloadBand], [bandIfReady]). */
+    val band: app.supersax.domain.audio.Band get() = bandLazy.value
+    /** The band if already loaded (never blocks), for the main thread. */
+    fun bandIfReady(): app.supersax.domain.audio.Band? = if (bandLazy.isInitialized()) bandLazy.value else null
+    /** Starts loading the recorded instruments in the background. */
+    fun preloadBand() { if (!bandLazy.isInitialized()) appScope.launch { runCatching { bandLazy.value } } }
     /** Songs downloaded from YouTube (app-private). */
     val songsDir: File get() = File(context.filesDir, "songs").apply { mkdirs() }
     val backup by lazy { BackupRepository(db, settings, recordingsDir, importsDir) { clock.nowMs() } }

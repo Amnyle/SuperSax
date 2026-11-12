@@ -87,6 +87,8 @@ fun LevelsScreen(
     extra: @Composable (results: List<app.supersax.domain.common.DrillResultRecord>, openLevel: Int) -> Unit = { _, _ -> },
 ) {
     val vm = appViewModel(key = "levels-$kind") { LevelsViewModel(it) }
+    val container = app.supersax.ui.nav.LocalContainer.current
+    androidx.compose.runtime.LaunchedEffect(Unit) { container.preloadBand() }
     val results by vm.results.collectAsStateWithLifecycle()
     val seen by vm.seen.collectAsStateWithLifecycle()
     val max = Levels.count(kind, 0)

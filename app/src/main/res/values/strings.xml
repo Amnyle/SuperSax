@@ -1012,4 +1012,24 @@
     <string name="drill_lesson_example">Example</string>
     <string name="drill_lesson_start">I understand · start level %1$d</string>
     <string name="drill_lesson_open">Read the lesson of level %1$d</string>
+    <string name="crash_title">The app stopped last time</string>
+    <string name="crash_body">Sorry! Copy this report and send it so the problem can be fixed.</string>
+    <string name="crash_copy">Copy the report</string>
+    <string name="idea_title">Solo ideas</string>
+    <string name="idea_body">Generate a solo over the backing: the sax plays it once through, then the band keeps going so you can play it back, change it or answer it. Not your style? Generate a new one.</string>
+    <string name="idea_easy">Easy</string>
+    <string name="idea_medium">Medium</string>
+    <string name="idea_hard">Hard</string>
+    <string name="idea_extreme">Extreme</string>
+    <string name="idea_easy_hint">Quarter and half notes on the pentatonic scale, chord notes on the beat, one octave, space to breathe.</string>
+    <string name="idea_medium_hint">Adds eighth notes and the blue note; a rhythm motif comes back with new notes.</string>
+    <string name="idea_hard_hint">Swing eighth lines on each chord\'s scale, aiming for 3rds and 7ths, with chromatic approach notes.</string>
+    <string name="idea_extreme_hint">Sixteenth-note runs, enclosures around the target notes, 9ths and 13ths, the whole range.</string>
+    <string name="idea_generate">Generate a solo</string>
+    <string name="idea_new">New idea</string>
+    <string name="idea_clear">Remove</string>
+    <string name="idea_sax_turn">The sax plays the idea · bar %1$d of %2$d</string>
+    <string name="idea_your_turn">Your turn · bar %1$d of %2$d</string>
+    <string name="idea_staff_desc">The generated solo written for alto saxophone</string>
+    <string name="idea_written">Written for alto saxophone. Swing the eighth notes (long-short).</string>
 </resources>

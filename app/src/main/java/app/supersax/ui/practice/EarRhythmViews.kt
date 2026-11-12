@@ -214,7 +214,7 @@ fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Bo
                     awaitFirstDown()
                     if (phase == RhythmPhase.RUN) {
                         presses += doubleArrayOf((android.os.SystemClock.uptimeMillis() - t0).toDouble(), Double.NaN)
-                        c.audio.startHold(c.band.altoSax, hold)
+                        c.audio.startHold(c.bandIfReady()?.altoSax, hold)
                     }
                     waitForUpOrCancellation()
                     val last = presses.lastOrNull()

@@ -22,7 +22,7 @@ public final class Band {
     public static Band load(Opener opener) {
         SampledInstrument[] s = new SampledInstrument[FILES.length];
         for (int i = 0; i < FILES.length; i++) {
-            try (java.io.InputStream in = opener.open(FILES[i])) { s[i] = SampledInstrument.read(in); } catch (Exception e) { s[i] = null; }
+            try (java.io.InputStream in = opener.open(FILES[i])) { s[i] = SampledInstrument.read(in); } catch (Throwable e) { s[i] = null; }
         }
         return new Band(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]);
     }

@@ -109,6 +109,12 @@ public final class Groove {
      */
     public static Mix render(Style style, int bassMidi, double bpm, int rate, @Nullable List<List<Blues.PhraseNote>> calls, int leadMidi,
                              @Nullable app.supersax.domain.audio.Band band) {
+        return render(style, bassMidi, bpm, rate, calls, leadMidi, band, null);
+    }
+
+    /** As above; a generated [solo] (beats from the loop start, concert pitch) is played by the lead instead of calls. */
+    public static Mix render(Style style, int bassMidi, double bpm, int rate, @Nullable List<List<Blues.PhraseNote>> calls, int leadMidi,
+                             @Nullable app.supersax.domain.audio.Band band, @Nullable List<SoloGenerator.Note> solo) {
         double beat = 60.0 / bpm;
         int choruses = choruses(style);
         int n = (int) Math.round(loopSeconds(style, bpm) * choruses * rate);
@@ -128,7 +134,16 @@ public final class Groove {
             a.bass(v, ch, next, t0, chorus);
             a.comp(v, ch, t0, chorus, inForm);
         }
-        if (calls != null && !calls.isEmpty()) {
+        if (solo != null) {
+            for (SoloGenerator.Note sn : solo) {
+                if (sn.midi == null) continue;
+                double frac = sn.start - Math.floor(sn.start);
+                double at = Math.abs(frac - 0.5) < 1e-9 ? Math.floor(sn.start) + swingOffset(style.feel) : sn.start;
+                double len = sn.beats;
+                if (Math.abs(frac) < 1e-9 && Math.abs(len - 0.5) < 1e-9) len = swingOffset(style.feel); // long-short eighths
+                v.lead(at * beat, Math.max(0.08, len * beat * 0.95), sn.midi);
+            }
+        } else if (calls != null && !calls.isEmpty()) {
             for (int c = 0; c < choruses; c++) {
                 for (int i = 0; i * 4 < style.bars(); i++) {
                     for (Blues.PhraseNote p : calls.get(i % calls.size())) {

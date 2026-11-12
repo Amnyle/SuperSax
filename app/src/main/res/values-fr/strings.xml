@@ -1018,4 +1018,24 @@
     <string name="drill_lesson_example">Exemple</string>
     <string name="drill_lesson_start">J\'ai compris · commencer le niveau %1$d</string>
     <string name="drill_lesson_open">Lire la leçon du niveau %1$d</string>
+    <string name="crash_title">L\'application s\'est arrêtée la dernière fois</string>
+    <string name="crash_body">Désolé ! Copiez ce rapport et envoyez-le pour que le problème soit corrigé.</string>
+    <string name="crash_copy">Copier le rapport</string>
+    <string name="idea_title">Idées de solo</string>
+    <string name="idea_body">Générez un solo sur l\'accompagnement : le sax le joue une fois, puis l\'orchestre continue pour que vous le rejouiez, le changiez ou lui répondiez. Pas à votre goût ? Générez-en un autre.</string>
+    <string name="idea_easy">Facile</string>
+    <string name="idea_medium">Moyen</string>
+    <string name="idea_hard">Difficile</string>
+    <string name="idea_extreme">Extrême</string>
+    <string name="idea_easy_hint">Noires et blanches sur la pentatonique, notes de l\'accord sur le temps, une octave, de l\'espace pour respirer.</string>
+    <string name="idea_medium_hint">Ajoute les croches et la blue note ; un motif rythmique revient avec d\'autres notes.</string>
+    <string name="idea_hard_hint">Lignes de croches swing sur la gamme de chaque accord, visant tierces et septièmes, avec des notes d\'approche chromatiques.</string>
+    <string name="idea_extreme_hint">Traits de doubles croches, encerclements des notes cibles, 9es et 13es, toute la tessiture.</string>
+    <string name="idea_generate">Générer un solo</string>
+    <string name="idea_new">Nouvelle idée</string>
+    <string name="idea_clear">Retirer</string>
+    <string name="idea_sax_turn">Le sax joue l\'idée · mesure %1$d sur %2$d</string>
+    <string name="idea_your_turn">À vous · mesure %1$d sur %2$d</string>
+    <string name="idea_staff_desc">Le solo généré écrit pour saxophone alto</string>
+    <string name="idea_written">Écrit pour saxophone alto. Jouez les croches swing (longue-courte).</string>
 </resources>
