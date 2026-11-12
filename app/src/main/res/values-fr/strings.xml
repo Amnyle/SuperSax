@@ -1042,14 +1042,13 @@
     <string name="rhythm_v_late_ms">Note %1$d en retard de %2$d ms · %3$d pour cent</string>
     <string name="rhythm_v_short_pct">Note %1$d relâchée trop tôt (tenez les notes longues) · %2$d pour cent</string>
     <string name="sep_title">Retirer un instrument (IA)</string>
-    <string name="sep_body">Créez une version de ce morceau sans le sax (ou la voix, le piano, la guitare, la batterie ou la basse) pour jouer cette partie vous-même. Le morceau est envoyé à LALAL.AI, un service de séparation en ligne ; la nouvelle version apparaît dans vos morceaux avec la même tonalité, le même tempo et les mêmes mesures.</string>
+    <string name="sep_body">Créez une version de ce morceau sans le sax (ou la mélodie principale, le piano, la guitare, la batterie ou la basse) pour jouer cette partie vous-même. Le morceau est envoyé à LALAL.AI, un service de séparation en ligne ; la nouvelle version apparaît dans vos morceaux avec la même tonalité, le même tempo et les mêmes mesures. LALAL.AI ne sépare le sax et les vents qu\'avec un modèle plus ancien : si le sax reste audible, essayez « Mélodie principale » — quand le sax joue l\'air, le modèle le plus récent l\'enlève souvent plus proprement.</string>
     <string name="sep_key_needed">Cela utilise votre propre compte LALAL.AI (payé à la minute d\'audio). Collez votre clé de licence une fois ; elle reste sur ce téléphone et n\'est jamais sauvegardée.</string>
     <string name="sep_get_key">Obtenir une clé sur lalal.ai</string>
     <string name="sep_key">Clé de licence</string>
     <string name="sep_save_key">Enregistrer la clé</string>
     <string name="sep_forget_key">Oublier la clé</string>
-    <string name="stem_wind">Sax et vents</string>
-    <string name="stem_vocals">Voix</string>
+    <string name="stem_wind">Sax et vents (IA plus ancienne)</string>
     <string name="stem_piano">Piano</string>
     <string name="stem_guitar">Guitare</string>
     <string name="stem_drums">Batterie</string>
@@ -1063,4 +1062,11 @@
     <string name="sep_failed">Cela n\'a pas marché : %1$s</string>
     <string name="sep_done">Terminé : une version sans %1$s est dans vos morceaux.</string>
     <string name="sep_open">L\'ouvrir</string>
+    <string name="stem_lead">Mélodie principale ou voix (IA la plus récente)</string>
+    <string name="stem_short_wind">sax</string>
+    <string name="stem_short_lead">mélodie</string>
+    <string name="stem_short_piano">piano</string>
+    <string name="stem_short_guitar">guitare</string>
+    <string name="stem_short_drums">batterie</string>
+    <string name="stem_short_bass">basse</string>
 </resources>

@@ -40,11 +40,22 @@ import app.supersax.ui.theme.Sax
 @Composable
 fun stemName(s: Lalal.Stem): String = stringResource(when (s) {
     Lalal.Stem.WIND -> R.string.stem_wind
-    Lalal.Stem.VOCALS -> R.string.stem_vocals
+    Lalal.Stem.LEAD -> R.string.stem_lead
     Lalal.Stem.PIANO -> R.string.stem_piano
     Lalal.Stem.GUITAR -> R.string.stem_guitar
     Lalal.Stem.DRUMS -> R.string.stem_drums
     Lalal.Stem.BASS -> R.string.stem_bass
+})
+
+/** Short name of what is removed, for titles and buttons ("sax", "lead"). */
+@Composable
+fun stemShort(s: Lalal.Stem): String = stringResource(when (s) {
+    Lalal.Stem.WIND -> R.string.stem_short_wind
+    Lalal.Stem.LEAD -> R.string.stem_short_lead
+    Lalal.Stem.PIANO -> R.string.stem_short_piano
+    Lalal.Stem.GUITAR -> R.string.stem_short_guitar
+    Lalal.Stem.DRUMS -> R.string.stem_short_drums
+    Lalal.Stem.BASS -> R.string.stem_short_bass
 })
 
 /**
@@ -76,7 +87,7 @@ fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit) {
         if (!running) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Lalal.Stem.entries.forEach { s -> FilterChip(selected = stem == s, onClick = { stem = s }, label = { Text(stemName(s)) }, modifier = Modifier.heightIn(min = 44.dp)) }
         }
-        val suffix = stringResource(R.string.sep_suffix, stemName(stem).lowercase())
+        val suffix = stringResource(R.string.sep_suffix, stemShort(stem))
         when {
             running -> {
                 Text(stringResource(when (job!!.step) {
@@ -91,13 +102,13 @@ fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit) {
             else -> {
                 if (job?.step == SeparationJob.Step.FAILED) Text(stringResource(R.string.sep_failed, job.error ?: ""), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                 if (job?.step == SeparationJob.Step.DONE && job.resultSongId != null) {
-                    Text(stringResource(R.string.sep_done, stemName(job.stem)), style = MaterialTheme.typography.titleSmall, color = Sax.colors.good)
+                    Text(stringResource(R.string.sep_done, stemShort(job.stem)), style = MaterialTheme.typography.titleSmall, color = Sax.colors.good)
                     Button(onClick = { onOpen(job.resultSongId) }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) { Text(stringResource(R.string.sep_open)) }
                 }
                 Button(onClick = { c.separations.start(ref, stem, suffix) }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
-                    Text(stringResource(R.string.sep_start, stemName(stem).lowercase()))
+                    Text(stringResource(R.string.sep_start, stemShort(stem)))
                 }
                 Row { TextButton(onClick = { SeparationKey.set(c, null); hasKey = false }) { Text(stringResource(R.string.sep_forget_key)) } }
             }

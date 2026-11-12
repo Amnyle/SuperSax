@@ -59,21 +59,21 @@ class SeparationJobs(private val c: AppContainer) {
                     val input = c.context.contentResolver.openInputStream(uri) ?: throw Lalal.ServiceException("cannot read the song file")
                     Lalal.upload(key, input, "${ref.title}.$ext", length)
                 }
-                withContext(Dispatchers.IO) { Lalal.split(key, id, stem) }
+                val task = withContext(Dispatchers.IO) { Lalal.split(key, id, stem) }
                 set(ref.id, SeparationJob(stem, SeparationJob.Step.SEPARATING))
                 var status: Lalal.Status
                 var waited = 0
                 while (true) {
                     delay(3000); waited += 3
-                    status = withContext(Dispatchers.IO) { Lalal.check(key, id) }
+                    status = withContext(Dispatchers.IO) { Lalal.check(key, task) }
                     if (status.state == "success" || status.state == "error") break
                     set(ref.id, SeparationJob(stem, SeparationJob.Step.SEPARATING, status.progress))
                     if (waited > 30 * 60) throw Lalal.ServiceException("timed out")
                 }
                 if (status.state == "error" || status.backTrack == null) throw Lalal.ServiceException(status.error ?: "separation failed")
                 set(ref.id, SeparationJob(stem, SeparationJob.Step.DOWNLOADING))
-                val urlExt = fileExtension(status.backTrack!!)
-                val out = File(c.songsDir, "${UUID.randomUUID()}.$urlExt")
+                // Results are asked as mp3; the download link itself carries no extension.
+                val out = File(c.songsDir, "${UUID.randomUUID()}.mp3")
                 withContext(Dispatchers.IO) { Lalal.download(status.backTrack!!, out) { p -> set(ref.id, SeparationJob(stem, SeparationJob.Step.DOWNLOADING, (p * 100).toInt())) } }
                 val rec = AudioRefRecord(UUID.randomUUID().toString(), Uri.fromFile(out).toString(), "${ref.title} ($titleSuffix)", c.clock.nowMs())
                 c.media.saveAudioRef(rec)
