@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * The daily 5-minute exercise: a short mix of the phone drills, each at the player's open level.
- * Base mix: 4 notes to read, 3 scales, 3 fingerings, 2 ear questions, 1 rhythm, 2 theory questions (theory only once a lesson was
+ * Base mix: 4 notes to read, 3 scales, 3 fingerings, 2 ear questions, 2 theory questions (theory only once a lesson was
  * passed; otherwise one more note and one more scale). The drill with the lowest recent accuracy gets
  * 2 extra questions. The order alternates drills so the same kind never comes twice in a row when avoidable.
  */
@@ -19,7 +19,7 @@ public final class DailyMix {
     private DailyMix() {}
 
     public static final List<DrillKind> KINDS = List.of(DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.THEORY_QUIZ,
-        DrillKind.EAR, DrillKind.RHYTHM);
+        DrillKind.EAR);
 
     /** How many questions of each drill. {@code accuracy}: recent share of right answers per drill (missing = never played). */
     public static Map<DrillKind, Integer> counts(boolean theoryAvailable, Map<DrillKind, Double> accuracy) {
@@ -28,7 +28,6 @@ public final class DailyMix {
         n.put(DrillKind.SCALE_RECOGNITION, 3);
         n.put(DrillKind.FINGERING, 3);
         n.put(DrillKind.EAR, 2);
-        n.put(DrillKind.RHYTHM, 1);
         if (theoryAvailable) n.put(DrillKind.THEORY_QUIZ, 2);
         else { n.put(DrillKind.READING, 5); n.put(DrillKind.SCALE_RECOGNITION, 4); }
         DrillKind weakest = null;

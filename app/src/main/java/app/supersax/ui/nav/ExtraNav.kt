@@ -138,10 +138,6 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
             onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.EAR, it, sax)) },
             extra = { _, _ -> app.supersax.ui.practice.EarModeCard(sax) { sax = it } })
     }
-    composable(ExtraRoutes.RHYTHM) {
-        LevelsScreen(DrillKind.RHYTHM, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.RHYTHM, it)) },
-            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.RHYTHM, it)) })
-    }
     composable(ExtraRoutes.DRILL_LESSON, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType },
         navArgument("sax") { type = NavType.BoolType; defaultValue = false })) { e ->
         val kind = DrillKind.valueOf(e.arguments!!.getString("kind")!!)
@@ -244,7 +240,6 @@ fun phoneTrainingEntries(nav: NavHostController): List<HubEntry> {
         },
         HubEntry(stringResource(R.string.ex_reading), stringResource(R.string.reading_sub), Icons.AutoMirrored.Rounded.MenuBook, blue) { nav.navigate(ExtraRoutes.READING) },
         HubEntry(stringResource(R.string.ear_title), stringResource(R.string.ear_sub), Icons.Rounded.Hearing, blue) { nav.navigate(ExtraRoutes.EAR) },
-        HubEntry(stringResource(R.string.rhythm_title), stringResource(R.string.rhythm_sub), Icons.Rounded.Timer, blue) { nav.navigate(ExtraRoutes.RHYTHM) },
         HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Rounded.Piano, blue) { nav.navigate(ExtraRoutes.SCALE_REC) },
         HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Rounded.School, blue) { nav.navigate(ExtraRoutes.LESSONS) },
         HubEntry(stringResource(R.string.ex_fingering), stringResource(R.string.fingering_sub), Icons.Rounded.TouchApp, blue) { nav.navigate(ExtraRoutes.FINGERING) },

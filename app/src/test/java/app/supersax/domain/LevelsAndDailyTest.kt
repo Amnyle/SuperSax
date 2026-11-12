@@ -74,13 +74,13 @@ class LevelsAndDailyTest {
 
     @Test fun dailyMixCountsAndOrder() {
         val noData = DailyMix.counts(false, emptyMap())
-        assertEquals(mapOf(DrillKind.READING to 5, DrillKind.SCALE_RECOGNITION to 4, DrillKind.FINGERING to 3, DrillKind.EAR to 2, DrillKind.RHYTHM to 1), noData)
+        assertEquals(mapOf(DrillKind.READING to 5, DrillKind.SCALE_RECOGNITION to 4, DrillKind.FINGERING to 3, DrillKind.EAR to 2), noData)
         val withTheory = DailyMix.counts(true, mapOf(DrillKind.READING to 0.95, DrillKind.FINGERING to 0.5))
         assertEquals(5, withTheory[DrillKind.FINGERING], "the weakest drill gets 2 more")
         assertEquals(2, withTheory[DrillKind.THEORY_QUIZ])
-        assertEquals(17, withTheory.values.sum())
+        assertEquals(16, withTheory.values.sum())
         val order = DailyMix.order(withTheory, 3L)
-        assertEquals(17, order.size)
+        assertEquals(16, order.size)
         withTheory.forEach { (k, n) -> assertEquals(n, order.count { it == k }) }
         assertTrue(order.zipWithNext().none { (a, b) -> a == b }, "$order")
     }

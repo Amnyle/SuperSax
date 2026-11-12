@@ -72,7 +72,7 @@ public final class Badges {
         out.add(new Badge(Id.HOLD_20, longest, 20));
         out.add(new Badge(Id.IN_TUNE_90, inTune, 1));
         boolean three = false, master = false;
-        for (DrillKind k : new DrillKind[]{DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.EAR, DrillKind.RHYTHM, DrillKind.THEORY_QUIZ}) {
+        for (DrillKind k : new DrillKind[]{DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.EAR, DrillKind.THEORY_QUIZ}) {
             int max = Levels.count(k, lessons);
             boolean all = max > 0;
             for (int l = 1; l <= max; l++) {

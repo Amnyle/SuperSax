@@ -31,7 +31,7 @@ class PhoneDrillsRenderTest {
         val c = ApplicationProvider.getApplicationContext<SaxApp>().container
         val settings = c.settings.currentBlocking().copy(noteNaming = app.supersax.domain.pitch.NoteNaming.SOLFEGE, language = "fr")
         val screens = mutableListOf<Pair<String, @androidx.compose.runtime.Composable () -> Unit>>()
-        for (k in listOf(DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.EAR, DrillKind.RHYTHM)) {
+        for (k in listOf(DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.EAR)) {
             screens += "levels $k" to { LevelsScreen(k, {}, {}, onLesson = {}) }
             for (l in 1..Levels.count(k, 0)) {
                 screens += "lesson $k $l" to { DrillLessonScreen(k, l, {}, {}) }
