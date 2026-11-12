@@ -29,6 +29,13 @@ data class SeparationJob(
     val resultSongId: String? = null,
 ) { enum class Step { UPLOADING, SEPARATING, DOWNLOADING, DONE, FAILED } }
 
+/** The audio extension at the end of a download link's file name ("mp3" when it has none). */
+internal fun fileExtension(url: String): String {
+    val name = url.substringBefore('?').substringBefore('#').trimEnd('/').substringAfterLast('/')
+    val ext = name.substringAfterLast('.', "").lowercase()
+    return if (ext in setOf("mp3", "wav", "flac", "m4a", "aac", "ogg", "opus")) ext else "mp3"
+}
+
 /** Runs separations in the app scope, so they go on when the screen is closed. */
 class SeparationJobs(private val c: AppContainer) {
     private val _jobs = MutableStateFlow<Map<String, SeparationJob>>(emptyMap())
@@ -65,7 +72,7 @@ class SeparationJobs(private val c: AppContainer) {
                 }
                 if (status.state == "error" || status.backTrack == null) throw Lalal.ServiceException(status.error ?: "separation failed")
                 set(ref.id, SeparationJob(stem, SeparationJob.Step.DOWNLOADING))
-                val urlExt = status.backTrack!!.substringBefore('?').substringAfterLast('.', "mp3").take(5)
+                val urlExt = fileExtension(status.backTrack!!)
                 val out = File(c.songsDir, "${UUID.randomUUID()}.$urlExt")
                 withContext(Dispatchers.IO) { Lalal.download(status.backTrack!!, out) { p -> set(ref.id, SeparationJob(stem, SeparationJob.Step.DOWNLOADING, (p * 100).toInt())) } }
                 val rec = AudioRefRecord(UUID.randomUUID().toString(), Uri.fromFile(out).toString(), "${ref.title} ($titleSuffix)", c.clock.nowMs())
