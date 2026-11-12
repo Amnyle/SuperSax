@@ -1069,4 +1069,7 @@
     <string name="stem_short_guitar">guitare</string>
     <string name="stem_short_drums">batterie</string>
     <string name="stem_short_bass">basse</string>
+    <string name="version_original">Original</string>
+    <string name="version_without">Sans %1$s</string>
+    <string name="version_ai">Version IA</string>
 </resources>

@@ -85,10 +85,12 @@ class ScreenTour {
                 c.songs.save("tour-song", app.supersax.domain.song.SongSetup(analyzed = true, detectedBpm = 112.0, bpm = 112.0, firstBeatMs = 1200,
                     keyTonic = 10, keyMinor = false, analysisVersion = app.supersax.domain.song.CURRENT_ANALYSIS,
                     checkpoints = listOf(app.supersax.domain.song.Checkpoint("c1", "Chorus", 34000))))
+                c.media.saveAudioRef(app.supersax.domain.common.AudioRefRecord("tour-song-nosax", "file:///nonexistent2.mp3", "Practice song (no sax)", 1))
+                c.songs.save("tour-song-nosax", c.songs.get("tour-song").copy(parentId = "tour-song", removed = "WIND"))
             }
         }
-        click("Song player"); waitFor("Search YouTube"); shot("14-songs")
-        click("Practice song"); waitFor("Show the key signature"); shot("17-song-player")
+        click("Song player"); waitFor("Search YouTube"); waitFor("No sax"); shot("14-songs")
+        click("Practice song"); waitFor("Show the key signature"); waitFor("Original"); shot("17-song-player")
         click("Show the key signature"); waitFor("Written for alto"); shot("18-key-signature")
         click("Metronome clicks"); shot("19-song-mix")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }

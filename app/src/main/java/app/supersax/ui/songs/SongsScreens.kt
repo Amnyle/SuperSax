@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.FileOpen
@@ -73,6 +74,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -89,6 +91,32 @@ class SongsViewModel(private val c: AppContainer) : ViewModel() {
             refs.mapIndexed { i, r -> SongRow(r, setups[i]) }
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    init {
+        // Versions made before songs were linked: match "Title (no …)" / "Title (sans …)" to the song "Title".
+        viewModelScope.launch {
+            val refs = c.media.audioRefs.first()
+            for (r in refs) {
+                val s = c.songs.get(r.id)
+                if (s.parentId != null || !r.title.endsWith(")")) continue
+                val open = r.title.lastIndexOf(" (")
+                if (open <= 0) continue
+                val inner = r.title.substring(open + 2, r.title.length - 1).lowercase()
+                if (!inner.startsWith("no ") && !inner.startsWith("sans ")) continue
+                val parent = refs.firstOrNull { it.id != r.id && it.title == r.title.substring(0, open) } ?: continue
+                val stem = when {
+                    "sax" in inner || "wind" in inner || "vent" in inner -> "WIND"
+                    "lead" in inner || "voice" in inner || "voix" in inner || "mélodie" in inner || "vocal" in inner -> "LEAD"
+                    "piano" in inner -> "PIANO"
+                    "guit" in inner -> "GUITAR"
+                    "drum" in inner || "batterie" in inner -> "DRUMS"
+                    "bass" in inner -> "BASS"
+                    else -> null
+                }
+                c.songs.save(r.id, s.copy(parentId = parent.id, removed = stem))
+            }
+        }
+    }
 
     /** Keeps a reference to the user's file (it stays where it is). */
     fun import(uri: Uri, onAdded: (String) -> Unit) = viewModelScope.launch {
@@ -139,7 +167,10 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
             }
             val list = songs ?: return@ScrollColumn
             if (list.isEmpty()) EmptyState(stringResource(R.string.songs_empty))
-            list.forEach { row ->
+            // AI versions ("no sax"…) are listed under their original song.
+            val ids = list.map { it.ref.id }.toSet()
+            val versions = list.filter { it.setup.parentId != null && it.setup.parentId in ids }.groupBy { it.setup.parentId!! }
+            list.filter { it.setup.parentId == null || it.setup.parentId !in ids }.forEach { row ->
                 SectionCard(modifier = Modifier.clickable { onSong(row.ref.id) }) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconTile(Icons.Rounded.MusicNote)
@@ -149,8 +180,11 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                             Text(songSummary(row.setup) ?: stringResource(R.string.song_not_analysed), style = MaterialTheme.typography.bodySmall,
                                 color = Sax.colors.textSecondary)
                         }
-                        IconButton(onClick = { vm.remove(row.ref) }) { Icon(Icons.Rounded.Delete, stringResource(R.string.remove), tint = Sax.colors.textTertiary) }
+                        IconButton(onClick = { vm.remove(row.ref); versions[row.ref.id]?.forEach { v -> vm.remove(v.ref) } }) {
+                            Icon(Icons.Rounded.Delete, stringResource(R.string.remove), tint = Sax.colors.textTertiary)
+                        }
                     }
+                    versions[row.ref.id]?.let { vs -> VersionChips(vs.map { it.ref.id to it.setup.removed }, null) { onSong(it) } }
                 }
             }
         }
@@ -240,6 +274,23 @@ fun YouTubeSearchScreen(onBack: () -> Unit, onSong: (String) -> Unit) {
                     ui.downloading[r.url]?.let { LinearProgressIndicator(progress = { it }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent) }
                 }
             }
+        }
+    }
+}
+
+/** Chips to open the AI versions of a song ("no sax", "no lead"); [current] is highlighted, null id = the original. */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+fun VersionChips(versions: List<Pair<String, String?>>, current: String?, original: String? = null, onOpen: (String) -> Unit) {
+    androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        if (original != null) androidx.compose.material3.FilterChip(selected = current == original, onClick = { if (current != original) onOpen(original) },
+            label = { Text(stringResource(R.string.version_original)) }, modifier = Modifier.heightIn(min = 40.dp))
+        versions.forEach { (id, removed) ->
+            val stem = removed?.let { r -> app.supersax.separation.Lalal.Stem.entries.firstOrNull { it.name == r } }
+            androidx.compose.material3.FilterChip(selected = current == id, onClick = { if (current != id) onOpen(id) },
+                label = { Text(if (stem != null) stringResource(R.string.version_without, stemShort(stem)) else stringResource(R.string.version_ai)) },
+                leadingIcon = { Icon(Icons.Rounded.AutoAwesome, null, modifier = Modifier.size(16.dp)) },
+                modifier = Modifier.heightIn(min = 40.dp))
         }
     }
 }

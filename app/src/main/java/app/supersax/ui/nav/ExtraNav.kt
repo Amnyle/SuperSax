@@ -187,7 +187,7 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
         YouTubeSearchScreen(onBack = { nav.popBackStack() }, onSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(ExtraRoutes.YT_SEARCH) { inclusive = true } } })
     }
     composable(ExtraRoutes.SONG, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
-        SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() }, onOpenSong = { id -> nav.navigate(ExtraRoutes.song(id)) })
+        SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() }, onOpenSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(e.destination.id) { inclusive = true } } })
     }
     composable(ExtraRoutes.STATS) { app.supersax.ui.stats.StatsScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.SCALE_CHECKER) { ScaleCheckerScreen(onBack = { nav.popBackStack() }) }

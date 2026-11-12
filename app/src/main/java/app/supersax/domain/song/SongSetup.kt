@@ -29,4 +29,7 @@ data class SongSetup(
     val analysisVersion: Int = 1,
     /** Where the audio came from, e.g. a YouTube page address; null for an imported file. */
     val source: String? = null,
+    /** For an AI version of a song: the original song's id, and what was removed (a Lalal.Stem name, e.g. "WIND"). */
+    val parentId: String? = null,
+    val removed: String? = null,
 )

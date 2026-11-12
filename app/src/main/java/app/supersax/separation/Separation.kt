@@ -78,7 +78,9 @@ class SeparationJobs(private val c: AppContainer) {
                 val rec = AudioRefRecord(UUID.randomUUID().toString(), Uri.fromFile(out).toString(), "${ref.title} ($titleSuffix)", c.clock.nowMs())
                 c.media.saveAudioRef(rec)
                 // Same song, same key, tempo and bars: keep what was found and set for the original.
-                c.songs.save(rec.id, c.songs.get(ref.id))
+                // Linked to the original (a version of a version is linked to the same original).
+                val original = c.songs.get(ref.id)
+                c.songs.save(rec.id, original.copy(parentId = original.parentId ?: ref.id, removed = stem.name))
                 set(ref.id, SeparationJob(stem, SeparationJob.Step.DONE, 100, resultSongId = rec.id))
             } catch (e: Exception) {
                 set(ref.id, SeparationJob(stem, SeparationJob.Step.FAILED, error = e.message ?: e.javaClass.simpleName))

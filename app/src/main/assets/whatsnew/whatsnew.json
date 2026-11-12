@@ -226,5 +226,14 @@
     "fr": [
       "Meilleure suppression d'instrument : elle utilise maintenant la dernière API de LALAL.AI, retire le sax le plus complètement possible, et ajoute « Mélodie principale » (leur modèle le plus récent) : quand le sax joue l'air, essayez-la, c'est souvent plus propre que le modèle sax."
     ]
+  },
+  {
+    "id": 19,
+    "en": [
+      "Songs and their AI versions are linked: in the song list each version (\"No sax\", \"No lead\") sits under its song, and in the player a row switches between the original and its versions. Deleting a song deletes its versions too."
+    ],
+    "fr": [
+      "Les morceaux et leurs versions IA sont liés : dans la liste, chaque version (« Sans sax », « Sans mélodie ») est rangée sous son morceau, et dans le lecteur une ligne passe de l'original à ses versions. Supprimer un morceau supprime aussi ses versions."
+    ]
   }
 ]

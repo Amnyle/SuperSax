@@ -1063,4 +1063,7 @@
     <string name="stem_short_guitar">guitar</string>
     <string name="stem_short_drums">drums</string>
     <string name="stem_short_bass">bass</string>
+    <string name="version_original">Original</string>
+    <string name="version_without">No %1$s</string>
+    <string name="version_ai">AI version</string>
 </resources>

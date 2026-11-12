@@ -90,6 +90,7 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
     val mix by vm.mix.collectAsStateWithLifecycle()
     ScreenScaffold(ref?.title ?: "", onBack = onBack) { padding ->
         ScrollColumn(padding) {
+            SongVersionsRow(songId, s, onOpenSong)
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
             analysis.progress?.let { p ->
                 SectionCard {
@@ -381,4 +382,18 @@ private fun VolumeRow(label: String, value: Float, onChange: (Float) -> Unit) {
         )
         Text("${(value * 100).roundToInt()} %", Modifier.width(52.dp), style = MaterialTheme.typography.labelLarge)
     }
+}
+
+/** Switch between a song and its AI versions (shown only when there are versions). */
+@Composable
+fun SongVersionsRow(songId: String, setup: SongSetup, onOpen: (String) -> Unit) {
+    val c = app.supersax.ui.nav.LocalContainer.current
+    val originalId = setup.parentId ?: songId
+    val versions by androidx.compose.runtime.produceState<List<Pair<String, String?>>>(emptyList(), originalId) {
+        c.media.audioRefs.collect { refs ->
+            value = refs.mapNotNull { r -> c.songs.get(r.id).takeIf { it.parentId == originalId }?.let { r.id to it.removed } }
+        }
+    }
+    if (versions.isEmpty()) return
+    VersionChips(versions, songId, original = originalId) { onOpen(it) }
 }
