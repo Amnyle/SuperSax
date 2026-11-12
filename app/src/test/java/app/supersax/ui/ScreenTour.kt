@@ -64,6 +64,14 @@ class ScreenTour {
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Daily exercise"); waitFor("1/", substring = true); shot("12-daily")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Ear training"); waitFor("Higher or lower?"); shot("24-ear-levels")
+        click("Level 1"); waitFor("Is the second note higher or lower?"); shot("25-ear-question")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        click("Rhythm reading"); waitFor("Quarters, halves, whole notes")
+        click("Level 1"); waitFor("Tap this rhythm"); shot("26-rhythm-question")
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Fingering chart"); waitFor("Middle"); shot("20-fingering-chart")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Theory lessons", substring = true); shot("13-lessons")

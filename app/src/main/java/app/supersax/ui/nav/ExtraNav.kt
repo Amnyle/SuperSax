@@ -7,6 +7,8 @@ import androidx.compose.material.icons.rounded.Hearing
 import androidx.compose.material.icons.rounded.Summarize
 import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -80,8 +82,10 @@ object ExtraRoutes {
     const val SPEED = "reading_speed/{level}"
     fun speed(level: Int) = "reading_speed/$level"
     const val SOLO = "solo"
-    const val PLAY = "play/{kind}/{level}"
-    fun play(kind: DrillKind, level: Int) = "play/${kind.name}/$level"
+    const val PLAY = "play/{kind}/{level}?sax={sax}"
+    fun play(kind: DrillKind, level: Int, sax: Boolean = false) = "play/${kind.name}/$level?sax=$sax"
+    const val EAR = "ear_training"
+    const val RHYTHM = "rhythm_reading"
     fun lesson(id: String) = "lesson/$id"
     const val OVERTONES = "overtones"
     const val ALTISSIMO = "altissimo"
@@ -112,12 +116,22 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
         })
     }
     composable(ExtraRoutes.SOLO) { SoloScreen(onBack = { nav.popBackStack() }, onSongPlayer = { nav.navigate(ExtraRoutes.SLOW_DOWN) }) }
-    composable(ExtraRoutes.PLAY, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType })) { e ->
+    composable(ExtraRoutes.PLAY, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType },
+        navArgument("sax") { type = NavType.BoolType; defaultValue = false })) { e ->
         val kind = DrillKind.valueOf(e.arguments!!.getString("kind")!!)
         val level = e.arguments!!.getInt("level")
+        val sax = e.arguments!!.getBoolean("sax")
         PlayLevelScreen(kind, level, onClose = { nav.popBackStack() }, onLevel = { l ->
-            nav.navigate(ExtraRoutes.play(kind, l)) { popUpTo(e.destination.id) { inclusive = true } }
-        })
+            nav.navigate(ExtraRoutes.play(kind, l, sax)) { popUpTo(e.destination.id) { inclusive = true } }
+        }, sax = sax)
+    }
+    composable(ExtraRoutes.EAR) {
+        var sax by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
+        LevelsScreen(DrillKind.EAR, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.EAR, it, sax)) },
+            extra = { _, _ -> app.supersax.ui.practice.EarModeCard(sax) { sax = it } })
+    }
+    composable(ExtraRoutes.RHYTHM) {
+        LevelsScreen(DrillKind.RHYTHM, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.RHYTHM, it)) })
     }
     composable(ExtraRoutes.DAILY) { DailyScreen(onClose = { nav.popBackStack() }) }
     composable(ExtraRoutes.FINGERING_CHART) { FingeringChartScreen(onBack = { nav.popBackStack() }) }
@@ -206,6 +220,8 @@ fun phoneTrainingEntries(nav: NavHostController): List<HubEntry> {
             nav.navigate(ExtraRoutes.DAILY)
         },
         HubEntry(stringResource(R.string.ex_reading), stringResource(R.string.reading_sub), Icons.AutoMirrored.Rounded.MenuBook, blue) { nav.navigate(ExtraRoutes.READING) },
+        HubEntry(stringResource(R.string.ear_title), stringResource(R.string.ear_sub), Icons.Rounded.Hearing, blue) { nav.navigate(ExtraRoutes.EAR) },
+        HubEntry(stringResource(R.string.rhythm_title), stringResource(R.string.rhythm_sub), Icons.Rounded.Timer, blue) { nav.navigate(ExtraRoutes.RHYTHM) },
         HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Rounded.Piano, blue) { nav.navigate(ExtraRoutes.SCALE_REC) },
         HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Rounded.School, blue) { nav.navigate(ExtraRoutes.LESSONS) },
         HubEntry(stringResource(R.string.ex_fingering), stringResource(R.string.fingering_sub), Icons.Rounded.TouchApp, blue) { nav.navigate(ExtraRoutes.FINGERING) },

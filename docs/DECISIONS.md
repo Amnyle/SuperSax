@@ -223,3 +223,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Styles**: blues shuffle (12 bars), minor blues (i–iv–♭VI7–V7), slow blues in 12/8 (quick-change form, triplet feel, brushes), funk (8 bars, sixteenth-note drums and bass), jazz ii–V–I (4-bar loop, ride cymbal, walking bass with a half-step approach). Chords show their quality (7, m7, maj7); target notes are each chord's 3rd.
 - **Takes**: recording over the backing restarts it at bar 1 and records the microphone into the recordings (exercise "solo"); the last 5 takes can be played back on the solo screen and are in Recordings too.
 
+## Update B: ear training and rhythm reading
+
+- **Ear training** (8 levels, star rules as the other drills): higher/lower, intervals in three widening sets, major/minor then five chord types, 3-note major-scale and 4-note minor-pentatonic melodies. Notes are written for alto and played at concert pitch with the app's synth. **Sax mode** (owner's choice "tap + optional sax"): the player plays the second (or last) note heard and the tuner accepts it within 40 cents held 0.3 s; chord questions stay tapped.
+- **Rhythm reading** (7 levels): one 4/4 bar built from rhythm cells (quarters/halves/whole, rests, eighths, dotted quarter + eighth, syncopation, sixteenths, swing eighths), shown on the staff; one bar of count-in, then taps on a large pad. Judging removes the phone's constant delay (median offset, at most 250 ms) before checking each note within 100 ms (75 ms with sixteenths); a missed or extra tap makes the bar wrong.
+- **Daily mix** now has 2 ear questions and 1 rhythm bar.
+

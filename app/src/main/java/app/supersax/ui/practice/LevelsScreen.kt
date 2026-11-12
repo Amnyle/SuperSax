@@ -55,6 +55,8 @@ fun drillTitle(kind: DrillKind): String = stringResource(
         DrillKind.READING -> R.string.ex_reading
         DrillKind.SCALE_RECOGNITION -> R.string.ex_scale_recognition
         DrillKind.FINGERING -> R.string.ex_fingering
+        DrillKind.EAR -> R.string.ear_title
+        DrillKind.RHYTHM -> R.string.rhythm_title
         else -> R.string.lessons
     },
 )
@@ -67,6 +69,8 @@ fun levelDescription(kind: DrillKind, level: Int): String {
         DrillKind.SCALE_RECOGNITION -> listOf(R.string.lv_scale_1, R.string.lv_scale_2, R.string.lv_scale_3, R.string.lv_scale_4,
             R.string.lv_scale_5, R.string.lv_scale_6, R.string.lv_scale_7, R.string.lv_scale_8)
         DrillKind.FINGERING -> listOf(R.string.lv_fing_1, R.string.lv_fing_2, R.string.lv_fing_3, R.string.lv_fing_4, R.string.lv_fing_5)
+        DrillKind.EAR -> listOf(R.string.lv_ear_1, R.string.lv_ear_2, R.string.lv_ear_3, R.string.lv_ear_4, R.string.lv_ear_5, R.string.lv_ear_6, R.string.lv_ear_7, R.string.lv_ear_8)
+        DrillKind.RHYTHM -> listOf(R.string.lv_rh_1, R.string.lv_rh_2, R.string.lv_rh_3, R.string.lv_rh_4, R.string.lv_rh_5, R.string.lv_rh_6, R.string.lv_rh_7)
         else -> emptyList()
     }
     return ids.getOrNull(level - 1)?.let { stringResource(it) } ?: ""
@@ -136,4 +140,19 @@ fun LevelRow(level: Int, description: String, stars: Int, open: Boolean, title: 
 @Composable
 fun ChartAction(onChart: () -> Unit) {
     TextButton(onClick = onChart) { Text(stringResource(R.string.chart)) }
+}
+
+/** How ear-training questions are answered: by tapping, or by playing the note on the saxophone. */
+@Composable
+fun EarModeCard(sax: Boolean, onChange: (Boolean) -> Unit) {
+    app.supersax.ui.components.SectionCard {
+        Text(stringResource(R.string.ear_mode), style = MaterialTheme.typography.titleSmall)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            androidx.compose.material3.FilterChip(selected = !sax, onClick = { onChange(false) }, label = { Text(stringResource(R.string.ear_mode_tap)) },
+                modifier = Modifier.heightIn(min = 48.dp))
+            androidx.compose.material3.FilterChip(selected = sax, onClick = { onChange(true) }, label = { Text(stringResource(R.string.ear_mode_sax)) },
+                modifier = Modifier.heightIn(min = 48.dp))
+        }
+        Text(stringResource(if (sax) R.string.ear_mode_sax_hint else R.string.ear_mode_tap_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+    }
 }

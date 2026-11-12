@@ -147,7 +147,11 @@ private fun FeedbackPanel(ok: Boolean, item: DrillItem, onNext: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(if (ok) Icons.Rounded.CheckCircle else Icons.Rounded.Cancel, null, tint = tone, modifier = Modifier.size(30.dp))
             Spacer(Modifier.width(10.dp))
-            Text(if (ok) stringResource(R.string.feedback_right) else stringResource(R.string.it_was, expectedText(item)),
+            Text(when {
+                ok -> stringResource(R.string.feedback_right)
+                item is DrillItem.Rhythm -> stringResource(R.string.rhythm_wrong)
+                else -> stringResource(R.string.it_was, expectedText(item))
+            },
                 style = MaterialTheme.typography.titleLarge, color = tone)
         }
         explanationText(item)?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }

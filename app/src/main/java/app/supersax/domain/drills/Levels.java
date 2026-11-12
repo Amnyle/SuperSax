@@ -29,6 +29,8 @@ public final class Levels {
             case SCALE_RECOGNITION: return ScaleRecognition.LEVELS;
             case FINGERING: return FingeringDrill.LEVELS;
             case THEORY_QUIZ: return lessons;
+            case EAR: return EarDrill.LEVELS;
+            case RHYTHM: return RhythmDrill.LEVELS;
             default: return 1;
         }
     }

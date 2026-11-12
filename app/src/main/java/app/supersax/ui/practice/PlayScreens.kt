@@ -47,7 +47,9 @@ import java.time.ZoneId
 import kotlin.random.Random
 
 /** Questions of one level of a drill. */
-fun levelItems(c: AppContainer, kind: DrillKind, level: Int, count: Int?, seed: Long): List<DrillItem> = when (kind) {
+fun levelItems(c: AppContainer, kind: DrillKind, level: Int, count: Int?, seed: Long, sax: Boolean = false): List<DrillItem> = when (kind) {
+    DrillKind.EAR -> app.supersax.domain.drills.EarDrill.round(level, count ?: app.supersax.domain.drills.EarDrill.ROUND, seed).map { DrillItem.Ear(it, sax) }
+    DrillKind.RHYTHM -> app.supersax.domain.drills.RhythmDrill.round(level, count ?: app.supersax.domain.drills.RhythmDrill.ROUND, seed).map { DrillItem.Rhythm(it, level) }
     DrillKind.READING -> ReadingDrill.round(level, count ?: DrillRules.READING_ROUND, seed).map { DrillItem.Reading(it) }
     DrillKind.SCALE_RECOGNITION -> ScaleRecognition.round(level, count ?: DrillRules.SCALE_ROUND, seed).map { DrillItem.Scale(it, level) }
     DrillKind.FINGERING -> FingeringDrill.round(c.content.fingerings, level, count ?: DrillRules.FINGERING_ROUND, seed).map { DrillItem.Fingering(it.first, it.second) }
@@ -56,12 +58,12 @@ fun levelItems(c: AppContainer, kind: DrillKind, level: Int, count: Int?, seed: 
 
 data class LevelOutcome(val stars: Int, val unlockedNext: Boolean, val nextOpen: Boolean)
 
-class PlayLevelViewModel(c: AppContainer, val kind: DrillKind, val level: Int) : RoundViewModel(c) {
+class PlayLevelViewModel(c: AppContainer, val kind: DrillKind, val level: Int, val sax: Boolean = false) : RoundViewModel(c) {
     private val _outcome = MutableStateFlow<LevelOutcome?>(null)
     val outcome = _outcome.asStateFlow()
     val max = Levels.count(kind, 0)
 
-    init { begin(levelItems(c, kind, level, null, c.clock.nowMs())) }
+    init { begin(levelItems(c, kind, level, null, c.clock.nowMs(), sax)) }
 
     override suspend fun onFinished(u: RoundUi) {
         val before = c.progress.drills.first()
@@ -75,8 +77,8 @@ class PlayLevelViewModel(c: AppContainer, val kind: DrillKind, val level: Int) :
 }
 
 @Composable
-fun PlayLevelScreen(kind: DrillKind, level: Int, onClose: () -> Unit, onLevel: (Int) -> Unit) {
-    val vm = appViewModel(key = "play-$kind-$level") { PlayLevelViewModel(it, kind, level) }
+fun PlayLevelScreen(kind: DrillKind, level: Int, onClose: () -> Unit, onLevel: (Int) -> Unit, sax: Boolean = false) {
+    val vm = appViewModel(key = "play-$kind-$level-$sax") { PlayLevelViewModel(it, kind, level, sax) }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val outcome by vm.outcome.collectAsStateWithLifecycle()
     RoundScreen(vm, ui, onClose) {

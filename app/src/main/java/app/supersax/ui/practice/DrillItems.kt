@@ -56,6 +56,8 @@ sealed interface DrillItem {
     data class Scale(val q: ScaleRecognition.Question, val level: Int) : DrillItem { override val kind get() = DrillKind.SCALE_RECOGNITION }
     data class Fingering(val entry: FingeringEntry, val tapKeys: Boolean) : DrillItem { override val kind get() = DrillKind.FINGERING }
     data class Theory(val lessonId: String, val q: QuizQuestion) : DrillItem { override val kind get() = DrillKind.THEORY_QUIZ }
+    data class Ear(val q: app.supersax.domain.drills.EarDrill.Question, val sax: Boolean) : DrillItem { override val kind get() = DrillKind.EAR }
+    data class Rhythm(val q: app.supersax.domain.drills.RhythmDrill.Question, val level: Int) : DrillItem { override val kind get() = DrillKind.RHYTHM }
 }
 
 /** The right answer, as shown after a wrong one. */
@@ -68,7 +70,28 @@ fun expectedText(item: DrillItem): String {
             if (item.q.kind == Kind.BUILD) ": " + item.q.notes.joinToString(" ") { naming.format(it.pitchClass) } else ""
         is DrillItem.Fingering -> naming.format(SpelledPitch.parse(item.entry.note))
         is DrillItem.Theory -> Quiz.expectedText(item.q, LocaleHelper.effective(LocalContext.current), naming)
+        is DrillItem.Ear -> earAnswerText(item, naming)
+        is DrillItem.Rhythm -> ""
     }
+}
+
+@Composable
+private fun earAnswerText(item: DrillItem.Ear, naming: app.supersax.domain.pitch.NoteNaming): String {
+    val q = item.q
+    return when {
+        item.sax || q.kind == app.supersax.domain.drills.EarDrill.Kind.MELODY ->
+            app.supersax.domain.drills.EarDrill.spelled(q).let { notes -> (if (item.sax && q.kind != app.supersax.domain.drills.EarDrill.Kind.MELODY) notes.takeLast(1) else notes).joinToString(" ") { naming.format(it) } }
+        else -> earOptionLabel(q.kind, q.options[q.answer])
+    }
+}
+
+/** Name of an ear-training option: higher/lower, an interval, or a chord type. */
+@Composable
+fun earOptionLabel(kind: app.supersax.domain.drills.EarDrill.Kind, option: Int): String = when (kind) {
+    app.supersax.domain.drills.EarDrill.Kind.DIRECTION -> stringResource(if (option > 0) R.string.ear_higher else R.string.ear_lower)
+    app.supersax.domain.drills.EarDrill.Kind.INTERVAL -> stringResource(listOf(R.string.int_1, R.string.int_2, R.string.int_3, R.string.int_4, R.string.int_5,
+        R.string.int_6, R.string.int_7, R.string.int_8, R.string.int_9, R.string.int_10, R.string.int_11, R.string.int_12)[option - 1])
+    else -> stringResource(listOf(R.string.chord_major, R.string.chord_minor, R.string.chord_dom7, R.string.chord_min7, R.string.chord_maj7)[option])
 }
 
 /** A short explanation under the feedback (theory only). */
@@ -146,6 +169,8 @@ fun DrillItemView(item: DrillItem, key: Any, enabled: Boolean, onAnswer: (Boolea
                 AnswerInput(QuestionType.STAFF_NOTE, "fing-$key", enabled) { a -> onAnswer((a as Answer.StaffNote).value.midi == pitch.midi) }
             }
         }
+        is DrillItem.Ear -> EarView(item, key, enabled, onAnswer)
+        is DrillItem.Rhythm -> RhythmView(item, key, enabled, onAnswer)
         is DrillItem.Theory -> {
             Text(item.q.prompt.get(language), style = prompt)
             item.q.staff?.let { StaffView(it.toScore(), showTime = !it.free) }
