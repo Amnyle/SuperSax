@@ -1,19 +1,30 @@
 package app.supersax.domain.audio;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
 
 /**
- * A recorded instrument: zones of samples (key range, root pitch, optional loop), read from a sound file of
- * assets/sounds (see tools/build_sounds.py). Notes are mixed into a float buffer at any output rate, pitch-shifted
- * from the nearest sample with cubic interpolation.
+ * A recorded instrument: zones of samples (key range, loudness range, root pitch, optional loop), read from a sound
+ * file of assets/sounds (see tools/build_sounds.py). Notes are mixed into a float buffer at any output rate,
+ * pitch-shifted from the nearest sample with cubic interpolation; louder notes use louder recordings when the
+ * instrument has several. Optional expression bends the pitch: a scoop into the note, vibrato, a fall at its end.
  */
 public final class SampledInstrument {
     static final class Zone {
-        int lo, hi, loopStart, loopEnd, length, offset;
+        int lo, hi, vlo = 0, vhi = 127, loopStart, loopEnd, length, offset;
         float root, gain;
+    }
+
+    /** Pitch shaping of a note, in cents. */
+    public static final class Expression {
+        public final double scoopCents, scoopSec, vibratoCents, vibratoDelaySec, fallCents, fallSec;
+        public Expression(double scoopCents, double scoopSec, double vibratoCents, double vibratoDelaySec, double fallCents, double fallSec) {
+            this.scoopCents = scoopCents; this.scoopSec = scoopSec; this.vibratoCents = vibratoCents;
+            this.vibratoDelaySec = vibratoDelaySec; this.fallCents = fallCents; this.fallSec = fallSec;
+        }
+        public static final Expression NONE = new Expression(0, 0, 0, 0, 0, 0);
     }
 
     private final Zone[] zones;
@@ -27,32 +38,40 @@ public final class SampledInstrument {
         byte[] magic = new byte[4];
         d.readFully(magic);
         if (magic[0] != 'S' || magic[1] != 'X' || magic[2] != 'S' || magic[3] != 'B') throw new IOException("not a sound file");
-        d.readInt();
+        int version = d.readInt();
         int rate = d.readInt(), n = d.readInt();
         Zone[] zones = new Zone[n];
         int total = 0;
         for (int i = 0; i < n; i++) {
             Zone z = new Zone();
             z.lo = d.readUnsignedByte(); z.hi = d.readUnsignedByte();
+            if (version >= 2) { z.vlo = d.readUnsignedByte(); z.vhi = d.readUnsignedByte(); }
             z.root = d.readFloat(); z.gain = d.readFloat();
             z.loopStart = d.readInt(); z.loopEnd = d.readInt(); z.length = d.readInt(); z.offset = d.readInt();
             zones[i] = z;
             total = Math.max(total, z.offset + z.length);
         }
         short[] pcm = new short[total];
-        byte[] buf = new byte[total * 2];
-        d.readFully(buf);
-        for (int i = 0; i < total; i++) pcm[i] = (short) ((buf[2 * i] << 8) | (buf[2 * i + 1] & 0xFF));
+        byte[] buf = new byte[1 << 16];
+        int k = 0;
+        while (k < total) {
+            int want = Math.min(buf.length, (total - k) * 2);
+            d.readFully(buf, 0, want);
+            for (int i = 0; i < want; i += 2) pcm[k++] = (short) ((buf[i] << 8) | (buf[i + 1] & 0xFF));
+        }
         return new SampledInstrument(zones, pcm, rate);
     }
 
-    /** The zone for [midi]: the one whose range holds it, else the one with the nearest root. */
-    Zone zone(int midi) {
+    /** The zone for [midi] at loudness [vel] (0–127): in range, else the nearest root among the right loudness. */
+    Zone zone(int midi, int vel) {
         Zone best = null;
+        for (Zone z : zones) if (midi >= z.lo && midi <= z.hi && vel >= z.vlo && vel <= z.vhi) return z;
         for (Zone z : zones) if (midi >= z.lo && midi <= z.hi) return z;
         for (Zone z : zones) if (best == null || Math.abs(z.root - midi) < Math.abs(best.root - midi)) best = z;
         return best;
     }
+
+    Zone zone(int midi) { return zone(midi, 100); }
 
     /** True when a sample exists for exactly this key (kits: one zone per drum). */
     public boolean has(int midi) {
@@ -60,18 +79,29 @@ public final class SampledInstrument {
         return false;
     }
 
+    public void play(float[] out, int outRate, int startFrame, double midi, double gain, double holdSec, double releaseSec) {
+        play(out, outRate, startFrame, midi, gain, holdSec, releaseSec, 0.75, Expression.NONE);
+    }
+
     /**
      * Adds a note to [out] (sampled at [outRate]) from sample [startFrame]: pitch [midi] (fractional allowed),
-     * loudness [gain], held [holdSec] then released over [releaseSec]. Unlooped samples simply play out.
+     * loudness [gain], recording chosen by [layer] (0–1: soft to loud), held [holdSec] then released over
+     * [releaseSec], with [expr] pitch shaping. Unlooped samples simply play out.
      */
-    public void play(float[] out, int outRate, int startFrame, double midi, double gain, double holdSec, double releaseSec) {
-        Zone z = zone((int) Math.round(midi));
+    public void play(float[] out, int outRate, int startFrame, double midi, double gain, double holdSec, double releaseSec,
+                     double layer, Expression expr) {
+        int vel = (int) Math.max(0, Math.min(127, Math.round(layer * 127)));
+        Zone z = zone((int) Math.round(midi), vel);
         if (z == null) return;
-        double step = Math.pow(2, (midi - z.root) / 12.0) * rate / outRate;
+        double baseStep = Math.pow(2, (midi - z.root) / 12.0) * rate / outRate;
         boolean loop = z.loopEnd > z.loopStart && z.loopStart >= 0;
         int hold = (int) (holdSec * outRate), rel = Math.max(1, (int) (releaseSec * outRate));
         int maxFrames = hold + rel;
-        double pos = 0, g = gain;
+        boolean bend = expr != Expression.NONE;
+        int scoopN = (int) (expr.scoopSec * outRate), fallN = (int) (expr.fallSec * outRate);
+        int vibStart = (int) (expr.vibratoDelaySec * outRate);
+        double vibPhase = 0, vibW = 2 * Math.PI * 5.4 / outRate;
+        double pos = 0;
         for (int i = 0; i < maxFrames; i++) {
             int o = startFrame + i;
             if (o >= out.length) break;
@@ -81,12 +111,23 @@ public final class SampledInstrument {
             int k = (int) pos;
             float f = (float) (pos - k);
             float y0 = at(z, k - 1, loop), y1 = at(z, k, loop), y2 = at(z, k + 1, loop), y3 = at(z, k + 2, loop);
-            // Catmull-Rom
             float c1 = 0.5f * (y2 - y0), c2 = y0 - 2.5f * y1 + 2f * y2 - 0.5f * y3, c3 = 0.5f * (y3 - y0) + 1.5f * (y1 - y2);
             float y = ((c3 * f + c2) * f + c1) * f + y1;
             double env = i < hold ? 1 : 1 - (double) (i - hold) / rel;
             if (i < 32) env *= i / 32.0; // no click on attack
-            if (o >= 0) out[o] += (float) (g * env * env * y);
+            if (o >= 0) out[o] += (float) (gain * env * env * y);
+            double step = baseStep;
+            if (bend) {
+                double cents = 0;
+                if (i < scoopN) { double a = 1 - (double) i / scoopN; cents -= expr.scoopCents * a * a; }
+                if (i > vibStart && expr.vibratoCents > 0) {
+                    double depth = expr.vibratoCents * Math.min(1, (i - vibStart) / (0.4 * outRate));
+                    cents += depth * Math.sin(vibPhase);
+                    vibPhase += vibW;
+                }
+                if (fallN > 0 && i > hold - fallN && i < hold + rel) { double a = (double) (i - (hold - fallN)) / fallN; cents -= expr.fallCents * a * a; }
+                step = baseStep * Math.pow(2, cents / 1200.0);
+            }
             pos += step;
         }
     }

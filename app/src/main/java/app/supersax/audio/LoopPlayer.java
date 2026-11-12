@@ -25,11 +25,11 @@ public final class LoopPlayer {
         gains = partGains.clone();
         rate = mix.rate;
         frames = mix.frames();
-        int min = AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        int min = AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT);
         AudioTrack t = new AudioTrack.Builder()
             .setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
-            .setAudioFormat(new AudioFormat.Builder().setSampleRate(rate).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).build())
-            .setBufferSizeInBytes(Math.max(min * 2, rate / 5 * 2))
+            .setAudioFormat(new AudioFormat.Builder().setSampleRate(rate).setEncoding(AudioFormat.ENCODING_PCM_16BIT).setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).build())
+            .setBufferSizeInBytes(Math.max(min * 2, rate / 5 * 4))
             .setTransferMode(AudioTrack.MODE_STREAM)
             .build();
         track = t;
@@ -42,25 +42,17 @@ public final class LoopPlayer {
 
     private void loop(AudioTrack t, Groove.Mix mix) {
         Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
-        int block = 1024;
-        float[] f = new float[block];
-        short[] pcm = new short[block];
+        int block = 512;
+        short[] pcm = new short[block * 2];
         float[] cur = gains.clone();
         int pos = 0;
         while (running) {
             int n = Math.min(block, frames - pos);
+            // Move halfway to new gains each block (about 16 ms): changes glide instead of clicking.
             float[] target = gains;
-            // Glide to new gains over one block so changes do not click.
-            float[] start = cur.clone();
-            for (int i = 0; i < n; i++) {
-                float a = (float) i / n;
-                float v = 0;
-                for (int p = 0; p < mix.stems.length; p++) v += mix.stems[p][pos + i] * (start[p] + (target[p] - start[p]) * a);
-                f[i] = (float) Math.tanh(v * 1.1) * 0.92f;
-            }
-            cur = target.clone();
-            for (int i = 0; i < n; i++) pcm[i] = (short) Math.round(f[i] * 32767);
-            if (t.write(pcm, 0, n) < 0) break;
+            for (int p = 0; p < cur.length; p++) cur[p] += (target[p] - cur[p]) * 0.5f;
+            mix.mixStereo(pcm, n, pos, cur);
+            if (t.write(pcm, 0, n * 2) < 0) break;
             pos += n;
             if (pos >= frames) pos = 0;
         }

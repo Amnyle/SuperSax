@@ -84,6 +84,37 @@ public final class Groove {
             mixInto(out, 0, out.length, 0, gains);
             return out;
         }
+        /** Where each part sits, left (−1) to right (+1), and how much of it goes to the room. */
+        static final float[] PAN = {0.18f, 0f, -0.32f, 0.1f};
+        static final float[] SEND = {0.10f, 0.03f, 0.20f, 0.24f};
+        private @Nullable app.supersax.domain.audio.Reverb room;
+        private final float[] wet = new float[2];
+
+        /**
+         * Mixes frames [from, from+n) of the loop in stereo with [gains] into [out] (interleaved left/right, 16-bit),
+         * each part placed in the stereo field and sent to a small room. Call with consecutive blocks: the room keeps
+         * ringing across the loop's end, so the loop stays seamless.
+         */
+        public void mixStereo(short[] out, int n, int from, float[] gains) {
+            if (room == null) room = new app.supersax.domain.audio.Reverb(rate, 0.55, 0.5);
+            for (int i = 0; i < n; i++) {
+                int k = from + i;
+                float l = 0, r = 0, send = 0;
+                for (int p = 0; p < stems.length; p++) {
+                    float x = stems[p][k] * gains[p];
+                    double a = (PAN[p] + 1) * Math.PI / 4;
+                    l += x * (float) Math.cos(a) * 1.41f;
+                    r += x * (float) Math.sin(a) * 1.41f;
+                    send += x * SEND[p];
+                }
+                room.process(send, wet);
+                l = (float) Math.tanh((l + wet[0] * 2.2f) * 1.05) * 0.92f;
+                r = (float) Math.tanh((r + wet[1] * 2.2f) * 1.05) * 0.92f;
+                out[2 * i] = (short) Math.round(l * 32767);
+                out[2 * i + 1] = (short) Math.round(r * 32767);
+            }
+        }
+
         /** Mixes frames [from, from+n) of the loop into [out] at [at]. */
         public void mixInto(float[] out, int at, int n, int from, float[] gains) {
             for (int i = 0; i < n; i++) {
@@ -135,13 +166,15 @@ public final class Groove {
             a.comp(v, ch, t0, chorus, inForm);
         }
         if (solo != null) {
-            for (SoloGenerator.Note sn : solo) {
+            for (int i = 0; i < solo.size(); i++) {
+                SoloGenerator.Note sn = solo.get(i);
                 if (sn.midi == null) continue;
                 double frac = sn.start - Math.floor(sn.start);
                 double at = Math.abs(frac - 0.5) < 1e-9 ? Math.floor(sn.start) + swingOffset(style.feel) : sn.start;
                 double len = sn.beats;
                 if (Math.abs(frac) < 1e-9 && Math.abs(len - 0.5) < 1e-9) len = swingOffset(style.feel); // long-short eighths
-                v.lead(at * beat, Math.max(0.08, len * beat * (len <= 0.5 ? 0.98 : 0.92)), sn.midi, sn.vel);
+                double sec = Math.max(0.08, len * beat * (len <= 0.5 ? 0.98 : 0.92));
+                v.lead(at * beat, sec, sn.midi, sn.vel, expression(solo, i, sec, rnd));
             }
         } else if (calls != null && !calls.isEmpty()) {
             for (int c = 0; c < choruses; c++) {
@@ -177,6 +210,20 @@ public final class Groove {
         return new Mix(stems, rate);
     }
 
+    /**
+     * How the sax shapes a note of a solo: a scoop into phrase starts and long notes, vibrato that grows on notes held
+     * over half a second, and now and then a fall off the last note of a phrase.
+     */
+    static app.supersax.domain.audio.SampledInstrument.Expression expression(List<SoloGenerator.Note> solo, int i, double sec, Random rnd) {
+        SoloGenerator.Note n = solo.get(i);
+        boolean afterRest = i == 0 || solo.get(i - 1).midi == null;
+        boolean beforeRest = i + 1 >= solo.size() || solo.get(i + 1).midi == null;
+        double scoop = afterRest || sec >= 0.5 ? 35 + 25 * rnd.nextDouble() : 0;
+        double vibrato = sec >= 0.5 ? 9 + 5 * rnd.nextDouble() : 0;
+        double fall = beforeRest && sec >= 0.3 && rnd.nextDouble() < 0.35 ? 150 : 0;
+        return new app.supersax.domain.audio.SampledInstrument.Expression(scoop, 0.07, vibrato, Math.min(0.3, sec * 0.4), fall, Math.min(0.18, sec * 0.4));
+    }
+
     /** Where the off-beat eighth falls inside a beat. */
     static double swingOffset(Feel f) {
         switch (f) {
@@ -200,7 +247,8 @@ public final class Groove {
         void tom(double t, int which, double v);
         void bass(double t, double dur, double midi, double v);
         void chord(double t, double dur, int[] notes, double v);
-        void lead(double t, double dur, double midi, double vel);
+        void lead(double t, double dur, double midi, double vel, app.supersax.domain.audio.SampledInstrument.Expression e);
+        default void lead(double t, double dur, double midi, double vel) { lead(t, dur, midi, vel, app.supersax.domain.audio.SampledInstrument.Expression.NONE); }
         default void lead(double t, double dur, double midi) { lead(t, dur, midi, 1.0); }
     }
 
@@ -416,7 +464,7 @@ public final class Groove {
         private boolean drum(int key, double t, double v, double gain) {
             if (kit == null || !kit.has(key)) return false;
             double g = vel(v);
-            kit.play(stems[Part.DRUMS.ordinal()], rate, start(t), key, gain * g * g, 3.0, 0.05);
+            kit.play(stems[Part.DRUMS.ordinal()], rate, start(t), key, gain * (0.45 + 0.55 * g), 3.0, 0.05, Math.min(1, g), app.supersax.domain.audio.SampledInstrument.Expression.NONE);
             return true;
         }
 
@@ -444,14 +492,14 @@ public final class Groove {
             double strum = 0;
             double g = vel(v);
             for (int m : notes) {
-                keys.play(stems[Part.KEYS.ordinal()], rate, start(t + strum), m, 0.32 * g, dur, 0.12);
+                keys.play(stems[Part.KEYS.ordinal()], rate, start(t + strum), m, 0.32 * g, dur, 0.12, Math.min(1, g * 1.1), app.supersax.domain.audio.SampledInstrument.Expression.NONE);
                 strum += 0.005;
             }
         }
 
-        @Override public void lead(double t, double dur, double midi, double vel) {
-            if (lead == null) { synth.lead(t, dur, midi, vel); return; }
-            lead.play(stems[Part.LEAD.ordinal()], rate, (int) Math.round(t * rate), midi, 0.55 * vel, dur, 0.07);
+        @Override public void lead(double t, double dur, double midi, double vel, app.supersax.domain.audio.SampledInstrument.Expression e) {
+            if (lead == null) { synth.lead(t, dur, midi, vel, e); return; }
+            lead.play(stems[Part.LEAD.ordinal()], rate, (int) Math.round(t * rate), midi, 0.55 * vel, dur, 0.07, vel, e);
         }
     }
 
@@ -589,7 +637,7 @@ public final class Groove {
         }
 
         /** Reedy lead voice with vibrato and a little breath, for the call phrases. */
-        @Override public void lead(double t, double dur, double midi, double vel) {
+        @Override public void lead(double t, double dur, double midi, double vel, app.supersax.domain.audio.SampledInstrument.Expression e) {
             to(Part.LEAD);
             double f = hz(midi);
             int s0 = (int) (t * rate), len = (int) (dur * rate);
