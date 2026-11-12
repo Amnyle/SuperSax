@@ -2,7 +2,6 @@ package app.supersax.domain
 
 import app.supersax.domain.pitch.PitchClass
 import app.supersax.domain.solo.Blues
-import app.supersax.domain.solo.BluesBacking
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -43,11 +42,24 @@ class BluesTest {
         }
     }
 
-    @Test fun backingIsOneChorusAndNotClipped() {
-        val x = BluesBacking.render(46, 90.0, 22050, listOf(Blues.callPhrase(1), Blues.callPhrase(2), Blues.callPhrase(3)), 58)
-        assertEquals((22050 * BluesBacking.chorusSeconds(90.0)).toInt().toDouble(), x.size.toDouble(), 1.0)
-        assertTrue(x.all { abs(it) <= 0.91f })
-        assertTrue(x.maxOf { abs(it) } > 0.3f)
+    @Test fun everyStyleRendersOneLoop() {
+        app.supersax.domain.solo.Groove.Style.entries.forEach { st ->
+            val calls = (0 until st.bars() / 4).map { Blues.callPhrase(it.toLong()) }
+            val x = app.supersax.domain.solo.Groove.render(st, 46, st.defaultBpm.toDouble(), 16000, calls, 70)
+            assertEquals(16000 * app.supersax.domain.solo.Groove.loopSeconds(st, st.defaultBpm.toDouble()), x.size.toDouble(), 2.0, "$st")
+            assertTrue(x.all { abs(it) <= 0.91f && !it.isNaN() }, "$st clipped")
+            assertTrue(x.maxOf { abs(it) } > 0.2f, "$st silent")
+        }
+    }
+
+    @Test fun styleChordsSpelledForAlto() {
+        val g = p("G") // written key for concert B♭
+        val minor = app.supersax.domain.solo.Groove.Style.MINOR_BLUES.form.map { it.root(g).toString() + it.quality.suffix }
+        assertEquals(listOf("Gm7", "Gm7", "Gm7", "Gm7", "Cm7", "Cm7", "Gm7", "Gm7", "Eb7", "D7", "Gm7", "D7"), minor)
+        val jazz = app.supersax.domain.solo.Groove.Style.JAZZ_251.form
+        assertEquals(listOf("Am7", "D7", "Gmaj7", "Gmaj7"), jazz.map { it.root(g).toString() + it.quality.suffix })
+        assertEquals(listOf("C", "F#", "B", "B"), jazz.map { it.third(g).toString() })
+        assertEquals(listOf("G", "B", "D", "F#"), jazz[2].tones(g).map { it.toString() })
     }
 }
 

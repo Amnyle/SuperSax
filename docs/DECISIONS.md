@@ -217,3 +217,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 - **Speed challenge**: 60 seconds of note reading at any open level; each answer moves straight to the next note; the score is the number of right answers, best per level, stored as its own drill kind (it never counts for the level stars).
 - **Pentatonic scales** (owner's request): major (1 2 3 5 6) and minor (1 ♭3 4 5 ♭7) pentatonic are scale types of their own family (they never count for the rank's major, minor or mode requirements). Four of them join the unlock order of the scales practised in sessions (written C major, A minor, F major, E minor pentatonic for alto), and Solo practice gets a minor pentatonic step before the blues scale and a major pentatonic step after it.
 
+## Update A: backing sound, styles, takes
+
+- **Better backing synthesis, no sample files** (owner's choice): `Groove` renders each style with a Karplus–Strong plucked bass, an FM electric piano (bell attack that mellows), synthesised kick, snare, brushes and metallic hi-hat/ride (six detuned square waves, high-passed), a few milliseconds of human timing and some loudness variation; 32 kHz.
+- **Styles**: blues shuffle (12 bars), minor blues (i–iv–♭VI7–V7), slow blues in 12/8 (quick-change form, triplet feel, brushes), funk (8 bars, sixteenth-note drums and bass), jazz ii–V–I (4-bar loop, ride cymbal, walking bass with a half-step approach). Chords show their quality (7, m7, maj7); target notes are each chord's 3rd.
+- **Takes**: recording over the backing restarts it at bar 1 and records the microphone into the recordings (exercise "solo"); the last 5 takes can be played back on the solo screen and are in Recordings too.
+

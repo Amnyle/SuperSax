@@ -794,7 +794,7 @@
     <string name="solo_play">Lancer l\'accompagnement</string>
     <string name="solo_stop">Arrêter</string>
     <string name="solo_written_note">Accords écrits pour l\'alto, mesure par mesure. Mesures grisées : écoute ou silence à cette étape.</string>
-    <string name="solo_bar_of">Mesure %1$d sur 12</string>
+    <string name="solo_bar_of">Mesure %1$d sur %2$d</string>
     <string name="solo_chord_now">Accord : %1$s</string>
     <string name="solo_target_now">Vise %1$s</string>
     <string name="solo_cue_listen">Écoute</string>
@@ -843,4 +843,14 @@
     <string name="solo_minor_penta_body">Cinq notes qui sonnent toujours juste sur le blues : les trois que tu connais plus deux autres. Apprends-les par cœur, en montant et en descendant, puis improvise avec en gardant les rythmes et les silences des étapes précédentes.</string>
     <string name="solo_major_penta">Pentatonique majeure</string>
     <string name="solo_major_penta_body">Un son plus clair et plus doux que la gamme blues. Essaie-la sur les quatre premières mesures, puis mélange-la avec la pentatonique mineure et écoute comment l\'ambiance change.</string>
+    <string name="solo_style">Style</string>
+    <string name="style_blues">Blues shuffle</string>
+    <string name="style_minor_blues">Blues mineur</string>
+    <string name="style_slow_blues">Blues lent 12/8</string>
+    <string name="style_funk">Funk</string>
+    <string name="style_jazz">Jazz ii–V–I</string>
+    <string name="solo_take_start">Enregistrer une prise</string>
+    <string name="solo_take_stop">Arrêter et garder la prise</string>
+    <string name="solo_take_hint">L\'accompagnement repart de la mesure 1 et le micro t\'enregistre. Avec des écouteurs, l\'accompagnement ne s\'entend pas dans la prise.</string>
+    <string name="solo_takes">Tes prises</string>
 </resources>

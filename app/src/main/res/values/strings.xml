@@ -790,7 +790,7 @@
     <string name="solo_play">Play the backing</string>
     <string name="solo_stop">Stop</string>
     <string name="solo_written_note">Chords written for alto, bar by bar. Shaded bars: listen or rest in this step.</string>
-    <string name="solo_bar_of">Bar %1$d of 12</string>
+    <string name="solo_bar_of">Bar %1$d of %2$d</string>
     <string name="solo_chord_now">Chord: %1$s</string>
     <string name="solo_target_now">Aim for %1$s</string>
     <string name="solo_cue_listen">Listen</string>
@@ -839,4 +839,14 @@
     <string name="solo_minor_penta_body">Five notes that always sound right over the blues: the three you know plus two more. Learn them by heart, up and down, then improvise with them using the rhythms and gaps from the earlier steps.</string>
     <string name="solo_major_penta">Major pentatonic</string>
     <string name="solo_major_penta_body">A brighter, sweeter sound than the blues scale. Try it over the first four bars, then mix it with the minor pentatonic and hear how the mood changes.</string>
+    <string name="solo_style">Style</string>
+    <string name="style_blues">Blues shuffle</string>
+    <string name="style_minor_blues">Minor blues</string>
+    <string name="style_slow_blues">Slow blues 12/8</string>
+    <string name="style_funk">Funk</string>
+    <string name="style_jazz">Jazz ii–V–I</string>
+    <string name="solo_take_start">Record a take</string>
+    <string name="solo_take_stop">Stop and save the take</string>
+    <string name="solo_take_hint">The backing starts again from bar 1 and the microphone records you. Headphones keep the backing out of the recording.</string>
+    <string name="solo_takes">Your takes</string>
 </resources>
