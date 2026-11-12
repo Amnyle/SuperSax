@@ -208,5 +208,14 @@
     "fr": [
       "La lecture rythmique est retirée pour l'instant ; l'exercice du jour mélange notes, gammes, doigtés, oreille et théorie."
     ]
+  },
+  {
+    "id": 17,
+    "en": [
+      "Remove an instrument (AI): in the song player, make a version of any song without the sax (or the voice, piano, guitar, drums or bass) and play that part yourself. It uses your own LALAL.AI account; paste its licence key once."
+    ],
+    "fr": [
+      "Retirer un instrument (IA) : dans le lecteur de morceaux, créez une version de n'importe quel morceau sans le sax (ou la voix, le piano, la guitare, la batterie ou la basse) et jouez cette partie vous-même. Cela utilise votre propre compte LALAL.AI ; collez sa clé de licence une fois."
+    ]
   }
 ]

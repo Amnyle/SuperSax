@@ -1035,4 +1035,26 @@
     <string name="rhythm_v_early_ms">Note %1$d early by %2$d ms · %3$d percent</string>
     <string name="rhythm_v_late_ms">Note %1$d late by %2$d ms · %3$d percent</string>
     <string name="rhythm_v_short_pct">Note %1$d let go too soon (hold the long notes) · %2$d percent</string>
+    <string name="sep_title">Remove an instrument (AI)</string>
+    <string name="sep_body">Make a version of this song without the sax (or the voice, piano, guitar, drums or bass) to play that part yourself. The song is sent to LALAL.AI, an online separation service; the new version appears in your song list with the same key, tempo and bars.</string>
+    <string name="sep_key_needed">This uses your own LALAL.AI account (paid by the minute of audio). Paste your licence key once; it stays on this phone and is never backed up.</string>
+    <string name="sep_get_key">Get a key at lalal.ai</string>
+    <string name="sep_key">Licence key</string>
+    <string name="sep_save_key">Save the key</string>
+    <string name="sep_forget_key">Forget the key</string>
+    <string name="stem_wind">Sax and winds</string>
+    <string name="stem_vocals">Voice</string>
+    <string name="stem_piano">Piano</string>
+    <string name="stem_guitar">Guitar</string>
+    <string name="stem_drums">Drums</string>
+    <string name="stem_bass">Bass</string>
+    <string name="sep_suffix">no %1$s</string>
+    <string name="sep_start">Make a version without %1$s</string>
+    <string name="sep_uploading">Sending the song… (%1$s)</string>
+    <string name="sep_separating">Separating: %1$s…</string>
+    <string name="sep_downloading">Downloading the new version… (%1$s)</string>
+    <string name="sep_wait">Usually a minute or two. You can leave this screen; it carries on.</string>
+    <string name="sep_failed">It did not work: %1$s</string>
+    <string name="sep_done">Done: a version without %1$s is in your songs.</string>
+    <string name="sep_open">Open it</string>
 </resources>

@@ -80,7 +80,7 @@ private fun keyName(tonic: Int, minor: Boolean): String {
 
 /** The song player: tempo and key changes, bars, a part to loop or stop at, checkpoints, bar corrections. */
 @Composable
-fun SongPlayerScreen(songId: String, onBack: () -> Unit) {
+fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) -> Unit = {}) {
     val vm = appViewModel(key = "song-$songId") { SongPlayerViewModel(it, songId) }
     val ref by vm.ref.collectAsStateWithLifecycle()
     val s by vm.setup.collectAsStateWithLifecycle()
@@ -109,6 +109,7 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit) {
             CheckpointsCard(vm, s)
             TempoCard(vm, s, ui.speed)
             KeyCard(vm, s, ui.semitones)
+            ref?.let { SeparationCard(it, onOpenSong) }
             if (s.analyzed) AdjustCard(vm, s)
             Text(stringResource(R.string.song_detect_note), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
         }
