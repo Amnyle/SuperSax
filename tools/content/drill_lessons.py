@@ -22,15 +22,17 @@ READING = [
   ("Low {B} and {Bb} sit just under the ledger line of {C}. High {B} and {C} sit on the second ledger line and above it.", "{B} et {Bb} graves sont juste sous la ligne supplémentaire du {C}. Le {B} et le {C} aigus sont sur et au-dessus de la deuxième ligne supplémentaire."),
   ("Notes with many ledger lines are read by landmarks: middle {C} (one line below), high {A} (one line above), high {C} (two lines above).", "Les notes à plusieurs lignes se lisent avec des repères : {C} grave (une ligne en dessous), {A} aigu (une ligne au-dessus), {C} suraigu (deux lignes au-dessus)."),
  ], ["Bb3:1/4 B3:1/4 C4:1/2", "A5:1/4 B5:1/4 C6:1/4 D6:1/4"], tip=("Find the nearest landmark, then count steps from it.", "Trouvez le repère le plus proche, puis comptez les marches à partir de lui.")),
- L("Sharps and flats", "Dièses et bémols", [
-  ("A sharp ♯ raises a note by a half step; a flat ♭ lowers it by a half step; a natural ♮ cancels them.", "Un dièse ♯ monte la note d'un demi-ton, un bémol ♭ la descend d'un demi-ton, un bécarre ♮ les annule."),
-  ("The sign is written just before the note, on the same line or space. Name the note from its position, then add the sign.", "Le signe s'écrit juste avant la note, sur la même ligne ou le même interligne. Nommez la note par sa place, puis ajoutez le signe."),
-  ("A sharp or flat lasts until the end of the bar. Some notes have two names: {F#} and {Gb} are the same key on the sax.", "Un dièse ou un bémol dure jusqu'à la fin de la mesure. Certaines notes ont deux noms : {F#} et {Gb} sont la même note au sax."),
- ], ["F#4:1/4 G4:1/4 Bb4:1/4 A4:1/4", "C#5:1/4 D5:1/4 Eb5:1/4 D5:1/4"], tip=("In the answer, choose the sign first (♯ or ♭), then tap the letter.", "Pour répondre, choisissez d'abord le signe (♯ ou ♭), puis touchez la note.")),
- L("Accidentals over the whole range", "Altérations sur toute la tessiture", [
-  ("Now sharps and flats appear on ledger-line notes too. The method is the same: position first, sign second.", "Les dièses et bémols apparaissent maintenant aussi sur les notes à lignes supplémentaires. Même méthode : la place d'abord, le signe ensuite."),
-  ("Low {Bb} and high {F#} are the edges of the standard range: you will meet them often in real music.", "Le {Bb} grave et le {F#} aigu sont les limites de la tessiture : vous les rencontrerez souvent."),
- ], ["Bb3:1/4 C#4:1/4 Eb4:1/2", "F#5:1/4 Ab5:1/4 C#6:1/4 F#6:1/4"]),
+ L("Reading in a key signature", "Lire avec une armure", [
+  ("The sharps or flats at the start of the line are the key signature. They apply to every note of that letter, in every octave, for the whole piece.", "Les dièses ou bémols au début de la ligne forment l'armure. Ils s'appliquent à toutes les notes de ce nom, à toutes les octaves, pendant tout le morceau."),
+  ("So a note can be sharp or flat with no sign next to it: with one flat ({Bb}) in the key, a note on the middle line is {Bb}, not {B}.", "Une note peut donc être diésée ou bémolisée sans signe à côté : avec un bémol ({Bb}) à l'armure, la note sur la ligne du milieu est {Bb}, pas {B}."),
+  ("Method: before reading, say the key's altered notes out loud (\"{F#} {C#}\"). Then name each note by its place, and add the key's sharp or flat if its letter is in the list.", "Méthode : avant de lire, dites les notes altérées de l'armure (« {F#} {C#} »). Puis nommez chaque note par sa place, et ajoutez le dièse ou le bémol si son nom est dans la liste."),
+  ("Sharps always come in the order {F#} {C#} {G#}; flats in the order {Bb} {Eb} {Ab}.", "Les dièses viennent toujours dans l'ordre {F#} {C#} {G#} ; les bémols dans l'ordre {Bb} {Eb} {Ab}."),
+ ], ["F4:1/4 B4:1/4 E5:1/4 B4:1/4", "A4:1/4 E4:1/4 B4:1/2"], fifths=-2, tip=("Here (2 flats) every {B} and every {E} is flat, at any height.", "Ici (2 bémols) chaque {B} et chaque {E} est bémol, à toutes les hauteurs.")),
+ L("More keys, and accidentals in the bar", "Plus d'armures, et altérations dans la mesure", [
+  ("Keys now go up to 5 sharps ({F#} {C#} {G#} {D#} {A#}) or 5 flats ({Bb} {Eb} {Ab} {Db} {Gb}), over the whole range.", "Les armures vont maintenant jusqu'à 5 dièses ({F#} {C#} {G#} {D#} {A#}) ou 5 bémols ({Bb} {Eb} {Ab} {Db} {Gb}), sur toute la tessiture."),
+  ("An accidental written next to a note beats the key signature until the end of the bar. A natural ♮ cancels the key: in 2 sharps, a note on the bottom space with ♮ is {F}.", "Une altération écrite devant une note l'emporte sur l'armure jusqu'à la fin de la mesure. Un bécarre ♮ annule l'armure : avec 2 dièses, la note du premier interligne avec ♮ est {F}."),
+  ("So the order of reading is: sign next to the note first; if none, the key signature; if the letter is not in the key, it is natural.", "L'ordre de lecture est donc : le signe devant la note d'abord ; sinon l'armure ; si la note n'est pas dans l'armure, elle est naturelle."),
+ ], ["D5:1/4 Fn5:1/4 C#5:1/4 D5:1/4"], fifths=2, tip=("This is how real music is written: read the key before the first note, every time.", "C'est ainsi qu'est écrite la vraie musique : lisez l'armure avant la première note, à chaque fois.")),
 ]
 
 SCALE = [
@@ -137,19 +139,20 @@ EAR = [
 RHYTHM = [
  L("Quarter, half and whole notes", "Noires, blanches et rondes", [
   ("In 4/4 there are four beats in a bar. A quarter note lasts 1 beat, a half note 2, a whole note 4.", "En 4/4 il y a quatre temps par mesure. Une noire dure 1 temps, une blanche 2, une ronde 4."),
-  ("Press the pad when a note starts and keep holding until its end: hold a half note for two clicks, a whole note for four.", "Appuyez quand la note commence et tenez jusqu'à sa fin : une blanche pendant deux clics, une ronde pendant quatre."),
-  ("The timeline under the staff shows each note as a bar as long as the note. Your presses draw under it as you hold.", "La frise sous la portée montre chaque note comme une barre aussi longue qu'elle. Vos appuis se dessinent dessous."),
- ], ["B4:1/4 B4:1/4 B4:1/2", "B4:1/1"], tip=("Count out loud: \"1 2 3 4\". Let go just before the next note so you can press again.", "Comptez à voix haute : « 1 2 3 4 ». Relâchez juste avant la note suivante pour pouvoir rappuyer.")),
+  ("How to play: after 4 clicks, tap the pad exactly when each note starts. For notes of 2 beats or more (half and whole notes), keep your finger down until the note ends.", "Comment jouer : après 4 clics, touchez exactement quand chaque note commence. Pour les notes de 2 temps ou plus (blanches et rondes), gardez le doigt appuyé jusqu'à la fin de la note."),
+  ("The bar goes by twice in a row; your better pass counts. Each tap appears as a dot on the ruler: green on time, amber a little off, red off.", "La mesure passe deux fois de suite ; votre meilleur passage compte. Chaque appui apparaît comme un point sur la règle : vert à temps, orange un peu décalé, rouge décalé."),
+  ("Under the staff, the counting is written out: \"1 –\" means the note starts on beat 1 and lasts through beat 2. Count it in your head with the clicks.", "Sous la portée, le comptage est écrit : « 1 – » veut dire que la note commence sur le temps 1 et dure pendant le temps 2. Comptez-le dans votre tête avec les clics."),
+ ], ["B4:1/4 B4:1/4 B4:1/2", "B4:1/1"], tip=("Tap with the click, not after it: musicians feel the beat coming. Use \"Listen first\" as often as you like.", "Touchez avec le clic, pas après : les musiciens sentent le temps arriver. Utilisez « Écouter d'abord » autant que vous voulez.")),
  L("Rests", "Les silences", [
   ("A rest is silence of a certain length. A quarter rest lasts 1 beat: do not press, keep counting.", "Un silence est un temps sans son. Un soupir dure 1 temps : n'appuyez pas, continuez de compter."),
  ], ["B4:1/4 r:1/4 B4:1/4 r:1/4", "r:1/4 B4:1/2 B4:1/4"]),
  L("Eighth notes", "Les croches", [
   ("Two eighth notes fill one beat: count \"1 and 2 and 3 and 4 and\".", "Deux croches remplissent un temps : comptez « 1 et 2 et 3 et 4 et »."),
-  ("Each eighth is a short press: tap and release quickly, in time with \"1\" and \"and\".", "Chaque croche est un appui court : appuyez et relâchez vite, sur « 1 » et sur « et »."),
+  ("Each eighth is a short tap, in time with \"1\" and \"and\". Short notes only need their start to be right.", "Chaque croche est un appui court, sur « 1 » et sur « et ». Pour les notes courtes, seul le début compte."),
  ], ["B4:1/8 B4:1/8 B4:1/8 B4:1/8 B4:1/4 B4:1/4"]),
  L("Dotted quarter notes", "Les noires pointées", [
   ("A dot adds half the note's length: a dotted quarter lasts 1½ beats, and is usually followed by an eighth.", "Un point ajoute la moitié de la durée : une noire pointée dure 1 temps et demi, souvent suivie d'une croche."),
-  ("Hold through beat 2 and let go on its \"and\", then press the eighth right there.", "Tenez pendant le 2e temps et relâchez sur son « et », puis appuyez la croche à ce moment."),
+  ("Tap on 1, count \"2\" silently, and tap the eighth exactly on the \"and\" of 2.", "Touchez sur 1, comptez « 2 » en silence, et touchez la croche exactement sur le « et » du 2."),
  ], ["B4:3/8 B4:1/8 B4:1/2"]),
  L("Syncopation", "La syncope", [
   ("A syncopation starts a note between the beats and holds it over the next beat: eighth, quarter, eighth.", "Une syncope commence une note entre les temps et la tient par-dessus le temps suivant : croche, noire, croche."),

@@ -624,7 +624,7 @@
     <string name="onb_naming_q">Comment nommes-tu les notes ?</string>
     <string name="onb_naming_letters">A B C D E F G</string>
     <string name="onb_naming_solfege">Do Ré Mi Fa Sol La Si</string>
-    <string name="levels_hint">Obtiens 2 étoiles à un niveau pour ouvrir le suivant. 3 étoiles = maîtrisé.</string>
+    <string name="levels_hint">1 étoile (80 pour cent de bonnes réponses) ouvre le niveau suivant. 2 étoiles demandent 90 pour cent et des réponses rapides ; 3 étoiles, un sans-faute à vitesse d\'expert.</string>
     <string name="level_locked">verrouillé</string>
     <string name="stars_total">%1$d étoiles sur %2$d</string>
     <string name="stars_n">%1$d étoiles sur 3</string>
@@ -632,8 +632,8 @@
     <string name="lv_read_1">Notes sur la portée (Mi à Fa)</string>
     <string name="lv_read_2">Une ligne supplémentaire (Do grave à La aigu)</string>
     <string name="lv_read_3">Toute la tessiture (Si♭ grave à Fa♯ aigu)</string>
-    <string name="lv_read_4">Dièses et bémols, Do grave à La aigu</string>
-    <string name="lv_read_5">Dièses et bémols, toute la tessiture</string>
+    <string name="lv_read_4">Dans une armure : 1 à 3 dièses ou bémols</string>
+    <string name="lv_read_5">Armures jusqu\'à 5, avec altérations</string>
     <string name="lv_scale_1">Gammes majeures, jusqu\'à 1 dièse ou bémol</string>
     <string name="lv_scale_2">Gammes majeures, jusqu\'à 2</string>
     <string name="lv_scale_3">Gammes majeures, jusqu\'à 4</string>
@@ -651,8 +651,8 @@
     <string name="level_unlocked_next">Niveau suivant débloqué !</string>
     <string name="level_mastered">Maîtrisé : 3 étoiles.</string>
     <string name="level_all_mastered">Maîtrisé : tu as fini tous les niveaux !</string>
-    <string name="level_need_two">Obtiens 2 étoiles (80 %) pour ouvrir le niveau suivant.</string>
-    <string name="level_try_three">Vise 3 étoiles : toutes les réponses justes.</string>
+    <string name="level_need_two">Obtenez 80 pour cent de bonnes réponses pour une étoile : elle ouvre le niveau suivant.</string>
+    <string name="level_try_three">Les étoiles viennent avec la vitesse : 3 étoiles, c\'est un sans-faute à vitesse d\'expert. Cela prend du temps, continuez.</string>
     <string name="level_next">Niveau suivant</string>
     <string name="level_retry">Réessayer</string>
     <string name="level_back">Tous les niveaux</string>
@@ -906,12 +906,12 @@
     <string name="chord_dom7">Septième de dominante</string>
     <string name="chord_min7">Mineur 7</string>
     <string name="chord_maj7">Majeur 7</string>
-    <string name="rhythm_q">Tenez chaque note sur toute sa durée</string>
-    <string name="rhythm_q_swing">Tenez chaque note sur sa durée, en swing (croches longue-courte)</string>
-    <string name="rhythm_start">Commencer · 4 clics de décompte à %1$d BPM</string>
-    <string name="rhythm_pad">TENIR</string>
+    <string name="rhythm_q">Lisez la mesure, puis touchez chaque note quand elle commence</string>
+    <string name="rhythm_q_swing">Touchez chaque note quand elle commence, en swing (croches longue-courte)</string>
+    <string name="rhythm_start">Commencer · 4 clics de décompte</string>
+    <string name="rhythm_pad">TOUCHER</string>
     <string name="rhythm_listen">Écouter d\'abord</string>
-    <string name="rhythm_wrong">Pas tout à fait : regardez les notes en rouge</string>
+    <string name="rhythm_wrong">Moins de 85 pour cent : regardez les notes en rouge, écoutez, et recommencez</string>
     <string name="listen_runs_on">Écouter et compter mes passages</string>
     <string name="listen_runs_off">Arrêter l\'écoute</string>
     <string name="listen_runs_hint">Joue la gamme en montant et en descendant, puis fais une pause : chaque passage est vérifié et noté tout seul.</string>
@@ -1004,16 +1004,8 @@
     <string name="band_lead">Appels au sax</string>
     <string name="band_mute">Couper %1$s</string>
     <string name="band_hint">Coupez le piano pour jouer l\'harmonie vous-même, ou gardez seulement batterie et basse.</string>
-    <string name="rhythm_ready">Appuyez à chaque note et relâchez à sa fin · %1$d BPM</string>
+    <string name="rhythm_ready">Touchez au début de chaque note ; tenez les notes de 2 temps ou plus. La mesure passe deux fois : la meilleure compte · %1$d BPM</string>
     <string name="rhythm_listening">Écoutez et suivez le curseur</string>
-    <string name="rhythm_play_now">Tenez !</string>
-    <string name="rhythm_all_good">Chaque note à temps et de la bonne durée</string>
-    <string name="rhythm_extra">Un appui de trop</string>
-    <string name="rhythm_v_early">Note %1$d : commencée trop tôt</string>
-    <string name="rhythm_v_late">Note %1$d : commencée trop tard</string>
-    <string name="rhythm_v_short">Note %1$d : relâchée trop tôt</string>
-    <string name="rhythm_v_long">Note %1$d : tenue trop longtemps</string>
-    <string name="rhythm_v_missed">Note %1$d : pas jouée</string>
     <string name="drill_lesson">Leçon</string>
     <string name="drill_lesson_example">Exemple</string>
     <string name="drill_lesson_start">J\'ai compris · commencer le niveau %1$d</string>
@@ -1038,4 +1030,15 @@
     <string name="idea_your_turn">À vous · mesure %1$d sur %2$d</string>
     <string name="idea_staff_desc">Le solo généré écrit pour saxophone alto</string>
     <string name="idea_written">Écrit pour saxophone alto. Jouez les croches swing (longue-courte).</string>
+    <string name="level_detail_speed">Votre moyenne : %1$.1f s par réponse · 2 étoiles : moins de %2$.1f s · 3 étoiles : sans faute et moins de %3$.1f s</string>
+    <string name="level_detail_rhythm">Votre précision : %1$d ms d\'écart en moyenne · 2 étoiles : moins de %2$d ms · 3 étoiles : sans faute et moins de %3$d ms</string>
+    <string name="q_reading_key">Quelle est cette note, dans cette tonalité ?</string>
+    <string name="speed_stars_hint">Étoiles : 15, 28 et 45 notes justes avec au plus une erreur sur dix.</string>
+    <string name="rhythm_pass">Passage %1$d sur %2$d</string>
+    <string name="rhythm_score_ok">%1$d pour cent · %2$d ms d\'écart en moyenne</string>
+    <string name="rhythm_extra_pct">Un appui de trop · %1$d pour cent</string>
+    <string name="rhythm_v_missed_pct">Note %1$d pas jouée · %2$d pour cent</string>
+    <string name="rhythm_v_early_ms">Note %1$d en avance de %2$d ms · %3$d pour cent</string>
+    <string name="rhythm_v_late_ms">Note %1$d en retard de %2$d ms · %3$d pour cent</string>
+    <string name="rhythm_v_short_pct">Note %1$d relâchée trop tôt (tenez les notes longues) · %2$d pour cent</string>
 </resources>

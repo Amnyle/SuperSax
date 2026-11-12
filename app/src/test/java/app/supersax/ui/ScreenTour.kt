@@ -75,7 +75,7 @@ class ScreenTour {
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Rhythm reading"); waitFor("Quarters, halves, whole notes")
         click("Level 1"); waitFor("Quarter, half and whole notes"); shot("30-rhythm-lesson")
-        click("I understand · start level 1"); waitFor("Hold each note for its full length"); shot("26-rhythm-question")
+        click("I understand · start level 1"); waitFor("Read the bar, then tap each note as it starts"); shot("26-rhythm-question")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Fingering chart"); waitFor("Middle"); shot("20-fingering-chart")

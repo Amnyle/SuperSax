@@ -43,16 +43,17 @@ public final class Clips {
     }
 
     /**
-     * A rhythm bar after a count-in: [countIn] accented clicks, then the bar's clicks (softer), and, when [inst] is
-     * given, the notes ([spans] in beats from the bar start) on [concertMidi].
+     * A rhythm bar after a count-in: [countIn] clicks, then [reps] times the bar with softer clicks (beat 1 accented),
+     * and, when [inst] is given, the notes ([spans] in beats from the bar start) on [concertMidi] in each repetition.
      */
     public static float[] rhythm(@org.jetbrains.annotations.Nullable SampledInstrument inst, int rate, int bpm, List<double[]> spans,
-                                 int countIn, int concertMidi, double a4) {
+                                 int countIn, int reps, int concertMidi, double a4) {
         double beat = 60.0 / bpm;
-        float[] out = new float[(int) ((countIn + 4 + 1) * beat * rate)];
-        for (int b = 0; b < countIn + 4; b++) click(out, rate, (int) (b * beat * rate), b % 4 == 0, b < countIn ? 0.55 : 0.3);
-        if (inst != null) for (double[] s : spans) {
-            inst.play(out, rate, (int) ((countIn + s[0]) * beat * rate), concertMidi + shift(a4), 0.5, (s[1] - s[0]) * beat * 0.97, 0.06);
+        int beats = countIn + 4 * reps;
+        float[] out = new float[(int) ((beats + 1) * beat * rate)];
+        for (int b = 0; b < beats; b++) click(out, rate, (int) (b * beat * rate), b % 4 == 0, b < countIn ? 0.55 : 0.32);
+        if (inst != null) for (int r = 0; r < reps; r++) for (double[] s : spans) {
+            inst.play(out, rate, (int) ((countIn + 4 * r + s[0]) * beat * rate), concertMidi + shift(a4), 0.5, (s[1] - s[0]) * beat * 0.95, 0.06);
         }
         return out;
     }

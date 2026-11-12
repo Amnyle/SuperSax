@@ -69,13 +69,13 @@ fun bestSpeed(results: List<DrillResultRecord>, level: Int): Int? =
     results.filter { it.kind == DrillKind.READING_SPEED && it.level == level }.maxOfOrNull { it.correct }
 
 data class SpeedUi(
-    val note: SpelledPitch? = null,
+    val note: ReadingDrill.Question? = null,
     val secondsLeft: Int = SpeedReadingViewModel.SECONDS,
     val right: Int = 0,
     val wrong: Int = 0,
     /** Flash after an answer: true right, false wrong, null none. */
     val flash: Boolean? = null,
-    val last: SpelledPitch? = null,
+    val last: ReadingDrill.Question? = null,
     val done: Boolean = false,
     val best: Int? = null,
     val newBest: Boolean = false,
@@ -83,7 +83,7 @@ data class SpeedUi(
 
 /** 60 seconds: name as many notes as possible; each answer moves straight to the next note. */
 class SpeedReadingViewModel(private val c: AppContainer, val level: Int) : ViewModel() {
-    private val pool = ReadingDrill.round(level, 400, c.clock.nowMs())
+    private val pool = ReadingDrill.questions(level, 400, c.clock.nowMs())
     private var index = 0
     private val _ui = MutableStateFlow(SpeedUi(note = pool[0]))
     val ui = _ui.asStateFlow()
@@ -109,7 +109,7 @@ class SpeedReadingViewModel(private val c: AppContainer, val level: Int) : ViewM
         val u = _ui.value
         val q = u.note ?: return
         if (u.done) return
-        val ok = ReadingDrill.isCorrect(q, pc)
+        val ok = ReadingDrill.isCorrect(q.pitch, pc)
         times += c.clock.elapsedMs() - shownAt
         index = (index + 1) % pool.size
         shownAt = c.clock.elapsedMs()
@@ -155,6 +155,7 @@ fun SpeedReadingScreen(level: Int, onClose: () -> Unit, onAgain: () -> Unit) {
         if (ui.done) {
             Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Spacer(Modifier.height(24.dp))
+                StarRow(app.supersax.domain.drills.Levels.speedStars(ui.right, ui.right + ui.wrong), 56)
                 Text(stringResource(R.string.speed_score, ui.right), style = MaterialTheme.typography.displayMedium, textAlign = TextAlign.Center)
                 Text(stringResource(R.string.speed_detail, ui.right, ui.right + ui.wrong), style = MaterialTheme.typography.titleMedium, color = Sax.colors.textSecondary)
                 Text(
@@ -169,15 +170,16 @@ fun SpeedReadingScreen(level: Int, onClose: () -> Unit, onAgain: () -> Unit) {
                     Text(stringResource(R.string.speed_again), style = MaterialTheme.typography.titleMedium)
                 }
                 OutlinedButton(onClick = onClose, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) { Text(stringResource(R.string.level_back)) }
+                Text(stringResource(R.string.speed_stars_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary, textAlign = TextAlign.Center)
             }
             return@Column
         }
         Column(Modifier.weight(1f).fillMaxWidth().background(flashColor).padding(horizontal = 20.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(stringResource(R.string.speed_right, ui.right), style = MaterialTheme.typography.headlineSmall, modifier = Modifier.weight(1f))
-                ui.last?.let { Text(stringResource(R.string.it_was, naming.format(it.pitchClass)), color = bad, style = MaterialTheme.typography.titleSmall) }
+                ui.last?.let { Text(stringResource(R.string.it_was, naming.format(it.pitch.pitchClass)), color = bad, style = MaterialTheme.typography.titleSmall) }
             }
-            ui.note?.let { StaffView(StaffLayout.singleNote(it), staffSpace = 14.dp, showTime = false, description = stringResource(R.string.staff_note_description)) }
+            ui.note?.let { ReadingStaff(it.pitch, it.fifths) }
             NoteKeypad(naming, accidental, true, { accidental = it }) { l -> vm.answer(PitchClass(l, accidental)); accidental = 0 }
         }
     }
@@ -209,6 +211,8 @@ fun SpeedChallengeCard(results: List<DrillResultRecord>, openLevel: Int, onStart
                 ) {
                     Text(stringResource(R.string.level_short, l), style = MaterialTheme.typography.labelLarge, color = if (sel) Sax.colors.onAccent else Color.White)
                     Text(bestSpeed(results, l)?.toString() ?: "–", style = MaterialTheme.typography.titleMedium, color = if (sel) Sax.colors.onAccent else Sax.colors.accent)
+                    val st = app.supersax.domain.drills.Levels.best(results, DrillKind.READING_SPEED, l)
+                    Text("★".repeat(st) + "☆".repeat(3 - st), style = MaterialTheme.typography.labelSmall, color = if (sel) Sax.colors.onAccent else Color.White.copy(alpha = 0.8f))
                 }
             }
         }
@@ -217,4 +221,13 @@ fun SpeedChallengeCard(results: List<DrillResultRecord>, openLevel: Int, onStart
             Text(stringResource(R.string.speed_start))
         }
     }
+}
+
+/** A note to read, in its key signature when it has one. */
+@Composable
+fun ReadingStaff(pitch: SpelledPitch, fifths: Int) {
+    val desc = stringResource(R.string.staff_note_description)
+    if (fifths == 0) StaffView(StaffLayout.singleNote(pitch), staffSpace = 14.dp, showTime = false, description = desc)
+    else StaffView(app.supersax.domain.library.Score(fifths, 4, 4, 60, listOf(app.supersax.domain.library.Measure(listOf(
+        app.supersax.domain.library.ScoreNote(pitch, app.supersax.domain.library.Fraction(1, 1)))))), staffSpace = 14.dp, showTime = false, description = desc)
 }

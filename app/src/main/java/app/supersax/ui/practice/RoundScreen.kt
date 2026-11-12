@@ -81,10 +81,17 @@ abstract class RoundViewModel(protected val c: AppContainer) : ViewModel() {
         shownAt = c.clock.elapsedMs()
     }
 
+    private var metric: Long? = null
+
+    /** A measure to record for this answer instead of the response time (rhythm: mean timing error in ms). */
+    fun metric(ms: Long) { metric = ms }
+
     fun answer(ok: Boolean) {
         val u = _ui.value
         if (u.last != null || u.done) return
-        _ui.value = u.copy(last = ok, correct = u.correct + if (ok) 1 else 0, times = u.times + (c.clock.elapsedMs() - shownAt))
+        val m = metric ?: (c.clock.elapsedMs() - shownAt)
+        metric = null
+        _ui.value = u.copy(last = ok, correct = u.correct + if (ok) 1 else 0, times = u.times + m)
     }
 
     fun next() {
@@ -129,7 +136,7 @@ fun RoundScreen(vm: RoundViewModel, ui: RoundUi, onClose: () -> Unit, result: @C
             Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            DrillItemView(item, key = ui.index, enabled = ui.last == null, onAnswer = vm::answer)
+            DrillItemView(item, key = ui.index, enabled = ui.last == null, onAnswer = vm::answer, onMetric = vm::metric)
         }
         AnimatedVisibility(ui.last != null, enter = slideInVertically { it } + fadeIn()) {
             val ok = ui.last == true
@@ -180,7 +187,7 @@ fun StarRow(stars: Int, size: Int = 44) {
 @Composable
 fun LevelResult(
     levelName: String, stars: Int, correct: Int, total: Int, unlockedNext: Boolean, isLast: Boolean, nextOpen: Boolean,
-    onNext: () -> Unit, onRetry: () -> Unit, onLevels: () -> Unit,
+    onNext: () -> Unit, onRetry: () -> Unit, onLevels: () -> Unit, detail: String? = null,
 ) {
     Column(Modifier.fillMaxWidth().padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(14.dp)) {
         StarRow(stars, 64)
@@ -190,10 +197,11 @@ fun LevelResult(
             unlockedNext -> stringResource(R.string.level_unlocked_next)
             stars >= 3 && isLast -> stringResource(R.string.level_all_mastered)
             stars >= 3 -> stringResource(R.string.level_mastered)
-            stars < 2 -> stringResource(R.string.level_need_two)
+            stars < 1 -> stringResource(R.string.level_need_two)
             else -> stringResource(R.string.level_try_three)
         }
         Text(message, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+        detail?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary, textAlign = TextAlign.Center) }
         Spacer(Modifier.height(8.dp))
         val amber = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)
         if (nextOpen && !isLast) Button(onClick = onNext, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp), colors = amber) {

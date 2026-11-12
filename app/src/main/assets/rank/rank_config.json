@@ -1,59 +1,331 @@
 {
-  "technique": [
-    { "tier": 1, "requirements": [ { "family": "MAJOR", "count": 1, "minBpm": 0 } ] },
-    { "tier": 2, "requirements": [ { "family": "MAJOR", "count": 3, "minBpm": 70 } ] },
-    { "tier": 3, "requirements": [ { "family": "MAJOR", "count": 6, "minBpm": 80 } ] },
-    { "tier": 4, "requirements": [ { "family": "MAJOR", "count": 12, "minBpm": 90 } ] },
-    { "tier": 5, "requirements": [ { "family": "MAJOR", "count": 12, "minBpm": 90 }, { "family": "MINOR", "count": 12, "minBpm": 100 } ] },
-    { "tier": 6, "requirements": [ { "family": "MAJOR", "count": 12, "minBpm": 110 }, { "family": "MINOR", "count": 12, "minBpm": 110 } ] },
-    { "tier": 7, "requirements": [ { "family": "MAJOR", "count": 12, "minBpm": 130 }, { "family": "MINOR", "count": 12, "minBpm": 130 }, { "family": "MODE", "count": 12, "minBpm": 130 } ] },
-    { "tier": 8, "requirements": [ { "family": "MAJOR", "count": 12, "minBpm": 150 }, { "family": "MINOR", "count": 12, "minBpm": 150 }, { "family": "MODE", "count": 12, "minBpm": 150 }, { "family": "ARPEGGIO", "count": 24, "minBpm": 150 } ] }
-  ],
-  "range": [
-    { "tier": 1, "lowAtMost": 64, "highAtLeast": 74 },
-    { "tier": 2, "lowAtMost": 58, "highAtLeast": 79 },
-    { "tier": 3, "lowAtMost": 58, "highAtLeast": 86 },
-    { "tier": 4, "lowAtMost": 58, "highAtLeast": 90 },
-    { "tier": 5, "lowAtMost": 58, "highAtLeast": 91 },
-    { "tier": 6, "lowAtMost": 58, "highAtLeast": 93 },
-    { "tier": 7, "lowAtMost": 58, "highAtLeast": 96 },
-    { "tier": 8, "lowAtMost": 58, "highAtLeast": 98 }
-  ],
-  "rangeVerifiedFromTier": 5,
-  "sound": [
-    { "tier": 1, "seconds": 0, "toleranceCents": 50, "longToneBlocks": 1 },
-    { "tier": 2, "seconds": 8, "toleranceCents": 25 },
-    { "tier": 3, "seconds": 12, "toleranceCents": 20 },
-    { "tier": 4, "seconds": 16, "toleranceCents": 15, "allRegisters": true },
-    { "tier": 5, "seconds": 20, "toleranceCents": 12, "allRegisters": true },
-    { "tier": 6, "seconds": 25, "toleranceCents": 10, "allRegisters": true },
-    { "tier": 7, "seconds": 30, "toleranceCents": 8, "allRegisters": true },
-    { "tier": 8, "seconds": 35, "toleranceCents": 8, "allRegisters": true }
-  ],
-  "consistency": {
-    "windowDays": 56,
-    "thresholds": [25, 35, 45, 55, 65, 75, 85, 90],
-    "sessionsFloorFromTier": 4,
-    "minSessionsPerWeek": 3.0
+ "technique": [
+  {
+   "tier": 1,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 1,
+     "minBpm": 0
+    }
+   ]
   },
-  "repertoire": [
-    { "tier": 1, "minDifficulty": 1 },
-    { "tier": 2, "minDifficulty": 2 },
-    { "tier": 3, "minDifficulty": 3 },
-    { "tier": 4, "minDifficulty": 5 },
-    { "tier": 5, "minDifficulty": 6 },
-    { "tier": 6, "minDifficulty": 7 },
-    { "tier": 7, "minDifficulty": 8 },
-    { "tier": 8, "minDifficulty": 10 }
+  {
+   "tier": 2,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 3,
+     "minBpm": 72
+    }
+   ]
+  },
+  {
+   "tier": 3,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 6,
+     "minBpm": 88
+    }
+   ]
+  },
+  {
+   "tier": 4,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 12,
+     "minBpm": 100
+    }
+   ]
+  },
+  {
+   "tier": 5,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 12,
+     "minBpm": 112
+    },
+    {
+     "family": "MINOR",
+     "count": 12,
+     "minBpm": 104
+    }
+   ]
+  },
+  {
+   "tier": 6,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 12,
+     "minBpm": 126
+    },
+    {
+     "family": "MINOR",
+     "count": 12,
+     "minBpm": 120
+    }
+   ]
+  },
+  {
+   "tier": 7,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 12,
+     "minBpm": 144
+    },
+    {
+     "family": "MINOR",
+     "count": 12,
+     "minBpm": 144
+    },
+    {
+     "family": "MODE",
+     "count": 12,
+     "minBpm": 132
+    }
+   ]
+  },
+  {
+   "tier": 8,
+   "requirements": [
+    {
+     "family": "MAJOR",
+     "count": 12,
+     "minBpm": 168
+    },
+    {
+     "family": "MINOR",
+     "count": 12,
+     "minBpm": 168
+    },
+    {
+     "family": "MODE",
+     "count": 12,
+     "minBpm": 160
+    },
+    {
+     "family": "ARPEGGIO",
+     "count": 24,
+     "minBpm": 160
+    }
+   ]
+  }
+ ],
+ "range": [
+  {
+   "tier": 1,
+   "lowAtMost": 64,
+   "highAtLeast": 74
+  },
+  {
+   "tier": 2,
+   "lowAtMost": 58,
+   "highAtLeast": 79
+  },
+  {
+   "tier": 3,
+   "lowAtMost": 58,
+   "highAtLeast": 86
+  },
+  {
+   "tier": 4,
+   "lowAtMost": 58,
+   "highAtLeast": 90
+  },
+  {
+   "tier": 5,
+   "lowAtMost": 58,
+   "highAtLeast": 91
+  },
+  {
+   "tier": 6,
+   "lowAtMost": 58,
+   "highAtLeast": 93
+  },
+  {
+   "tier": 7,
+   "lowAtMost": 58,
+   "highAtLeast": 96
+  },
+  {
+   "tier": 8,
+   "lowAtMost": 58,
+   "highAtLeast": 98
+  }
+ ],
+ "rangeVerifiedFromTier": 5,
+ "sound": [
+  {
+   "tier": 1,
+   "seconds": 0,
+   "toleranceCents": 50,
+   "longToneBlocks": 1
+  },
+  {
+   "tier": 2,
+   "seconds": 10,
+   "toleranceCents": 20
+  },
+  {
+   "tier": 3,
+   "seconds": 15,
+   "toleranceCents": 15
+  },
+  {
+   "tier": 4,
+   "seconds": 20,
+   "toleranceCents": 12,
+   "allRegisters": true
+  },
+  {
+   "tier": 5,
+   "seconds": 25,
+   "toleranceCents": 10,
+   "allRegisters": true
+  },
+  {
+   "tier": 6,
+   "seconds": 30,
+   "toleranceCents": 8,
+   "allRegisters": true
+  },
+  {
+   "tier": 7,
+   "seconds": 35,
+   "toleranceCents": 6,
+   "allRegisters": true
+  },
+  {
+   "tier": 8,
+   "seconds": 40,
+   "toleranceCents": 5,
+   "allRegisters": true
+  }
+ ],
+ "consistency": {
+  "windowDays": 56,
+  "thresholds": [
+   25,
+   40,
+   50,
+   60,
+   70,
+   80,
+   88,
+   94
   ],
-  "musicianship": [
-    { "tier": 1, "anyActivity": true },
-    { "tier": 2, "readingLevel": 2, "readingAccuracy": 0.80, "lessons": 2, "lessonMinScore": 0.6 },
-    { "tier": 3, "readingLevel": 3, "readingAccuracy": 0.80, "scaleLevel": 1, "scaleAccuracy": 0.70, "lessons": 4, "lessonMinScore": 0.7 },
-    { "tier": 4, "readingLevel": 4, "readingAccuracy": 0.85, "readingMeanMs": 4000, "scaleLevel": 2, "scaleAccuracy": 0.80, "lessons": 6, "lessonMinScore": 0.7 },
-    { "tier": 5, "readingLevel": 5, "readingAccuracy": 0.85, "readingMeanMs": 3500, "scaleLevel": 4, "scaleAccuracy": 0.85, "lessons": 8, "lessonMinScore": 0.75 },
-    { "tier": 6, "readingLevel": 5, "readingAccuracy": 0.90, "readingMeanMs": 3000, "scaleLevel": 5, "scaleAccuracy": 0.90, "lessons": 10, "lessonMinScore": 0.8 },
-    { "tier": 7, "readingLevel": 5, "readingAccuracy": 0.95, "readingMeanMs": 2500, "scaleLevel": 7, "scaleAccuracy": 0.95, "lessons": 12, "lessonMinScore": 0.85 },
-    { "tier": 8, "readingLevel": 5, "readingAccuracy": 1.0, "readingMeanMs": 2000, "scaleLevel": 8, "scaleAccuracy": 1.0, "lessons": 13, "lessonMinScore": 0.9 }
-  ]
+  "sessionsFloorFromTier": 4,
+  "minSessionsPerWeek": 3.0
+ },
+ "repertoire": [
+  {
+   "tier": 1,
+   "minDifficulty": 1
+  },
+  {
+   "tier": 2,
+   "minDifficulty": 2
+  },
+  {
+   "tier": 3,
+   "minDifficulty": 3
+  },
+  {
+   "tier": 4,
+   "minDifficulty": 5
+  },
+  {
+   "tier": 5,
+   "minDifficulty": 6
+  },
+  {
+   "tier": 6,
+   "minDifficulty": 7
+  },
+  {
+   "tier": 7,
+   "minDifficulty": 8
+  },
+  {
+   "tier": 8,
+   "minDifficulty": 10
+  }
+ ],
+ "musicianship": [
+  {
+   "tier": 1,
+   "anyActivity": true
+  },
+  {
+   "tier": 2,
+   "readingLevel": 2,
+   "readingAccuracy": 0.85,
+   "lessons": 2,
+   "lessonMinScore": 0.6
+  },
+  {
+   "tier": 3,
+   "readingLevel": 3,
+   "readingAccuracy": 0.85,
+   "scaleLevel": 1,
+   "scaleAccuracy": 0.75,
+   "lessons": 4,
+   "lessonMinScore": 0.7
+  },
+  {
+   "tier": 4,
+   "readingLevel": 4,
+   "readingAccuracy": 0.9,
+   "readingMeanMs": 2000,
+   "scaleLevel": 2,
+   "scaleAccuracy": 0.85,
+   "lessons": 6,
+   "lessonMinScore": 0.7
+  },
+  {
+   "tier": 5,
+   "readingLevel": 5,
+   "readingAccuracy": 0.9,
+   "readingMeanMs": 1750,
+   "scaleLevel": 4,
+   "scaleAccuracy": 0.9,
+   "lessons": 8,
+   "lessonMinScore": 0.75
+  },
+  {
+   "tier": 6,
+   "readingLevel": 5,
+   "readingAccuracy": 0.95,
+   "readingMeanMs": 1500,
+   "scaleLevel": 5,
+   "scaleAccuracy": 0.95,
+   "lessons": 10,
+   "lessonMinScore": 0.8
+  },
+  {
+   "tier": 7,
+   "readingLevel": 5,
+   "readingAccuracy": 1.0,
+   "readingMeanMs": 1250,
+   "scaleLevel": 7,
+   "scaleAccuracy": 1.0,
+   "lessons": 12,
+   "lessonMinScore": 0.85
+  },
+  {
+   "tier": 8,
+   "readingLevel": 5,
+   "readingAccuracy": 1.0,
+   "readingMeanMs": 1000,
+   "scaleLevel": 8,
+   "scaleAccuracy": 1.0,
+   "lessons": 13,
+   "lessonMinScore": 0.9
+  }
+ ]
 }

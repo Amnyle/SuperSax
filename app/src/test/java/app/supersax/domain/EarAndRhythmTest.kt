@@ -91,3 +91,50 @@ class RhythmHoldTest {
         assertFalse(RhythmDrill.judgeHolds(target, emptyList(), 100.0, beat).correct)
     }
 }
+
+class RhythmTapTest {
+    private val beat = 1000.0
+    private val spans = listOf(doubleArrayOf(0.0, 1000.0), doubleArrayOf(1000.0, 3000.0), doubleArrayOf(3000.0, 4000.0))
+
+    @Test fun constantDelayIsRemovedAndScored() {
+        val taps = listOf(doubleArrayOf(150.0, 400.0), doubleArrayOf(1160.0, 2900.0), doubleArrayOf(3140.0, 3300.0))
+        val r = RhythmDrill.scoreTaps(spans, taps, 100.0, beat, 0.0)
+        assertTrue(r.passed); assertTrue(r.meanErrorMs < 15, "${r.meanErrorMs}")
+        assertEquals(100.0, r.percent, 1e-9)
+    }
+
+    @Test fun shortNotesOnlyNeedTheirStartLongNotesMustBeHeld() {
+        val quickRelease = listOf(doubleArrayOf(0.0, 80.0), doubleArrayOf(1000.0, 1150.0), doubleArrayOf(3000.0, 3080.0))
+        val r = RhythmDrill.scoreTaps(spans, quickRelease, 100.0, beat, 0.0)
+        assertEquals(RhythmDrill.Verdict.OK, r.notes[0].verdict)
+        assertEquals(RhythmDrill.Verdict.SHORT, r.notes[1].verdict, "the half note was let go at once")
+        assertFalse(r.passed)
+    }
+
+    @Test fun lateMissedAndExtra() {
+        val late = listOf(doubleArrayOf(0.0, 500.0), doubleArrayOf(1170.0, 2900.0), doubleArrayOf(3000.0, 3500.0), doubleArrayOf(3500.0, 3600.0))
+        val r = RhythmDrill.scoreTaps(spans, late, 100.0, beat, 0.0)
+        assertEquals(RhythmDrill.Verdict.LATE, r.notes[1].verdict)
+        assertEquals(1, r.extra)
+        val missed = RhythmDrill.scoreTaps(spans, listOf(doubleArrayOf(0.0, 500.0)), 100.0, beat, 0.0)
+        assertEquals(RhythmDrill.Verdict.MISSED, missed.notes[1].verdict)
+        assertFalse(missed.passed)
+    }
+
+    @Test fun countingLine() {
+        val q = RhythmDrill.round(3, 80, 3L).first { it.durations == listOf(4, 8, 2, 2) || it.durations.first() == 8 }
+        assertTrue(RhythmDrill.counting(q).startsWith("1"))
+    }
+}
+
+class KeyReadingTest {
+    @Test fun levelFourReadsTheKeySignature() {
+        val qs = app.supersax.domain.drills.ReadingDrill.questions(4, 200, 9L)
+        assertTrue(qs.all { it.fifths != 0 && kotlin.math.abs(it.fifths) <= 3 })
+        qs.forEach { q -> assertEquals(app.supersax.domain.pitch.KeySignature(q.fifths).alterFor(q.pitch.letter), q.pitch.alter, "level 4 has no accidentals in the bar") }
+        assertTrue(qs.count { it.pitch.alter != 0 } > 80, "most notes are on a letter the key alters")
+        val five = app.supersax.domain.drills.ReadingDrill.questions(5, 300, 4L)
+        assertTrue(five.any { app.supersax.domain.pitch.KeySignature(it.fifths).alterFor(it.pitch.letter) != it.pitch.alter }, "level 5 has accidentals")
+        assertEquals(qs, app.supersax.domain.drills.ReadingDrill.questions(4, 200, 9L))
+    }
+}

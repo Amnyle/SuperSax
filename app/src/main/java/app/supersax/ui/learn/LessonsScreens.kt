@@ -103,7 +103,7 @@ class LessonViewModel(private val c: AppContainer, val lessonId: String) : ViewM
             val previous = c.progress.lessons.first().firstOrNull { it.lessonId == l.id }
             // Keep the best score; count attempts.
             val bestBefore = app.supersax.domain.drills.Levels.best(c.progress.drills.first(), DrillKind.THEORY_QUIZ, l.order)
-            _unlockedNext.value = nextLesson != null && bestBefore < 2 && app.supersax.domain.drills.Levels.stars(u.correct, l.quiz.size) >= 2
+            _unlockedNext.value = nextLesson != null && bestBefore < app.supersax.domain.drills.Levels.STARS_TO_UNLOCK && app.supersax.domain.drills.Levels.stars(u.correct, l.quiz.size) >= app.supersax.domain.drills.Levels.STARS_TO_UNLOCK
             c.progress.saveLesson(LessonProgressRecord(l.id, c.clock.nowMs(), maxOf(score, previous?.quizScore ?: 0.0), (previous?.attempts ?: 0) + 1))
             c.savePhoneDrill(DrillKind.THEORY_QUIZ, l.order, l.quiz.size, u.correct, 0, startedAt, "lesson=${l.id}")
         }
@@ -127,7 +127,7 @@ fun LessonScreen(lessonId: String, onBack: () -> Unit, onLesson: (String) -> Uni
                     val next = vm.nextLesson
                     app.supersax.ui.practice.LevelResult(
                         l.title.get(language), stars, ui.correct, l.quiz.size, unlocked, isLast = next == null,
-                        nextOpen = next != null && (unlocked || stars >= 2),
+                        nextOpen = next != null && (unlocked || stars >= app.supersax.domain.drills.Levels.STARS_TO_UNLOCK),
                         onNext = { next?.let { onLesson(it.id) } }, onRetry = vm::startQuiz, onLevels = onBack,
                     )
                 }

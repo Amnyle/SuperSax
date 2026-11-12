@@ -50,7 +50,7 @@ import kotlin.random.Random
 fun levelItems(c: AppContainer, kind: DrillKind, level: Int, count: Int?, seed: Long, sax: Boolean = false): List<DrillItem> = when (kind) {
     DrillKind.EAR -> app.supersax.domain.drills.EarDrill.round(level, count ?: app.supersax.domain.drills.EarDrill.ROUND, seed).map { DrillItem.Ear(it, sax) }
     DrillKind.RHYTHM -> app.supersax.domain.drills.RhythmDrill.round(level, count ?: app.supersax.domain.drills.RhythmDrill.ROUND, seed).map { DrillItem.Rhythm(it, level) }
-    DrillKind.READING -> ReadingDrill.round(level, count ?: DrillRules.READING_ROUND, seed).map { DrillItem.Reading(it) }
+    DrillKind.READING -> ReadingDrill.questions(level, count ?: DrillRules.READING_ROUND, seed).map { DrillItem.Reading(it.pitch, it.fifths) }
     DrillKind.SCALE_RECOGNITION -> ScaleRecognition.round(level, count ?: DrillRules.SCALE_ROUND, seed).map { DrillItem.Scale(it, level) }
     DrillKind.FINGERING -> FingeringDrill.round(c.content.fingerings, level, count ?: DrillRules.FINGERING_ROUND, seed).map { DrillItem.Fingering(it.first, it.second) }
     else -> emptyList()
@@ -69,7 +69,7 @@ class PlayLevelViewModel(c: AppContainer, val kind: DrillKind, val level: Int, v
         val before = c.progress.drills.first()
         val openBefore = Levels.unlocked(before, kind, max)
         c.savePhoneDrill(kind, level, u.items.size, u.correct, u.meanMs, startedAt)
-        val stars = Levels.stars(u.correct, u.items.size)
+        val stars = Levels.stars(kind, u.correct, u.items.size, u.meanMs)
         val after = before + DrillResultRecord("new", c.clock.nowMs(), kind, level, u.items.size, u.correct, u.meanMs)
         val openAfter = Levels.unlocked(after, kind, max)
         _outcome.value = LevelOutcome(stars, openAfter > openBefore, level + 1 <= openAfter)
@@ -86,6 +86,7 @@ fun PlayLevelScreen(kind: DrillKind, level: Int, onClose: () -> Unit, onLevel: (
         LevelResult(
             "${drillTitle(kind)} · ${stringResource(R.string.level_n, level)}", o.stars, ui.correct, ui.items.size,
             o.unlockedNext, level >= vm.max, o.nextOpen, onNext = { onLevel(level + 1) }, onRetry = { onLevel(level) }, onLevels = onClose,
+            detail = speedDetail(kind, ui.meanMs),
         )
     }
 }
@@ -145,4 +146,12 @@ fun DailyScreen(onClose: () -> Unit) {
             }
         }
     }
+}
+
+/** "Your average … · 2 stars … · 3 stars …" for drills where speed counts. */
+@Composable
+fun speedDetail(kind: DrillKind, meanMs: Long): String? {
+    val lim = Levels.speedLimits(kind) ?: return null
+    return if (kind == DrillKind.RHYTHM) stringResource(R.string.level_detail_rhythm, meanMs, lim[0], lim[1])
+    else stringResource(R.string.level_detail_speed, meanMs / 1000.0, lim[0] / 1000.0, lim[1] / 1000.0)
 }

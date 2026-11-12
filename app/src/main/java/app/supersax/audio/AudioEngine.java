@@ -139,12 +139,27 @@ public final class AudioEngine {
         }
     }
 
+    // Timing of what comes out of the speaker: frames written, the frame where the last clip started, and the
+    // latest AudioTimestamp (frame heard at a CLOCK_MONOTONIC time, the same clock as SystemClock.uptimeMillis).
+    private volatile long clipStartFrame = -1;
+    private volatile long tsFrame = -1, tsNanos = 0;
+
+    /**
+     * Uptime (ms, SystemClock.uptimeMillis base) at which the first frame of the last [playClip] clip is heard,
+     * or -1 while not known yet (a few tens of ms after it starts).
+     */
+    public long clipStartUptimeMs() {
+        long start = clipStartFrame, f = tsFrame, n = tsNanos;
+        if (start < 0 || f < 0 || n == 0) return -1;
+        return (long) ((n + (start - f) * 1e9 / SAMPLE_RATE) / 1e6);
+    }
+
     /** Output sample rate, for sounds rendered with [playClip]. */
     public int getSampleRate() { return SAMPLE_RATE; }
 
     /** Plays a pre-rendered mono buffer at [getSampleRate], replacing other clips. */
     public void playClip(float[] samples) {
-        synchronized (lock) { clips.clear(); clipPos.clear(); clips.add(samples); clipPos.add(new int[]{0}); }
+        synchronized (lock) { clips.clear(); clipPos.clear(); clips.add(samples); clipPos.add(new int[]{0}); clipStartFrame = -1; }
         ensureRunning();
     }
 
@@ -205,6 +220,10 @@ public final class AudioEngine {
             return;
         }
         float[] buf = new float[512];
+        long written = 0;
+        int writes = 0;
+        android.media.AudioTimestamp ts = new android.media.AudioTimestamp();
+        tsFrame = -1; tsNanos = 0;
         try {
             track.play();
             update(s -> s.withError(null));
@@ -232,6 +251,7 @@ public final class AudioEngine {
                     for (int c = clips.size() - 1; c >= 0; c--) {
                         float[] clip = clips.get(c);
                         int[] at = clipPos.get(c);
+                        if (at[0] == 0) clipStartFrame = written;
                         int n = Math.min(buf.length, clip.length - at[0]);
                         for (int i = 0; i < n; i++) buf[i] += clip[at[0] + i];
                         at[0] += n;
@@ -251,6 +271,8 @@ public final class AudioEngine {
                 }
                 for (int i = 0; i < buf.length; i++) buf[i] = Math.max(-1f, Math.min(1f, buf[i]));
                 track.write(buf, 0, buf.length, AudioTrack.WRITE_BLOCKING);
+                written += buf.length;
+                if (++writes % 8 == 0 && track.getTimestamp(ts)) { tsFrame = ts.framePosition; tsNanos = ts.nanoTime; }
                 idleBuffers = busy() ? 0 : idleBuffers + 1;
                 if (idleBuffers > 20) running = false;
             }

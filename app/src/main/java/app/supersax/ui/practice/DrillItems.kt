@@ -52,7 +52,7 @@ import app.supersax.ui.theme.Sax
 sealed interface DrillItem {
     val kind: DrillKind
 
-    data class Reading(val pitch: SpelledPitch) : DrillItem { override val kind get() = DrillKind.READING }
+    data class Reading(val pitch: SpelledPitch, val fifths: Int = 0) : DrillItem { override val kind get() = DrillKind.READING }
     data class Scale(val q: ScaleRecognition.Question, val level: Int) : DrillItem { override val kind get() = DrillKind.SCALE_RECOGNITION }
     data class Fingering(val entry: FingeringEntry, val tapKeys: Boolean) : DrillItem { override val kind get() = DrillKind.FINGERING }
     data class Theory(val lessonId: String, val q: QuizQuestion) : DrillItem { override val kind get() = DrillKind.THEORY_QUIZ }
@@ -111,14 +111,14 @@ fun FeedbackExtra(item: DrillItem) {
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DrillItemView(item: DrillItem, key: Any, enabled: Boolean, onAnswer: (Boolean) -> Unit) {
+fun DrillItemView(item: DrillItem, key: Any, enabled: Boolean, onAnswer: (Boolean) -> Unit, onMetric: (Long) -> Unit = {}) {
     val naming = LocalSettings.current.noteNaming
     val language = LocaleHelper.effective(LocalContext.current)
     val prompt = MaterialTheme.typography.titleLarge
     when (item) {
         is DrillItem.Reading -> {
-            Text(stringResource(R.string.q_reading), style = prompt)
-            StaffView(StaffLayout.singleNote(item.pitch), staffSpace = 14.dp, showTime = false, description = stringResource(R.string.staff_note_description))
+            Text(stringResource(if (item.fifths != 0) R.string.q_reading_key else R.string.q_reading), style = prompt)
+            ReadingStaff(item.pitch, item.fifths)
             var acc by remember(key) { mutableIntStateOf(0) }
             NoteKeypad(naming, acc, enabled, { acc = it }) { l -> onAnswer(ReadingDrill.isCorrect(item.pitch, PitchClass(l, acc))) }
         }
@@ -170,7 +170,7 @@ fun DrillItemView(item: DrillItem, key: Any, enabled: Boolean, onAnswer: (Boolea
             }
         }
         is DrillItem.Ear -> EarView(item, key, enabled, onAnswer)
-        is DrillItem.Rhythm -> RhythmView(item, key, enabled, onAnswer)
+        is DrillItem.Rhythm -> RhythmView(item, key, enabled, onAnswer, onMetric)
         is DrillItem.Theory -> {
             Text(item.q.prompt.get(language), style = prompt)
             item.q.staff?.let { StaffView(it.toScore(), showTime = !it.free) }

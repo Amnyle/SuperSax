@@ -130,37 +130,64 @@ private fun SaxAnswer(targetWritten: Int, key: Any, enabled: Boolean, onAnswer: 
     if (enabled) TextButton(onClick = { answered = true; onAnswer(false) }) { Text(stringResource(R.string.ear_give_up)) }
 }
 
-/** Rhythm question: after a count-in, press and hold for each note, and let go at its end. */
+/**
+ * Rhythm question: read the bar, then after a 4-click count-in tap each note as it starts (hold the long ones) while
+ * the bar goes by twice; the better pass counts. Taps land as dots on a beat ruler, coloured by timing.
+ */
 @Composable
-fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Boolean) -> Unit) {
+fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Boolean) -> Unit, onMetric: (Long) -> Unit = {}) {
     val c = LocalContainer.current
     val q = item.q
     val bpm = RhythmDrill.bpm(item.level)
     val beatMs = 60000.0 / bpm
+    val barMs = 4 * beatMs
     val spans = remember(key) { q.spans() }
+    val spansMs = remember(key) { spans.map { doubleArrayOf(it[0] * beatMs, it[1] * beatMs) } }
+    val tol = RhythmDrill.toleranceMs(item.level)
     val scope = rememberCoroutineScope()
-    // READY, DEMO (listening), RUN (count-in and bar), DONE
     var phase by remember(key) { mutableStateOf(RhythmPhase.READY) }
-    var t0 by remember(key) { mutableStateOf(0L) }          // uptime of beat 1 of the bar
+    var t0 by remember(key) { mutableStateOf(0L) }      // uptime of beat 1 of the first pass
+    var exact by remember(key) { mutableStateOf(false) } // t0 measured from the speaker, not estimated
     var now by remember(key) { mutableStateOf(0L) }
-    val presses = remember(key) { mutableStateListOf<DoubleArray>() } // {down, up} ms from beat 1; up = NaN while held
-    var result by remember(key) { mutableStateOf<RhythmDrill.HoldResult?>(null) }
-    val hold = MIDI_HOLD
+    val presses = remember(key) { mutableStateListOf<LongArray>() } // {down, up} uptime; up = 0 while held
+    var result by remember(key) { mutableStateOf<RhythmDrill.TapScore?>(null) }
+    var bestPass by remember(key) { mutableIntStateOf(0) }
+    var prior by remember { mutableStateOf(0.0) }
+    val reps = 2
+    LaunchedEffect(Unit) { prior = c.db.kv().get(LATENCY_KEY)?.json?.toDoubleOrNull() ?: 0.0 }
     DisposableEffect(key) { onDispose { c.audio.stopHold(); c.audio.stopAll() } }
+
+    fun passPresses(pass: Int): List<DoubleArray> {
+        val base = t0 + (pass * barMs).toLong()
+        return presses.filter { val d = it[0] - base; d >= -beatMs * 0.5 && d < barMs - beatMs * 0.5 + (if (pass == reps - 1) beatMs else 0.0) }
+            .map { doubleArrayOf((it[0] - base).toDouble(), if (it[1] == 0L) Double.NaN else (it[1] - base).toDouble()) }
+    }
+
     LaunchedEffect(phase) {
+        val countIn = 4
         while (phase == RhythmPhase.DEMO || phase == RhythmPhase.RUN) {
             now = android.os.SystemClock.uptimeMillis()
-            val end = t0 + (4.5 * beatMs).toLong()
-            if (now >= end) {
+            if (!exact) {
+                val heard = c.audio.clipStartUptimeMs()
+                if (heard > 0) { t0 = heard + (countIn * beatMs).toLong(); exact = true }
+            }
+            val passes = if (phase == RhythmPhase.RUN) reps else 1
+            if (now >= t0 + (passes * barMs + beatMs * 0.6).toLong()) {
                 if (phase == RhythmPhase.RUN) {
                     c.audio.stopHold()
-                    val ms = (now - t0).toDouble()
-                    val done = presses.map { if (it[1].isNaN()) doubleArrayOf(it[0], ms) else it }
-                    val r = RhythmDrill.judgeHolds(spans.map { doubleArrayOf(it[0] * beatMs, it[1] * beatMs) }, done, RhythmDrill.toleranceMs(item.level), beatMs)
-                    presses.clear(); presses.addAll(done)
+                    val scores = (0 until reps).map { RhythmDrill.scoreTaps(spansMs, passPresses(it), tol, beatMs, prior) }
+                    val best = scores.indices.maxByOrNull { scores[it].percent }!!
+                    val r = scores[best]
+                    bestPass = best
                     result = r
                     phase = RhythmPhase.DONE
-                    onAnswer(r.correct)
+                    // Learn this phone's delay a little from each good run.
+                    if (r.notes.count { !it.errorMs.isNaN() } >= 3) {
+                        val learned = (0.7 * prior + 0.3 * r.offsetMs).coerceIn(-250.0, 350.0)
+                        c.appScope.launch { c.db.kv().put(app.supersax.data.db.KeyValueEntity(LATENCY_KEY, learned.toString())) }
+                    }
+                    onMetric(r.meanErrorMs.toLong().coerceAtMost(999))
+                    onAnswer(r.passed)
                 } else phase = RhythmPhase.READY
                 break
             }
@@ -171,11 +198,12 @@ fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Bo
         scope.launch {
             val sax = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) { c.band.altoSax }
             val clip = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
-                app.supersax.domain.audio.Clips.rhythm(if (demo) sax else null, c.audio.sampleRate, bpm, spans, 4, hold, c.audio.a4)
+                app.supersax.domain.audio.Clips.rhythm(if (demo) sax else null, c.audio.sampleRate, bpm, spans, 4, if (demo) 1 else reps, MIDI_HOLD, c.audio.a4)
             }
-            presses.clear(); result = null
+            presses.clear(); result = null; exact = false
             c.audio.playClip(clip)
-            t0 = android.os.SystemClock.uptimeMillis() + (4 * beatMs).toLong()
+            // Until the speaker reports when the clip is heard, assume a typical output delay.
+            t0 = android.os.SystemClock.uptimeMillis() + 120 + (4 * beatMs).toLong()
             now = android.os.SystemClock.uptimeMillis()
             phase = if (demo) RhythmPhase.DEMO else RhythmPhase.RUN
         }
@@ -183,19 +211,29 @@ fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Bo
 
     Text(stringResource(if (q.swing) R.string.rhythm_q_swing else R.string.rhythm_q), style = MaterialTheme.typography.titleLarge)
     StaffView(Score(0, 4, 4, bpm, listOf(Score.parseMeasure(q.measure()))), staffSpace = 12.dp, showTime = true)
-    val beatNow = if (phase == RhythmPhase.DEMO || phase == RhythmPhase.RUN) (now - t0) / beatMs else null
-    RhythmTimeline(spans, presses.map { doubleArrayOf(it[0] / beatMs, it[1] / beatMs) }, beatNow, result, q.durations.any { kotlin.math.abs(it) % 4 != 0 })
-    // What to do now: the count-in numbers, then "hold", or the verdict.
+    if (item.level <= 4 || phase == RhythmPhase.DONE) Text(RhythmDrill.counting(q), style = MaterialTheme.typography.titleMedium.copy(fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace),
+        color = Sax.colors.accentInk, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+    val elapsed = (now - t0).toDouble()
+    val running = phase == RhythmPhase.RUN || phase == RhythmPhase.DEMO
+    val pass = if (running && elapsed >= 0) (elapsed / barMs).toInt() else 0
+    val cursor = if (running && elapsed >= 0) (elapsed - pass * barMs) / beatMs else null
+    // Taps of the pass to show: the current one while playing, the better one after.
+    val shownPass = if (phase == RhythmPhase.DONE) bestPass else pass.coerceAtMost(reps - 1)
+    val shownTaps = if (phase == RhythmPhase.RUN || phase == RhythmPhase.DONE) passPresses(shownPass) else emptyList()
+    RhythmRuler(
+        spans = spans, showNotes = phase == RhythmPhase.DEMO || phase == RhythmPhase.DONE || item.level <= 2,
+        taps = shownTaps.map { (it[0] - prior) / beatMs }, tapColors = shownTaps.map { tapQuality(it[0] - prior, spansMs, tol) },
+        cursor = cursor, result = result, eighths = q.durations.any { kotlin.math.abs(it) % 4 != 0 },
+    )
     val status = when {
-        beatNow != null && beatNow < 0 -> "${(beatNow + 5).toInt().coerceIn(1, 4)}"
+        running && elapsed < 0 -> "${((elapsed + 4 * beatMs) / beatMs).toInt().coerceIn(0, 3) + 1}"
         phase == RhythmPhase.DEMO -> stringResource(R.string.rhythm_listening)
-        phase == RhythmPhase.RUN -> stringResource(R.string.rhythm_play_now)
-        result != null -> result!!.firstWrong.let { i -> if (i < 0) stringResource(R.string.rhythm_all_good) else verdictText(i + 1, result!!.verdicts[i]) }
-            .let { if (result!!.extra > 0 && result!!.firstWrong < 0) stringResource(R.string.rhythm_extra) else it }
+        phase == RhythmPhase.RUN -> stringResource(R.string.rhythm_pass, pass + 1, reps)
+        result != null -> rhythmVerdict(result!!)
         else -> stringResource(R.string.rhythm_ready, bpm)
     }
-    Text(status, style = if (beatNow != null && beatNow < 0) MaterialTheme.typography.displaySmall else MaterialTheme.typography.titleMedium,
-        color = if (result?.correct == false) MaterialTheme.colorScheme.error else Sax.colors.accentInk,
+    Text(status, style = if (running && elapsed < 0) MaterialTheme.typography.displaySmall else MaterialTheme.typography.titleMedium,
+        color = if (result?.passed == false) MaterialTheme.colorScheme.error else Sax.colors.accentInk,
         modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
     if (phase == RhythmPhase.READY && enabled) {
         Button(
@@ -205,21 +243,21 @@ fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Bo
         OutlinedButton(onClick = { start(true) }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.rhythm_listen)) }
     }
     val active = phase == RhythmPhase.RUN
-    val held = presses.lastOrNull()?.get(1)?.isNaN() == true
+    val held = presses.lastOrNull()?.get(1) == 0L
     Box(
-        Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(28.dp))
+        Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(28.dp))
             .background(when { !active -> Sax.colors.elevated; held -> Sax.colors.accentInk; else -> Sax.colors.accent })
             .pointerInput(key) {
                 awaitEachGesture {
-                    awaitFirstDown()
+                    val down = awaitFirstDown()
                     if (phase == RhythmPhase.RUN) {
-                        presses += doubleArrayOf((android.os.SystemClock.uptimeMillis() - t0).toDouble(), Double.NaN)
-                        c.audio.startHold(c.bandIfReady()?.altoSax, hold)
+                        presses += longArrayOf(down.uptimeMillis, 0L)
+                        c.audio.startHold(c.bandIfReady()?.altoSax, MIDI_HOLD)
                     }
-                    waitForUpOrCancellation()
-                    val last = presses.lastOrNull()
-                    if (last != null && last[1].isNaN() && phase == RhythmPhase.RUN) {
-                        presses[presses.size - 1] = doubleArrayOf(last[0], (android.os.SystemClock.uptimeMillis() - t0).toDouble())
+                    val up = waitForUpOrCancellation()
+                    val i = presses.indexOfLast { it[1] == 0L }
+                    if (i >= 0) {
+                        presses[i] = longArrayOf(presses[i][0], up?.uptimeMillis ?: android.os.SystemClock.uptimeMillis())
                         c.audio.stopHold()
                     }
                 }
@@ -231,68 +269,77 @@ fun RhythmView(item: DrillItem.Rhythm, key: Any, enabled: Boolean, onAnswer: (Bo
     }
 }
 
+private const val LATENCY_KEY = "rhythm:latency"
+
 private enum class RhythmPhase { READY, DEMO, RUN, DONE }
 
 /** Concert pitch of the held note: B♭3 (written G4 for alto). */
 private const val MIDI_HOLD = 58
 
+/** 2 on time, 1 a little off, 0 off (relative to the nearest note start). */
+private fun tapQuality(tapMs: Double, spansMs: List<DoubleArray>, tol: Double): Int {
+    val d = spansMs.minOf { kotlin.math.abs(tapMs - it[0]) }
+    return if (d <= tol * 0.5) 2 else if (d <= tol) 1 else 0
+}
+
 @Composable
-private fun verdictText(note: Int, v: RhythmDrill.Verdict): String = stringResource(when (v) {
-    RhythmDrill.Verdict.EARLY -> R.string.rhythm_v_early
-    RhythmDrill.Verdict.LATE -> R.string.rhythm_v_late
-    RhythmDrill.Verdict.SHORT -> R.string.rhythm_v_short
-    RhythmDrill.Verdict.LONG -> R.string.rhythm_v_long
-    RhythmDrill.Verdict.MISSED -> R.string.rhythm_v_missed
-    RhythmDrill.Verdict.OK -> R.string.rhythm_all_good
-}, note)
+private fun rhythmVerdict(r: RhythmDrill.TapScore): String {
+    val i = r.firstWrong
+    val pct = r.percent.toInt()
+    return when {
+        i < 0 && r.extra > 0 -> stringResource(R.string.rhythm_extra_pct, pct)
+        i < 0 -> stringResource(R.string.rhythm_score_ok, pct, r.meanErrorMs.toInt())
+        else -> {
+            val n = r.notes[i]
+            when (n.verdict) {
+                RhythmDrill.Verdict.MISSED -> stringResource(R.string.rhythm_v_missed_pct, i + 1, pct)
+                RhythmDrill.Verdict.EARLY -> stringResource(R.string.rhythm_v_early_ms, i + 1, -n.errorMs.toInt(), pct)
+                RhythmDrill.Verdict.LATE -> stringResource(R.string.rhythm_v_late_ms, i + 1, n.errorMs.toInt(), pct)
+                else -> stringResource(R.string.rhythm_v_short_pct, i + 1, pct)
+            }
+        }
+    }
+}
 
 /**
- * The bar as a timeline: beats 1–4 with a grid, each note as a block as long as it lasts (top lane), what the
- * player held (bottom lane), and the moving cursor. After the bar, blocks turn green or red.
+ * One bar as a ruler: beats 1–4 (and "+" for eighths), the notes as bars as long as they last (when shown),
+ * the taps as dots (green on time, amber a little off, red off), and the moving cursor.
  */
 @Composable
-private fun RhythmTimeline(spans: List<DoubleArray>, presses: List<DoubleArray>, beatNow: Double?, result: RhythmDrill.HoldResult?, eighths: Boolean) {
-    val accent = Sax.colors.accent
+private fun RhythmRuler(spans: List<DoubleArray>, showNotes: Boolean, taps: List<Double>, tapColors: List<Int>, cursor: Double?,
+                        result: RhythmDrill.TapScore?, eighths: Boolean) {
     val soft = Sax.colors.accentSoft
     val good = Sax.colors.good
+    val warn = Sax.colors.warn
     val bad = MaterialTheme.colorScheme.error
     val grid = Sax.colors.elevated
     val ink = Sax.colors.text
-    val label = Sax.colors.textSecondary
     val measurer = androidx.compose.ui.text.rememberTextMeasurer()
-    val labelStyle = MaterialTheme.typography.labelMedium.copy(color = label)
-    androidx.compose.foundation.Canvas(Modifier.fillMaxWidth().height(112.dp)) {
+    val labelStyle = MaterialTheme.typography.labelMedium.copy(color = Sax.colors.textSecondary)
+    androidx.compose.foundation.Canvas(Modifier.fillMaxWidth().height(96.dp)) {
         val w = size.width
-        val laneH = size.height * 0.3f
-        val topY = size.height * 0.2f
-        val botY = topY + laneH + size.height * 0.08f
-        fun x(b: Double) = (b / 4.0 * w).toFloat()
-        // grid and beat numbers
+        val top = size.height * 0.28f
+        val laneH = size.height * 0.34f
+        val dotY = top + laneH + size.height * 0.2f
+        fun x(b: Double) = (b / 4.0 * w).toFloat().coerceIn(0f, w)
         for (k in 0..(if (eighths) 8 else 4)) {
             val b = if (eighths) k / 2.0 else k.toDouble()
-            drawLine(grid, androidx.compose.ui.geometry.Offset(x(b), topY - 4), androidx.compose.ui.geometry.Offset(x(b), botY + laneH),
-                strokeWidth = if (k % (if (eighths) 2 else 1) == 0) 3f else 1.5f)
-            if (b < 4) {
-                val txt = if (eighths && k % 2 == 1) "+" else "${b.toInt() + 1}"
-                drawText(measurer, txt, androidx.compose.ui.geometry.Offset(x(b) + 6f, 0f), labelStyle)
-            }
+            val major = !eighths || k % 2 == 0
+            drawLine(grid, androidx.compose.ui.geometry.Offset(x(b), top - 4), androidx.compose.ui.geometry.Offset(x(b), size.height), strokeWidth = if (major) 3f else 1.5f)
+            if (b < 4) drawText(measurer, if (major) "${b.toInt() + 1}" else "+", androidx.compose.ui.geometry.Offset(x(b) + 6f, 0f), labelStyle)
         }
-        // the notes
-        spans.forEachIndexed { i, s ->
-            val color = when (result?.verdicts?.getOrNull(i)) { null -> soft; RhythmDrill.Verdict.OK -> good; else -> bad }
-            drawRoundRect(color, androidx.compose.ui.geometry.Offset(x(s[0]) + 3f, topY), androidx.compose.ui.geometry.Size(x(s[1]) - x(s[0]) - 6f, laneH),
+        if (showNotes) spans.forEachIndexed { i, s ->
+            val color = when (result?.notes?.getOrNull(i)?.verdict) { null -> soft; RhythmDrill.Verdict.OK -> good; else -> bad }
+            drawRoundRect(color, androidx.compose.ui.geometry.Offset(x(s[0]) + 3f, top), androidx.compose.ui.geometry.Size((x(s[1]) - x(s[0]) - 6f).coerceAtLeast(6f), laneH),
                 androidx.compose.ui.geometry.CornerRadius(12f))
         }
-        // what was held (presses are in beats here)
-        presses.forEach { p ->
-            val end = if (p[1].isNaN()) (beatNow ?: p[0]) else p[1]
-            val a = p[0].coerceIn(-0.2, 4.4); val b = end.coerceIn(-0.2, 4.4)
-            if (b > a) drawRoundRect(accent, androidx.compose.ui.geometry.Offset(x(a), botY), androidx.compose.ui.geometry.Size(x(b) - x(a), laneH * 0.7f),
-                androidx.compose.ui.geometry.CornerRadius(10f))
+        taps.forEachIndexed { i, b ->
+            if (b < -0.6 || b > 4.6) return@forEachIndexed
+            val color = when (tapColors.getOrNull(i)) { 2 -> good; 1 -> warn; else -> bad }
+            drawCircle(color, 11f, androidx.compose.ui.geometry.Offset(x(b), dotY))
         }
-        // cursor
-        if (beatNow != null && beatNow in 0.0..4.4) {
-            drawLine(ink, androidx.compose.ui.geometry.Offset(x(beatNow), topY - 6), androidx.compose.ui.geometry.Offset(x(beatNow), botY + laneH), strokeWidth = 5f)
+        if (cursor != null && cursor in 0.0..4.0) {
+            drawLine(ink, androidx.compose.ui.geometry.Offset(x(cursor), top - 6), androidx.compose.ui.geometry.Offset(x(cursor), size.height), strokeWidth = 5f)
         }
     }
 }

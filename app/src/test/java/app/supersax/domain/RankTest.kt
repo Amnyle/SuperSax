@@ -54,14 +54,14 @@ class RankTest {
 
     @Test fun technique() {
         assertEquals(1, tier(RankEvents(pairs(ScaleType.MAJOR, 1, 50)), Pillar.TECHNIQUE))
-        assertEquals(2, tier(RankEvents(pairs(ScaleType.MAJOR, 3, 70)), Pillar.TECHNIQUE))
-        assertEquals(1, tier(RankEvents(pairs(ScaleType.MAJOR, 3, 65)), Pillar.TECHNIQUE))
-        assertEquals(4, tier(RankEvents(pairs(ScaleType.MAJOR, 12, 90)), Pillar.TECHNIQUE))
-        assertEquals(5, tier(RankEvents(pairs(ScaleType.MAJOR, 12, 90) + pairs(ScaleType.NATURAL_MINOR, 12, 100)), Pillar.TECHNIQUE))
-        val all150 = ScaleType.entries.flatMap { pairs(it, 12, 150) }
+        assertEquals(2, tier(RankEvents(pairs(ScaleType.MAJOR, 3, 72)), Pillar.TECHNIQUE))
+        assertEquals(1, tier(RankEvents(pairs(ScaleType.MAJOR, 3, 70)), Pillar.TECHNIQUE))
+        assertEquals(4, tier(RankEvents(pairs(ScaleType.MAJOR, 12, 100)), Pillar.TECHNIQUE))
+        assertEquals(5, tier(RankEvents(pairs(ScaleType.MAJOR, 12, 112) + pairs(ScaleType.NATURAL_MINOR, 12, 104)), Pillar.TECHNIQUE))
+        val all150 = ScaleType.entries.flatMap { pairs(it, 12, 170) }
         assertEquals(8, tier(RankEvents(all150), Pillar.TECHNIQUE))
-        // Next-tier transparency: 4 of 6 majors at 80.
-        val next = rank(RankEvents(pairs(ScaleType.MAJOR, 4, 80))).pillars.getValue(Pillar.TECHNIQUE).next.single()
+        // Next-tier transparency: 4 of 6 majors at 88.
+        val next = rank(RankEvents(pairs(ScaleType.MAJOR, 4, 88))).pillars.getValue(Pillar.TECHNIQUE).next.single()
         assertEquals(ReqKind.SCALES_AT_BPM, next.kind); assertEquals(6.0, next.target); assertEquals(4.0, next.current); assertFalse(next.met)
     }
 
@@ -80,20 +80,20 @@ class RankTest {
     @Test fun soundTiersAndRegisters() {
         val block = RankEventRecord(id(), 0, RankEventKind.LONG_TONE_BLOCK)
         assertEquals(1, tier(RankEvents(listOf(block)), Pillar.SOUND))
-        // Three notes held 8 s within ±25: Bronze.
-        val three = listOf(63, 65, 67).map { hold(it, 9.0, steady(10f)) }
+        // Three notes held 10 s within ±20: Bronze.
+        val three = listOf(63, 65, 67).map { hold(it, 11.0, steady(10f)) }
         assertEquals(2, tier(RankEvents(listOf(block), holds = three), Pillar.SOUND))
         // Only two distinct notes: not Bronze.
         assertEquals(1, tier(RankEvents(listOf(block), holds = three.take(2) + hold(63, 9.0, steady())), Pillar.SOUND))
-        // 16 s within ±15 on three middle notes: Silver only, Gold needs all registers.
-        val middle = listOf(66, 68, 70).map { hold(it, 17.0, steady(5f)) } // written D♯5..G5
+        // 20 s within ±12 on three middle notes: Silver only, Gold needs all registers.
+        val middle = listOf(66, 68, 70).map { hold(it, 21.0, steady(5f)) } // written D♯5..G5
         assertEquals(3, tier(RankEvents(listOf(block), holds = middle), Pillar.SOUND))
-        val spread = listOf(52, 66, 78).map { hold(it, 17.0, steady(5f)) } // written C♯4, D♯5, E♭6
+        val spread = listOf(52, 66, 78).map { hold(it, 21.0, steady(5f)) } // written C♯4, D♯5, E♭6
         assertEquals(4, tier(RankEvents(listOf(block), holds = spread), Pillar.SOUND))
     }
 
     @Test fun recomputedFromStoredTracesAfterConfigChange() {
-        val holds = listOf(63, 65, 67).map { hold(it, 9.0, steady(12f)) } // ±12 cents wobble
+        val holds = listOf(63, 65, 67).map { hold(it, 11.0, steady(12f)) } // ±12 cents wobble
         val e = RankEvents(listOf(RankEventRecord(id(), 0, RankEventKind.LONG_TONE_BLOCK)), holds = holds)
         assertEquals(2, tier(e, Pillar.SOUND))
         val stricter = config.copy(sound = config.sound.map { if (it.tier == 2) it.copy(toleranceCents = 10.0) else it })
@@ -134,7 +134,7 @@ class RankTest {
 
     @Test fun musicianshipAndCap() {
         val drills = listOf(
-            DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 1500),
+            DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 900),
             DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, ScaleRecognition.LEVELS, 10, 10, 3000),
         )
         val lessons = (1..13).map { LessonProgressRecord("l$it", 0, 1.0) }
@@ -150,7 +150,7 @@ class RankTest {
     @Test fun overallAverageDivisionsAndLimiter() {
         // Technique 2, Range 3, Sound 1, Repertoire 2, Consistency 0, Musicianship 1 → avg 9/6 = 1.5 → Iron II.
         val e = RankEvents(
-            rankEvents = pairs(ScaleType.MAJOR, 3, 70) + listOf(note(58, false), note(86, false), RankEventRecord(id(), 0, RankEventKind.LONG_TONE_BLOCK)),
+            rankEvents = pairs(ScaleType.MAJOR, 3, 72) + listOf(note(58, false), note(86, false), RankEventRecord(id(), 0, RankEventKind.LONG_TONE_BLOCK)),
             pieceProgress = listOf(PieceProgressRecord("x", "", PieceStage.CLEAN_AT_TEMPO, 0)), pieceDifficulty = mapOf("x" to 2),
             drills = listOf(DrillResultRecord(id(), 0, DrillKind.READING, 1, 15, 10, 5000)),
         )
@@ -164,12 +164,12 @@ class RankTest {
         assertEquals(Pillar.SOUND, tie.limiter)
         // Average exactly 8 → Master without division.
         val max = RankEvents(
-            rankEvents = ScaleType.entries.flatMap { pairs(it, 12, 150) } + listOf(note(58, false), note(98, true),
+            rankEvents = ScaleType.entries.flatMap { pairs(it, 12, 170) } + listOf(note(58, false), note(98, true),
                 RankEventRecord(id(), 0, RankEventKind.OVERTONE_MILESTONE, verified = true)),
-            holds = listOf(52, 66, 78).map { hold(it, 40.0, steady(2f)) },
+            holds = listOf(52, 66, 78).map { hold(it, 41.0, steady(2f)) },
             sessions = (0 until 56).map { today.minusDays(it.toLong()) }.map { session(it) }, plannedDays = (1..7).toSet(),
             pieceProgress = listOf(PieceProgressRecord("x", "", PieceStage.CLEAN_AT_TEMPO, 0)), pieceDifficulty = mapOf("x" to 10),
-            drills = listOf(DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 1500), DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, ScaleRecognition.LEVELS, 10, 10, 3000)),
+            drills = listOf(DrillResultRecord(id(), 0, DrillKind.READING, 5, 20, 20, 900), DrillResultRecord(id(), 0, DrillKind.SCALE_RECOGNITION, ScaleRecognition.LEVELS, 10, 10, 3000)),
             lessons = (1..13).map { LessonProgressRecord("l$it", 0, 1.0) },
         )
         val m = rank(max)

@@ -624,7 +624,7 @@
     <string name="onb_naming_q">How do you name the notes?</string>
     <string name="onb_naming_letters">A B C D E F G</string>
     <string name="onb_naming_solfege">Do Ré Mi Fa Sol La Si</string>
-    <string name="levels_hint">Get 2 stars on a level to open the next one. 3 stars = mastered.</string>
+    <string name="levels_hint">1 star (80 percent right) opens the next level. 2 stars need 90 percent and quick answers; 3 stars, a perfect round at expert speed.</string>
     <string name="level_locked">locked</string>
     <string name="stars_total">%1$d of %2$d stars</string>
     <string name="stars_n">%1$d of 3 stars</string>
@@ -632,8 +632,8 @@
     <string name="lv_read_1">Notes on the staff (E to F)</string>
     <string name="lv_read_2">One ledger line (low C to high A)</string>
     <string name="lv_read_3">The whole range (low B♭ to high F♯)</string>
-    <string name="lv_read_4">Sharps and flats, low C to high A</string>
-    <string name="lv_read_5">Sharps and flats, the whole range</string>
+    <string name="lv_read_4">In a key signature: 1 to 3 sharps or flats</string>
+    <string name="lv_read_5">Key signatures up to 5, with accidentals</string>
     <string name="lv_scale_1">Major scales, up to 1 sharp or flat</string>
     <string name="lv_scale_2">Major scales, up to 2</string>
     <string name="lv_scale_3">Major scales, up to 4</string>
@@ -651,8 +651,8 @@
     <string name="level_unlocked_next">Next level unlocked!</string>
     <string name="level_mastered">Mastered: 3 stars.</string>
     <string name="level_all_mastered">Mastered: you finished every level!</string>
-    <string name="level_need_two">Get 2 stars (80 percent) to open the next level.</string>
-    <string name="level_try_three">Try for 3 stars: every answer right.</string>
+    <string name="level_need_two">Get 80 percent right for a star: it opens the next level.</string>
+    <string name="level_try_three">Stars come with speed now: 3 stars is a perfect round at expert speed. It takes time, keep practising.</string>
     <string name="level_next">Next level</string>
     <string name="level_retry">Try again</string>
     <string name="level_back">All levels</string>
@@ -902,12 +902,12 @@
     <string name="chord_dom7">Dominant 7</string>
     <string name="chord_min7">Minor 7</string>
     <string name="chord_maj7">Major 7</string>
-    <string name="rhythm_q">Hold each note for its full length</string>
-    <string name="rhythm_q_swing">Hold each note for its length, with a swing feel (long-short eighths)</string>
-    <string name="rhythm_start">Start · 4 clicks to count in at %1$d BPM</string>
-    <string name="rhythm_pad">HOLD</string>
+    <string name="rhythm_q">Read the bar, then tap each note as it starts</string>
+    <string name="rhythm_q_swing">Tap each note as it starts, with a swing feel (long-short eighths)</string>
+    <string name="rhythm_start">Start · 4 clicks to count in</string>
+    <string name="rhythm_pad">TAP</string>
     <string name="rhythm_listen">Listen first</string>
-    <string name="rhythm_wrong">Not quite: look at the red notes</string>
+    <string name="rhythm_wrong">Below 85 percent: look at the red notes, listen, and try again</string>
     <string name="listen_runs_on">Listen and count my runs</string>
     <string name="listen_runs_off">Stop listening</string>
     <string name="listen_runs_hint">Play the scale up and down, then pause: each run is checked and logged by itself.</string>
@@ -998,16 +998,8 @@
     <string name="band_lead">Sax calls</string>
     <string name="band_mute">Mute %1$s</string>
     <string name="band_hint">Turn the piano off to play the harmony yourself, or keep only drums and bass.</string>
-    <string name="rhythm_ready">Press on each note and let go at its end · %1$d BPM</string>
+    <string name="rhythm_ready">Tap on each note\'s start; hold notes of 2 beats or more. The bar goes by twice: the better pass counts · %1$d BPM</string>
     <string name="rhythm_listening">Listen and follow the cursor</string>
-    <string name="rhythm_play_now">Hold!</string>
-    <string name="rhythm_all_good">Every note in time and the right length</string>
-    <string name="rhythm_extra">A press too many</string>
-    <string name="rhythm_v_early">Note %1$d: started early</string>
-    <string name="rhythm_v_late">Note %1$d: started late</string>
-    <string name="rhythm_v_short">Note %1$d: let go too soon</string>
-    <string name="rhythm_v_long">Note %1$d: held too long</string>
-    <string name="rhythm_v_missed">Note %1$d: not played</string>
     <string name="drill_lesson">Lesson</string>
     <string name="drill_lesson_example">Example</string>
     <string name="drill_lesson_start">I understand · start level %1$d</string>
@@ -1032,4 +1024,15 @@
     <string name="idea_your_turn">Your turn · bar %1$d of %2$d</string>
     <string name="idea_staff_desc">The generated solo written for alto saxophone</string>
     <string name="idea_written">Written for alto saxophone. Swing the eighth notes (long-short).</string>
+    <string name="level_detail_speed">Your average: %1$.1f s per answer · 2 stars: under %2$.1f s · 3 stars: perfect and under %3$.1f s</string>
+    <string name="level_detail_rhythm">Your timing: %1$d ms off on average · 2 stars: under %2$d ms · 3 stars: perfect and under %3$d ms</string>
+    <string name="q_reading_key">Which note is this, in this key?</string>
+    <string name="speed_stars_hint">Stars: 15, 28 and 45 notes right with at most one wrong in ten.</string>
+    <string name="rhythm_pass">Pass %1$d of %2$d</string>
+    <string name="rhythm_score_ok">%1$d percent · %2$d ms off on average</string>
+    <string name="rhythm_extra_pct">A tap too many · %1$d percent</string>
+    <string name="rhythm_v_missed_pct">Note %1$d not played · %2$d percent</string>
+    <string name="rhythm_v_early_ms">Note %1$d early by %2$d ms · %3$d percent</string>
+    <string name="rhythm_v_late_ms">Note %1$d late by %2$d ms · %3$d percent</string>
+    <string name="rhythm_v_short_pct">Note %1$d let go too soon (hold the long notes) · %2$d percent</string>
 </resources>

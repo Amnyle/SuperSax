@@ -251,4 +251,110 @@ public final class RhythmDrill {
         for (boolean u : used) if (!u) extra++;
         return new HoldResult(verdicts, extra, offset);
     }
+
+    // --- tapping, scored per note (rhythm reading v3) -------------------------------------------
+
+    /** How one note was played: its timing error in ms (start; NaN when missed) and points earned (0–1). */
+    public static final class NoteScore {
+        public final double errorMs, points;
+        public final Verdict verdict;
+        NoteScore(double errorMs, double points, Verdict verdict) { this.errorMs = errorMs; this.points = points; this.verdict = verdict; }
+        public double getErrorMs() { return errorMs; }
+        public double getPoints() { return points; }
+        public Verdict getVerdict() { return verdict; }
+    }
+
+    /** A played bar: per-note scores, extra taps, the score in percent and the mean timing error. */
+    public static final class TapScore {
+        public final List<NoteScore> notes;
+        public final int extra;
+        public final double percent, meanErrorMs, offsetMs;
+        TapScore(List<NoteScore> notes, int extra, double percent, double meanErrorMs, double offsetMs) {
+            this.notes = notes; this.extra = extra; this.percent = percent; this.meanErrorMs = meanErrorMs; this.offsetMs = offsetMs;
+        }
+        public List<NoteScore> getNotes() { return notes; }
+        public int getExtra() { return extra; }
+        public double getPercent() { return percent; }
+        public double getMeanErrorMs() { return meanErrorMs; }
+        public double getOffsetMs() { return offsetMs; }
+        /** Passed: 85 percent of the points. */
+        public boolean getPassed() { return percent >= 85 - 1e-9; }
+        public int getFirstWrong() { for (int i = 0; i < notes.size(); i++) if (notes.get(i).verdict != Verdict.OK) return i; return -1; }
+    }
+
+    /**
+     * Scores taps ({down, up} ms from beat 1 of the bar) against note spans ({start, end} ms). The phone's delay is
+     * estimated as the median offset of the taps, kept within [priorMs ± 250] (the delay learned on this phone) and
+     * removed. Per note: a tap within half the tolerance earns 1 point, within the tolerance 0.75, within twice
+     * 0.35, else the note is missed. Notes of two beats or more must also be held for most of their length
+     * (released no earlier than 60 percent, else 60 percent off). Each extra tap costs half a point.
+     */
+    public static TapScore scoreTaps(List<double[]> spansMs, List<double[]> pressesMs, double toleranceMs, double beatMs, double priorMs) {
+        List<double[]> presses = new ArrayList<>();
+        for (double[] p : pressesMs) presses.add(p);
+        double offset = priorMs;
+        if (!presses.isEmpty()) {
+            List<Double> diffs = new ArrayList<>();
+            for (double[] p : presses) {
+                double best = Double.MAX_VALUE;
+                for (double[] s : spansMs) if (Math.abs(p[0] - priorMs - s[0]) < Math.abs(best)) best = p[0] - priorMs - s[0];
+                if (Math.abs(best) < beatMs * 0.4) diffs.add(best);
+            }
+            if (!diffs.isEmpty()) {
+                Collections.sort(diffs);
+                double m = diffs.get(diffs.size() / 2);
+                offset = priorMs + Math.max(-250, Math.min(250, m));
+            }
+        }
+        boolean[] used = new boolean[presses.size()];
+        List<NoteScore> notes = new ArrayList<>();
+        double points = 0, errSum = 0;
+        int matched = 0;
+        for (double[] s : spansMs) {
+            int bestI = -1;
+            double best = Double.MAX_VALUE;
+            for (int i = 0; i < presses.size(); i++) {
+                if (used[i]) continue;
+                double d = Math.abs(presses.get(i)[0] - offset - s[0]);
+                if (d < best) { best = d; bestI = i; }
+            }
+            if (bestI < 0 || best > Math.max(toleranceMs * 2, 1)) { notes.add(new NoteScore(Double.NaN, 0, Verdict.MISSED)); continue; }
+            used[bestI] = true;
+            double[] p = presses.get(bestI);
+            double err = p[0] - offset - s[0];
+            double pt = best <= toleranceMs * 0.5 ? 1 : best <= toleranceMs ? 0.75 : 0.35;
+            Verdict v = best <= toleranceMs ? Verdict.OK : err < 0 ? Verdict.EARLY : Verdict.LATE;
+            double dur = s[1] - s[0];
+            if (dur >= beatMs * 2 - 1 && !Double.isNaN(p[1]) && p[1] - offset < s[0] + 0.6 * dur) { pt *= 0.4; if (v == Verdict.OK) v = Verdict.SHORT; }
+            notes.add(new NoteScore(err, pt, v));
+            points += pt;
+            errSum += Math.abs(err);
+            matched++;
+        }
+        int extra = 0;
+        for (boolean u : used) if (!u) extra++;
+        double max = spansMs.size();
+        double percent = max == 0 ? 0 : Math.max(0, (points - 0.5 * extra) / max * 100);
+        return new TapScore(notes, extra, percent, matched == 0 ? 999 : errSum / matched, offset);
+    }
+
+    /** The counting under a bar: "1", "+", "e", "a" where each note starts, a dash for each beat it holds. */
+    public static String counting(Question q) {
+        StringBuilder b = new StringBuilder();
+        int t = 0;
+        for (int d : q.getDurations()) {
+            int len = Math.abs(d);
+            if (d > 0) {
+                if (b.length() > 0) b.append("  ");
+                int beat = t / 4 + 1, sub = t % 4;
+                b.append(sub == 0 ? String.valueOf(beat) : sub == 2 ? "+" : sub == 1 ? "e" : "a");
+                for (int k = 4 - sub; k < len; k += 4) b.append(" –");
+            } else {
+                if (b.length() > 0) b.append("  ");
+                b.append("(").append(t % 4 == 0 ? String.valueOf(t / 4 + 1) : t % 4 == 2 ? "+" : "·").append(")");
+            }
+            t += len;
+        }
+        return b.toString();
+    }
 }

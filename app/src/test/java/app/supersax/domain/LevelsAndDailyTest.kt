@@ -19,25 +19,36 @@ class LevelsAndDailyTest {
         DrillResultRecord("r${t}", t++, kind, level, total, correct, 1000)
 
     @Test fun starsFromScore() {
-        assertEquals(0, Levels.stars(5, 10))
-        assertEquals(1, Levels.stars(6, 10))
-        assertEquals(1, Levels.stars(7, 10))
-        assertEquals(2, Levels.stars(8, 10))
-        assertEquals(2, Levels.stars(14, 15))
+        // Accuracy only (theory): 80 / 90 / 100 percent.
+        assertEquals(0, Levels.stars(7, 10))
+        assertEquals(1, Levels.stars(8, 10))
+        assertEquals(2, Levels.stars(9, 10))
         assertEquals(3, Levels.stars(15, 15))
-        assertEquals(2, Levels.stars(12, 15), "80 percent exactly")
+        // Drills with a speed ceiling: perfect but slow is only 1 star; 3 stars need expert speed.
+        assertEquals(1, Levels.stars(DrillKind.READING, 15, 15, 4000))
+        assertEquals(2, Levels.stars(DrillKind.READING, 14, 15, 2000))
+        assertEquals(1, Levels.stars(DrillKind.READING, 13, 15, 900), "87 percent is 1 star however fast")
+        assertEquals(2, Levels.stars(DrillKind.READING, 15, 15, 1500))
+        assertEquals(3, Levels.stars(DrillKind.READING, 15, 15, 1100))
+        assertEquals(3, Levels.stars(DrillKind.RHYTHM, 8, 8, 30))
+        assertEquals(2, Levels.stars(DrillKind.RHYTHM, 8, 8, 60))
+        // Timed reading.
+        assertEquals(0, Levels.speedStars(14, 14))
+        assertEquals(1, Levels.speedStars(20, 21))
+        assertEquals(0, Levels.speedStars(30, 40), "too many wrong")
+        assertEquals(3, Levels.speedStars(45, 47))
     }
 
     @Test fun twoStarsOpenTheNextLevel() {
         val r = mutableListOf<DrillResultRecord>()
         assertEquals(1, Levels.unlocked(r, DrillKind.READING, 5))
-        r += result(DrillKind.READING, 1, 9, 15) // 1 star
+        r += result(DrillKind.READING, 1, 11, 15) // 73 percent: no star
         assertEquals(1, Levels.unlocked(r, DrillKind.READING, 5))
-        r += result(DrillKind.READING, 1, 12, 15) // 2 stars
+        r += result(DrillKind.READING, 1, 12, 15) // 80 percent: 1 star opens level 2
         assertEquals(2, Levels.unlocked(r, DrillKind.READING, 5))
         // The best round counts: a worse round later does not lock anything.
         r += result(DrillKind.READING, 1, 3, 15)
-        assertEquals(2, Levels.best(r, DrillKind.READING, 1))
+        assertEquals(1, Levels.best(r, DrillKind.READING, 1))
         assertEquals(2, Levels.unlocked(r, DrillKind.READING, 5))
         // Other drills and the daily mix never count for a ladder.
         r += result(DrillKind.SCALE_RECOGNITION, 2, 8, 8)
