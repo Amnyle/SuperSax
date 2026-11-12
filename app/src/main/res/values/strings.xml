@@ -852,7 +852,7 @@
     <string name="ear_title">Ear training</string>
     <string name="ear_sub">Hear intervals, chords and melodies (8 levels)</string>
     <string name="rhythm_title">Rhythm reading</string>
-    <string name="rhythm_sub">Read a bar and tap its rhythm in time (7 levels)</string>
+    <string name="rhythm_sub">Read a bar and hold each note for its length (7 levels)</string>
     <string name="lv_ear_1">Higher or lower?</string>
     <string name="lv_ear_2">Intervals: 2nd, 3rd, 5th, octave</string>
     <string name="lv_ear_3">Adds minor 3rd, 4th and 6th</string>
@@ -902,14 +902,12 @@
     <string name="chord_dom7">Dominant 7</string>
     <string name="chord_min7">Minor 7</string>
     <string name="chord_maj7">Major 7</string>
-    <string name="rhythm_q">Tap this rhythm</string>
-    <string name="rhythm_q_swing">Tap this rhythm with a swing feel (long-short eighths)</string>
-    <string name="rhythm_start">Start · count-in at %1$d BPM</string>
-    <string name="rhythm_count">%1$d…</string>
-    <string name="rhythm_tap_now">Tap now!</string>
-    <string name="rhythm_pad">TAP</string>
-    <string name="rhythm_listen">Hear it first</string>
-    <string name="rhythm_wrong">Not quite in time</string>
+    <string name="rhythm_q">Hold each note for its full length</string>
+    <string name="rhythm_q_swing">Hold each note for its length, with a swing feel (long-short eighths)</string>
+    <string name="rhythm_start">Start · 4 clicks to count in at %1$d BPM</string>
+    <string name="rhythm_pad">HOLD</string>
+    <string name="rhythm_listen">Listen first</string>
+    <string name="rhythm_wrong">Not quite: look at the red notes</string>
     <string name="listen_runs_on">Listen and count my runs</string>
     <string name="listen_runs_off">Stop listening</string>
     <string name="listen_runs_hint">Play the scale up and down, then pause: each run is checked and logged by itself.</string>
@@ -993,4 +991,25 @@
         <item quantity="one">%1$d day played in the last 4 months</item>
         <item quantity="other">%1$d days played in the last 4 months</item>
     </plurals>
+    <string name="band_mix">Band mix</string>
+    <string name="band_drums">Drums</string>
+    <string name="band_bass">Bass</string>
+    <string name="band_keys">Piano</string>
+    <string name="band_lead">Sax calls</string>
+    <string name="band_mute">Mute %1$s</string>
+    <string name="band_hint">Turn the piano off to play the harmony yourself, or keep only drums and bass.</string>
+    <string name="rhythm_ready">Press on each note and let go at its end · %1$d BPM</string>
+    <string name="rhythm_listening">Listen and follow the cursor</string>
+    <string name="rhythm_play_now">Hold!</string>
+    <string name="rhythm_all_good">Every note in time and the right length</string>
+    <string name="rhythm_extra">A press too many</string>
+    <string name="rhythm_v_early">Note %1$d: started early</string>
+    <string name="rhythm_v_late">Note %1$d: started late</string>
+    <string name="rhythm_v_short">Note %1$d: let go too soon</string>
+    <string name="rhythm_v_long">Note %1$d: held too long</string>
+    <string name="rhythm_v_missed">Note %1$d: not played</string>
+    <string name="drill_lesson">Lesson</string>
+    <string name="drill_lesson_example">Example</string>
+    <string name="drill_lesson_start">I understand · start level %1$d</string>
+    <string name="drill_lesson_open">Read the lesson of level %1$d</string>
 </resources>

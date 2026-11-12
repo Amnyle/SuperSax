@@ -856,7 +856,7 @@
     <string name="ear_title">Oreille</string>
     <string name="ear_sub">Reconnaître intervalles, accords et mélodies (8 niveaux)</string>
     <string name="rhythm_title">Lecture rythmique</string>
-    <string name="rhythm_sub">Lis une mesure et tape son rythme en mesure (7 niveaux)</string>
+    <string name="rhythm_sub">Lisez une mesure et tenez chaque note sur sa durée (7 niveaux)</string>
     <string name="lv_ear_1">Plus aigu ou plus grave ?</string>
     <string name="lv_ear_2">Intervalles : seconde, tierce, quinte, octave</string>
     <string name="lv_ear_3">Ajoute tierce mineure, quarte et sixte</string>
@@ -906,14 +906,12 @@
     <string name="chord_dom7">Septième de dominante</string>
     <string name="chord_min7">Mineur 7</string>
     <string name="chord_maj7">Majeur 7</string>
-    <string name="rhythm_q">Tape ce rythme</string>
-    <string name="rhythm_q_swing">Tape ce rythme en swing (croches longue-brève)</string>
-    <string name="rhythm_start">Commencer · décompte à %1$d BPM</string>
-    <string name="rhythm_count">%1$d…</string>
-    <string name="rhythm_tap_now">Tape maintenant !</string>
-    <string name="rhythm_pad">TAPE</string>
-    <string name="rhythm_listen">L\'écouter d\'abord</string>
-    <string name="rhythm_wrong">Pas tout à fait en rythme</string>
+    <string name="rhythm_q">Tenez chaque note sur toute sa durée</string>
+    <string name="rhythm_q_swing">Tenez chaque note sur sa durée, en swing (croches longue-courte)</string>
+    <string name="rhythm_start">Commencer · 4 clics de décompte à %1$d BPM</string>
+    <string name="rhythm_pad">TENIR</string>
+    <string name="rhythm_listen">Écouter d\'abord</string>
+    <string name="rhythm_wrong">Pas tout à fait : regardez les notes en rouge</string>
     <string name="listen_runs_on">Écouter et compter mes passages</string>
     <string name="listen_runs_off">Arrêter l\'écoute</string>
     <string name="listen_runs_hint">Joue la gamme en montant et en descendant, puis fais une pause : chaque passage est vérifié et noté tout seul.</string>
@@ -999,4 +997,25 @@
         <item quantity="many">%1$d jours joués ces 4 derniers mois</item>
         <item quantity="other">%1$d jours joués ces 4 derniers mois</item>
     </plurals>
+    <string name="band_mix">Mixage de l\'orchestre</string>
+    <string name="band_drums">Batterie</string>
+    <string name="band_bass">Basse</string>
+    <string name="band_keys">Piano</string>
+    <string name="band_lead">Appels au sax</string>
+    <string name="band_mute">Couper %1$s</string>
+    <string name="band_hint">Coupez le piano pour jouer l\'harmonie vous-même, ou gardez seulement batterie et basse.</string>
+    <string name="rhythm_ready">Appuyez à chaque note et relâchez à sa fin · %1$d BPM</string>
+    <string name="rhythm_listening">Écoutez et suivez le curseur</string>
+    <string name="rhythm_play_now">Tenez !</string>
+    <string name="rhythm_all_good">Chaque note à temps et de la bonne durée</string>
+    <string name="rhythm_extra">Un appui de trop</string>
+    <string name="rhythm_v_early">Note %1$d : commencée trop tôt</string>
+    <string name="rhythm_v_late">Note %1$d : commencée trop tard</string>
+    <string name="rhythm_v_short">Note %1$d : relâchée trop tôt</string>
+    <string name="rhythm_v_long">Note %1$d : tenue trop longtemps</string>
+    <string name="rhythm_v_missed">Note %1$d : pas jouée</string>
+    <string name="drill_lesson">Leçon</string>
+    <string name="drill_lesson_example">Exemple</string>
+    <string name="drill_lesson_start">J\'ai compris · commencer le niveau %1$d</string>
+    <string name="drill_lesson_open">Lire la leçon du niveau %1$d</string>
 </resources>

@@ -51,6 +51,8 @@ class AppContainer(val context: Context) {
     val importsDir: File get() = File(context.filesDir, "imports").apply { mkdirs() }
     val media by lazy { MediaRepository(db, recordingsDir) }
     val songs by lazy { app.supersax.data.repo.SongRepository(db) }
+    /** Recorded instruments for backing tracks and the ear trainer (loaded on first use, ~12 MB). */
+    val band: app.supersax.domain.audio.Band by lazy { app.supersax.domain.audio.Band.load { context.assets.open("sounds/$it.bin") } }
     /** Songs downloaded from YouTube (app-private). */
     val songsDir: File get() = File(context.filesDir, "songs").apply { mkdirs() }
     val backup by lazy { BackupRepository(db, settings, recordingsDir, importsDir) { clock.nowMs() } }
@@ -149,7 +151,12 @@ class AppContent(assets: android.content.res.AssetManager) : ContentRepository(a
     val lessons: List<app.supersax.domain.drills.Lesson> by lazy {
         list("lessons").map { load("lessons/$it", app.supersax.domain.drills.Lesson.serializer()) }.sortedBy { it.order }
     }
-    /** Release notes, newest last. */
+    /** Lessons before each level of the phone drills, by DrillKind name. */
+    val drillLessons: Map<String, List<app.supersax.domain.drills.DrillLesson>> by lazy {
+        load("drill_lessons/lessons.json", kotlinx.serialization.builtins.MapSerializer(kotlinx.serialization.serializer<String>(),
+            kotlinx.serialization.builtins.ListSerializer(app.supersax.domain.drills.DrillLesson.serializer())))
+    }
+    /** Release notes, newest last.*/
     val whatsNew: List<app.supersax.domain.common.WhatsNewEntry> by lazy {
         load("whatsnew/whatsnew.json", kotlinx.serialization.builtins.ListSerializer(app.supersax.domain.common.WhatsNewEntry.serializer())).sortedBy { it.id }
     }

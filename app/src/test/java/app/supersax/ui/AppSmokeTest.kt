@@ -59,7 +59,7 @@ class AppSmokeTest {
         click("Training"); waitFor("Tuner"); waitFor("On the phone")
         // Phone drills open on their level ladder; level 1 is open, level 2 locked.
         click("Note reading"); waitFor("Notes on the staff (E to F)")
-        click("Level 1"); waitFor("Which note is this?")
+        click("Level 1"); click("I understand · start level 1"); waitFor("Which note is this?")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Daily exercise"); waitFor("1/", substring = true)

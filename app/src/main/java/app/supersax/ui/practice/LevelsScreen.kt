@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
@@ -47,6 +48,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class LevelsViewModel(c: AppContainer) : ViewModel() {
     val results = c.progress.drills.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    val seen = seenLessons(c).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 }
 
 @Composable
@@ -80,10 +82,13 @@ fun levelDescription(kind: DrillKind, level: Int): String {
 @Composable
 fun LevelsScreen(
     kind: DrillKind, onBack: () -> Unit, onPlay: (Int) -> Unit, actions: @Composable () -> Unit = {},
+    /** Opens the lesson of a level; a level whose lesson was never read opens its lesson first. */
+    onLesson: ((Int) -> Unit)? = null,
     extra: @Composable (results: List<app.supersax.domain.common.DrillResultRecord>, openLevel: Int) -> Unit = { _, _ -> },
 ) {
     val vm = appViewModel(key = "levels-$kind") { LevelsViewModel(it) }
     val results by vm.results.collectAsStateWithLifecycle()
+    val seen by vm.seen.collectAsStateWithLifecycle()
     val max = Levels.count(kind, 0)
     ScreenScaffold(drillTitle(kind), onBack = onBack, actions = actions) { padding ->
         ScrollColumn(padding) {
@@ -98,13 +103,17 @@ fun LevelsScreen(
             }
             Text(stringResource(R.string.levels_hint), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary,
                 modifier = Modifier.padding(start = 4.dp))
-            for (level in 1..max) LevelRow(level, levelDescription(kind, level), Levels.best(r, kind, level), level <= open) { onPlay(level) }
+            val read = seen ?: return@ScrollColumn
+            for (level in 1..max) LevelRow(level, levelDescription(kind, level), Levels.best(r, kind, level), level <= open,
+                onLesson = onLesson?.let { f -> { f(level) } }) {
+                if (onLesson != null && "${kind.name}:$level" !in read) onLesson(level) else onPlay(level)
+            }
         }
     }
 }
 
 @Composable
-fun LevelRow(level: Int, description: String, stars: Int, open: Boolean, title: String? = null, onClick: () -> Unit) {
+fun LevelRow(level: Int, description: String, stars: Int, open: Boolean, title: String? = null, onLesson: (() -> Unit)? = null, onClick: () -> Unit) {
     val name = title ?: stringResource(R.string.level_n, level)
     val lockedText = stringResource(R.string.level_locked)
     Row(
@@ -133,6 +142,9 @@ fun LevelRow(level: Int, description: String, stars: Int, open: Boolean, title: 
             if (description.isNotEmpty()) Text(description, style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
         }
         if (open) StarRow(stars, 20)
+        if (open && onLesson != null) androidx.compose.material3.IconButton(onClick = onLesson) {
+            Icon(Icons.AutoMirrored.Rounded.MenuBook, stringResource(R.string.drill_lesson_open, level), tint = Sax.colors.accentInk)
+        }
     }
 }
 

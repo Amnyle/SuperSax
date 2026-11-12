@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Rhythm reading: one 4/4 bar on one note; the player taps it after a one-bar count-in. Bars are built
+ * Rhythm reading: one 4/4 bar on one note; after a one-bar count-in the player presses for each note and holds
+ * it for its length (released at its end). Bars are built
  * from rhythm cells (in sixteenths; negative = rest). Levels: 1 quarters, halves, whole; 2 adds quarter
  * rests; 3 adds eighth pairs; 4 adds dotted quarter + eighth; 5 adds syncopation; 6 adds sixteenths;
  * 7 swing eighths (written as eighths, played long-short). Taps are judged against the beat after
@@ -60,6 +61,25 @@ public final class RhythmDrill {
                     out.add(pos);
                 }
                 t += Math.abs(d);
+            }
+            return out;
+        }
+
+        /** Sixteenth position → beats, with swing (an off-beat eighth sounds two thirds into the beat). */
+        private double beats(int sixteenths) {
+            double pos = sixteenths;
+            if (swing && sixteenths % 4 == 2) pos = sixteenths - 2 + 4.0 * 2 / 3;
+            return pos / 4.0;
+        }
+
+        /** Each note as {start, end} in beats from the start of the bar (rests skipped). */
+        public List<double[]> spans() {
+            List<double[]> out = new ArrayList<>();
+            int t = 0;
+            for (int d : durations) {
+                int len = Math.abs(d);
+                if (d > 0) out.add(new double[]{beats(t), beats(t + len)});
+                t += len;
             }
             return out;
         }
@@ -157,5 +177,78 @@ public final class RhythmDrill {
         int extra = 0;
         for (boolean u : used) if (!u) extra++;
         return new Result(missed == 0 && extra == 0, missed, extra, matched == 0 ? 0 : errSum / matched);
+    }
+
+    /** How one note was played. */
+    public enum Verdict { OK, EARLY, LATE, SHORT, LONG, MISSED }
+
+    /** Result of a held bar: one verdict per note, presses that matched no note, and whether it was right. */
+    public static final class HoldResult {
+        public final List<Verdict> verdicts;
+        public final int extra;
+        public final double offsetMs;
+        HoldResult(List<Verdict> verdicts, int extra, double offsetMs) { this.verdicts = verdicts; this.extra = extra; this.offsetMs = offsetMs; }
+        public List<Verdict> getVerdicts() { return verdicts; }
+        public int getExtra() { return extra; }
+        public double getOffsetMs() { return offsetMs; }
+        public boolean getCorrect() {
+            if (extra > 0) return false;
+            for (Verdict v : verdicts) if (v != Verdict.OK) return false;
+            return true;
+        }
+        /** The first note not played right (−1 if none). */
+        public int getFirstWrong() {
+            for (int i = 0; i < verdicts.size(); i++) if (verdicts.get(i) != Verdict.OK) return i;
+            return -1;
+        }
+    }
+
+    /**
+     * Judges presses ({down, up} in ms from beat 1 of the bar) against note spans ({start, end} in ms). The
+     * phone's constant delay (median offset of the presses, at most 250 ms) is removed first. A press must start
+     * within [toleranceMs] of its note and end near the note's end: not earlier than max(150 ms, 35% of the note)
+     * before it, nor later than max(150 ms, 25% of the note) after it. Very short touches (under 40 ms) are ignored.
+     */
+    public static HoldResult judgeHolds(List<double[]> spansMs, List<double[]> pressesMs, double toleranceMs, double beatMs) {
+        List<double[]> presses = new ArrayList<>();
+        for (double[] p : pressesMs) if (p[1] - p[0] >= 40) presses.add(p);
+        double offset = 0;
+        if (!presses.isEmpty()) {
+            List<Double> diffs = new ArrayList<>();
+            for (double[] p : presses) {
+                double best = Double.MAX_VALUE;
+                for (double[] s : spansMs) if (Math.abs(p[0] - s[0]) < Math.abs(best)) best = p[0] - s[0];
+                diffs.add(best);
+            }
+            Collections.sort(diffs);
+            offset = diffs.get(diffs.size() / 2);
+            if (Math.abs(offset) > 250) offset = 0;
+        }
+        boolean[] used = new boolean[presses.size()];
+        List<Verdict> verdicts = new ArrayList<>();
+        for (double[] s : spansMs) {
+            int bestI = -1;
+            double best = Double.MAX_VALUE;
+            for (int i = 0; i < presses.size(); i++) {
+                if (used[i]) continue;
+                double d = Math.abs(presses.get(i)[0] - offset - s[0]);
+                if (d < best) { best = d; bestI = i; }
+            }
+            double window = Math.max(toleranceMs * 2, beatMs * 0.45);
+            if (bestI < 0 || best > window) { verdicts.add(Verdict.MISSED); continue; }
+            used[bestI] = true;
+            double[] p = presses.get(bestI);
+            double startErr = p[0] - offset - s[0];
+            double dur = s[1] - s[0];
+            double endErr = p[1] - offset - s[1];
+            if (startErr < -toleranceMs) verdicts.add(Verdict.EARLY);
+            else if (startErr > toleranceMs) verdicts.add(Verdict.LATE);
+            else if (endErr < -Math.max(150, 0.35 * dur)) verdicts.add(Verdict.SHORT);
+            else if (endErr > Math.max(150, 0.25 * dur)) verdicts.add(Verdict.LONG);
+            else verdicts.add(Verdict.OK);
+        }
+        int extra = 0;
+        for (boolean u : used) if (!u) extra++;
+        return new HoldResult(verdicts, extra, offset);
     }
 }

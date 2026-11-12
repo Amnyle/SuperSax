@@ -86,6 +86,8 @@ object ExtraRoutes {
     const val PLAY_ALONG = "play_along"
     const val PLAY = "play/{kind}/{level}?sax={sax}"
     fun play(kind: DrillKind, level: Int, sax: Boolean = false) = "play/${kind.name}/$level?sax=$sax"
+    const val DRILL_LESSON = "drill_lesson/{kind}/{level}?sax={sax}"
+    fun drillLesson(kind: DrillKind, level: Int, sax: Boolean = false) = "drill_lesson/${kind.name}/$level?sax=$sax"
     const val EAR = "ear_training"
     const val RHYTHM = "rhythm_reading"
     fun lesson(id: String) = "lesson/$id"
@@ -110,6 +112,7 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.MATCH) { MatchNoteScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.READING) {
         LevelsScreen(DrillKind.READING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.READING, it)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.READING, it)) },
             extra = { r, open -> SpeedChallengeCard(r, open) { l -> nav.navigate(ExtraRoutes.speed(l)) } })
     }
     composable(ExtraRoutes.SPEED, arguments = listOf(navArgument("level") { type = NavType.IntType })) { e ->
@@ -132,10 +135,21 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.EAR) {
         var sax by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
         LevelsScreen(DrillKind.EAR, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.EAR, it, sax)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.EAR, it, sax)) },
             extra = { _, _ -> app.supersax.ui.practice.EarModeCard(sax) { sax = it } })
     }
     composable(ExtraRoutes.RHYTHM) {
-        LevelsScreen(DrillKind.RHYTHM, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.RHYTHM, it)) })
+        LevelsScreen(DrillKind.RHYTHM, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.RHYTHM, it)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.RHYTHM, it)) })
+    }
+    composable(ExtraRoutes.DRILL_LESSON, arguments = listOf(navArgument("kind") { type = NavType.StringType }, navArgument("level") { type = NavType.IntType },
+        navArgument("sax") { type = NavType.BoolType; defaultValue = false })) { e ->
+        val kind = DrillKind.valueOf(e.arguments!!.getString("kind")!!)
+        val level = e.arguments!!.getInt("level")
+        val sax = e.arguments!!.getBoolean("sax")
+        app.supersax.ui.practice.DrillLessonScreen(kind, level, onBack = { nav.popBackStack() }, onStart = {
+            nav.navigate(ExtraRoutes.play(kind, level, sax)) { popUpTo(e.destination.id) { inclusive = true } }
+        })
     }
     composable(ExtraRoutes.DAILY) { DailyScreen(onClose = { nav.popBackStack() }) }
     composable(ExtraRoutes.FINGERING_CHART) { FingeringChartScreen(onBack = { nav.popBackStack() }) }
@@ -160,10 +174,12 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
         })
     }
     composable(ExtraRoutes.SCALE_REC) {
-        LevelsScreen(DrillKind.SCALE_RECOGNITION, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_RECOGNITION, it)) })
+        LevelsScreen(DrillKind.SCALE_RECOGNITION, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_RECOGNITION, it)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.SCALE_RECOGNITION, it)) })
     }
     composable(ExtraRoutes.FINGERING) {
         LevelsScreen(DrillKind.FINGERING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.FINGERING, it)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.FINGERING, it)) },
             actions = { ChartAction { nav.navigate(ExtraRoutes.FINGERING_CHART) } })
     }
     composable(ExtraRoutes.OVERTONES) { OvertoneScreen(onBack = { nav.popBackStack() }) }

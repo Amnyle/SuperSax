@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.automirrored.rounded.VolumeOff
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.Refresh
@@ -95,6 +97,8 @@ data class SoloUi(
     val bar: Int = 0,
     val done: Set<String> = emptySet(),
     val seed: Long = 1,
+    /** Volume of each part (Groove.Part order). */
+    val gains: List<Float> = listOf(1f, 1f, 1f, 1f),
 )
 
 class SoloViewModel(private val c: AppContainer) : ViewModel() {
@@ -107,7 +111,8 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
     init {
         viewModelScope.launch {
             val done = c.db.kv().get(DONE_KEY)?.json?.split(',')?.filter { it.isNotBlank() }?.toSet() ?: emptySet()
-            _ui.value = _ui.value.copy(done = done)
+            val gains = c.db.kv().get(MIX_KEY)?.json?.split(',')?.mapNotNull { it.toFloatOrNull() }?.takeIf { it.size == 4 }
+            _ui.value = _ui.value.copy(done = done, gains = gains ?: _ui.value.gains)
         }
         viewModelScope.launch {
             c.media.recordings.collect { all -> _ui.value = _ui.value.copy(takes = all.filter { it.exerciseKey == TAKE_KEY }.take(5)) }
@@ -116,7 +121,7 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
             while (isActive) {
                 val u = _ui.value
                 if (u.playing) {
-                    val bar = (player.positionSec() / (4 * 60.0 / u.bpm)).toInt().coerceIn(0, u.style.bars() - 1)
+                    val bar = (player.positionSec() / (4 * 60.0 / u.bpm)).toInt() % u.style.bars()
                     if (bar != u.bar) _ui.value = u.copy(bar = bar)
                 }
                 delay(40)
@@ -130,8 +135,8 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
             val concert = PitchClass.parse(u.key)
             val bass = (concert.semitone + 36).let { if (it < 40) it + 12 else it }
             val calls = if (u.step.calls) (0 until u.style.bars() / 4).map { Blues.callPhrase(u.seed + it) } else null
-            val samples = withContext(Dispatchers.Default) { Groove.render(u.style, bass, u.bpm.toDouble(), RATE, calls, bass + 24) }
-            runCatching { player.play(samples, RATE, 1f) }
+            val mix = withContext(Dispatchers.Default) { Groove.render(u.style, bass, u.bpm.toDouble(), RATE, calls, bass + 24, c.band) }
+            runCatching { player.play(mix, u.gains.toFloatArray()) }
             _ui.value = _ui.value.copy(playing = true, preparing = false, bar = 0)
         }
     }
@@ -183,6 +188,14 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
         _ui.value = _ui.value.copy(playingTake = if (takePlayer != null) r.id else null)
     }
     fun setBpm(b: Int) = change { it.copy(bpm = b) }
+
+    /** Turns one part up or down while it plays (saved for next time). */
+    fun setGain(part: Groove.Part, g: Float) {
+        val gains = _ui.value.gains.toMutableList().also { it[part.ordinal] = g }
+        _ui.value = _ui.value.copy(gains = gains)
+        player.setGains(gains.toFloatArray())
+        viewModelScope.launch { c.db.kv().put(KeyValueEntity(MIX_KEY, gains.joinToString(","))) }
+    }
     fun setStep(s: SoloStep) = change { it.copy(step = s) }
     fun newPhrases() = change { it.copy(seed = it.seed + 3) }
 
@@ -201,6 +214,7 @@ class SoloViewModel(private val c: AppContainer) : ViewModel() {
     companion object {
         const val RATE = 32000
         const val DONE_KEY = "solo:done"
+        const val MIX_KEY = "solo:mix"
         const val TAKE_KEY = "solo"
     }
 }
@@ -279,6 +293,7 @@ fun SoloScreen(onBack: () -> Unit, onSongPlayer: () -> Unit) {
                 }
                 Text(stringResource(R.string.solo_written_note), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
             }
+            BandMixCard(ui.gains, ui.step.calls, vm::setGain)
             // What to do right now.
             if (ui.playing) LiveCue(ui, written, naming)
             // Notes for this step.
@@ -403,3 +418,31 @@ fun styleName(st: Groove.Style): String = stringResource(
         Groove.Style.JAZZ_251 -> R.string.style_jazz
     },
 )
+
+/** Volume of each instrument of the backing (drums, bass, piano, and the call phrases on the sax). */
+@Composable
+fun BandMixCard(gains: List<Float>, calls: Boolean, onGain: (Groove.Part, Float) -> Unit) {
+    SectionCard(stringResource(R.string.band_mix)) {
+        Groove.Part.entries.forEach { p ->
+            if (p == Groove.Part.LEAD && !calls) return@forEach
+            val name = stringResource(when (p) {
+                Groove.Part.DRUMS -> R.string.band_drums
+                Groove.Part.BASS -> R.string.band_bass
+                Groove.Part.KEYS -> R.string.band_keys
+                Groove.Part.LEAD -> R.string.band_lead
+            })
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(name, Modifier.width(96.dp), style = MaterialTheme.typography.bodyMedium)
+                androidx.compose.material3.Slider(
+                    value = gains[p.ordinal], onValueChange = { onGain(p, it) }, valueRange = 0f..1.5f, modifier = Modifier.weight(1f),
+                    colors = androidx.compose.material3.SliderDefaults.colors(thumbColor = Sax.colors.accent, activeTrackColor = Sax.colors.accent),
+                )
+                androidx.compose.material3.IconButton(onClick = { onGain(p, if (gains[p.ordinal] > 0f) 0f else 1f) }) {
+                    Icon(if (gains[p.ordinal] > 0f) Icons.AutoMirrored.Rounded.VolumeUp else Icons.AutoMirrored.Rounded.VolumeOff,
+                        stringResource(R.string.band_mute, name), tint = if (gains[p.ordinal] > 0f) Sax.colors.accentInk else Sax.colors.textTertiary)
+                }
+            }
+        }
+        Text(stringResource(R.string.band_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+    }
+}

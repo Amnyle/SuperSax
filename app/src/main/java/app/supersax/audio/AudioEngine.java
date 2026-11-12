@@ -42,6 +42,9 @@ public final class AudioEngine {
     private final List<Tone> tones = new ArrayList<>();
     private @Nullable MelodyPlayer melody;
     private @Nullable Runnable onMelodyDone;
+    /** Pre-rendered sounds (recorded instruments) and how far each has played. */
+    private final List<int[]> clipPos = new ArrayList<>();
+    private final List<float[]> clips = new ArrayList<>();
 
     private volatile double a4 = Tuning.DEFAULT_A4;
     private volatile Timbre timbre = Timbre.SINE;
@@ -114,6 +117,37 @@ public final class AudioEngine {
 
     public void playTone(int concertMidi) { playTone(concertMidi, 1500); }
 
+    private @Nullable app.supersax.domain.audio.SampledInstrument.Voice hold;
+    private @Nullable ToneVoice holdTone;
+
+    /** Starts a note that sounds until [stopHold]: on [inst] if given, else the tone synth. */
+    public void startHold(@Nullable app.supersax.domain.audio.SampledInstrument inst, int concertMidi) {
+        synchronized (lock) {
+            if (hold != null) hold.release();
+            if (holdTone != null) holdTone.release();
+            double shift = 12 * Math.log(a4 / 440.0) / Math.log(2);
+            if (inst != null) { hold = inst.start(concertMidi + shift, 0.6, SAMPLE_RATE); holdTone = null; }
+            else { holdTone = new ToneVoice(SAMPLE_RATE, Tuning.midiToFrequency(concertMidi, a4), timbre, 0.3f); hold = null; }
+        }
+        ensureRunning();
+    }
+
+    public void stopHold() {
+        synchronized (lock) {
+            if (hold != null) hold.release();
+            if (holdTone != null) holdTone.release();
+        }
+    }
+
+    /** Output sample rate, for sounds rendered with [playClip]. */
+    public int getSampleRate() { return SAMPLE_RATE; }
+
+    /** Plays a pre-rendered mono buffer at [getSampleRate], replacing other clips. */
+    public void playClip(float[] samples) {
+        synchronized (lock) { clips.clear(); clipPos.clear(); clips.add(samples); clipPos.add(new int[]{0}); }
+        ensureRunning();
+    }
+
     /** Plays a melody with the tone synth at bpm (quarter-note beats). */
     public void playMelody(List<MelodyNote> notes, int bpm, @Nullable Runnable onDone) {
         synchronized (lock) {
@@ -132,12 +166,12 @@ public final class AudioEngine {
     }
 
     public void stopAll() {
-        synchronized (lock) { metronome = null; drone = null; tones.clear(); melody = null; }
+        synchronized (lock) { metronome = null; drone = null; tones.clear(); melody = null; clips.clear(); clipPos.clear(); hold = null; holdTone = null; }
         update(s -> new OutputState(false, s.getBpm(), s.getBeatsPerBar(), s.getSubdivision(), s.getAccent(), null, false, -1, null));
     }
 
     private boolean busy() {
-        synchronized (lock) { return metronome != null || drone != null || !tones.isEmpty() || melody != null; }
+        synchronized (lock) { return metronome != null || drone != null || !tones.isEmpty() || melody != null || !clips.isEmpty() || hold != null || holdTone != null; }
     }
 
     private void ensureRunning() {
@@ -192,6 +226,16 @@ public final class AudioEngine {
                         t.left -= buf.length;
                         if (t.left <= 0) t.voice.release();
                         if (t.voice.getFinished()) it.remove();
+                    }
+                    if (hold != null) { hold.mixInto(buf, buf.length); if (hold.getFinished()) hold = null; }
+                    if (holdTone != null) { holdTone.mixInto(buf); if (holdTone.getFinished()) holdTone = null; }
+                    for (int c = clips.size() - 1; c >= 0; c--) {
+                        float[] clip = clips.get(c);
+                        int[] at = clipPos.get(c);
+                        int n = Math.min(buf.length, clip.length - at[0]);
+                        for (int i = 0; i < n; i++) buf[i] += clip[at[0] + i];
+                        at[0] += n;
+                        if (at[0] >= clip.length) { clips.remove(c); clipPos.remove(c); }
                     }
                     MelodyPlayer m = melody;
                     if (m != null) {

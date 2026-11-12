@@ -46,7 +46,7 @@ class BluesTest {
         app.supersax.domain.solo.Groove.Style.entries.forEach { st ->
             val calls = (0 until st.bars() / 4).map { Blues.callPhrase(it.toLong()) }
             val x = app.supersax.domain.solo.Groove.render(st, 46, st.defaultBpm.toDouble(), 16000, calls, 70)
-            assertEquals(16000 * app.supersax.domain.solo.Groove.loopSeconds(st, st.defaultBpm.toDouble()), x.size.toDouble(), 2.0, "$st")
+            assertEquals(16000 * app.supersax.domain.solo.Groove.loopSeconds(st, st.defaultBpm.toDouble()) * app.supersax.domain.solo.Groove.choruses(st), x.size.toDouble(), 2.0, "$st")
             assertTrue(x.all { abs(it) <= 0.91f && !it.isNaN() }, "$st clipped")
             assertTrue(x.maxOf { abs(it) } > 0.2f, "$st silent")
         }

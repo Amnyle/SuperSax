@@ -60,18 +60,20 @@ class ScreenTour {
         click("Note reading"); waitFor("Notes on the staff (E to F)"); shot("09-levels")
         click("Start"); waitFor("0 right"); click("C"); shot("23-speed")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
-        click("Level 1"); waitFor("Which note is this?"); shot("10-question")
+        click("Level 1"); waitFor("The staff and the treble clef"); shot("29-drill-lesson")
+        click("I understand · start level 1"); waitFor("Which note is this?"); shot("10-question")
         click("C"); waitFor("Continue"); shot("11-feedback")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Daily exercise"); waitFor("1/", substring = true); shot("12-daily")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Ear training"); waitFor("Higher or lower?"); shot("24-ear-levels")
-        click("Level 1"); waitFor("Is the second note higher or lower?"); shot("25-ear-question")
+        click("Level 1"); click("I understand · start level 1"); waitFor("Is the second note higher or lower?"); shot("25-ear-question")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Rhythm reading"); waitFor("Quarters, halves, whole notes")
-        click("Level 1"); waitFor("Tap this rhythm"); shot("26-rhythm-question")
+        click("Level 1"); waitFor("Quarter, half and whole notes"); shot("30-rhythm-lesson")
+        click("I understand · start level 1"); waitFor("Hold each note for its full length"); shot("26-rhythm-question")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Fingering chart"); waitFor("Middle"); shot("20-fingering-chart")
