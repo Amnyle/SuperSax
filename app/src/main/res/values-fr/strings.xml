@@ -1054,13 +1054,6 @@
     <string name="stem_drums">Batterie</string>
     <string name="stem_bass">Basse</string>
     <string name="sep_suffix">sans %1$s</string>
-    <string name="sep_start">Créer une version sans %1$s</string>
-    <string name="sep_uploading">Envoi du morceau… (%1$s)</string>
-    <string name="sep_separating">Séparation : %1$s…</string>
-    <string name="sep_downloading">Téléchargement de la nouvelle version… (%1$s)</string>
-    <string name="sep_wait">En général une ou deux minutes. Vous pouvez quitter cet écran, cela continue.</string>
-    <string name="sep_failed">Cela n\'a pas marché : %1$s</string>
-    <string name="sep_done">Terminé : une version sans %1$s est dans vos morceaux.</string>
     <string name="sep_open">L\'ouvrir</string>
     <string name="stem_lead">Mélodie principale ou voix (IA la plus récente)</string>
     <string name="stem_short_wind">sax</string>
@@ -1072,4 +1065,25 @@
     <string name="version_original">Original</string>
     <string name="version_without">Sans %1$s</string>
     <string name="version_ai">Version IA</string>
+    <string name="queue_title">File IA</string>
+    <string name="queue_add">Ajouter à la file : version sans %1$s</string>
+    <string name="queue_hint">Les tâches s\'enchaînent en arrière-plan, même application fermée. Une notification arrive quand chaque version est prête.</string>
+    <string name="queue_open">Voir la file</string>
+    <string name="queue_waiting">Sans %1$s : en attente</string>
+    <string name="queue_uploading">Sans %1$s : envoi du morceau…</string>
+    <string name="queue_separating">Sans %1$s : séparation…</string>
+    <string name="queue_downloading">Sans %1$s : téléchargement…</string>
+    <string name="queue_done">Sans %1$s : prête</string>
+    <string name="queue_failed">Sans %1$s : échec</string>
+    <string name="queue_screen_hint">Les séparations s\'exécutent dans cet ordre en arrière-plan, une à la fois, quand le téléphone est en ligne. Vous pouvez fermer l\'application.</string>
+    <string name="queue_empty">Rien dans la file. Ouvrez un morceau et ajoutez une version à créer.</string>
+    <string name="queue_finished">Terminées</string>
+    <string name="queue_clear">Effacer</string>
+    <string name="queue_done_title">Une version est prête</string>
+    <plurals name="queue_running">
+        <item quantity="one">File IA : %1$d en cours ou en attente</item>
+    <item quantity="many">File IA : %1$d en cours ou en attente</item>
+        <item quantity="other">File IA : %1$d en cours ou en attente</item>
+    </plurals>
+    <string name="sep_offline">Le téléphone n\'a pas pu joindre lalal.ai (pas d\'internet, ou un DNS privé ou bloqueur de pubs dans Paramètres, Réseau). Touchez Réessayer une fois en ligne.</string>
 </resources>

@@ -1048,13 +1048,6 @@
     <string name="stem_drums">Drums</string>
     <string name="stem_bass">Bass</string>
     <string name="sep_suffix">no %1$s</string>
-    <string name="sep_start">Make a version without %1$s</string>
-    <string name="sep_uploading">Sending the song… (%1$s)</string>
-    <string name="sep_separating">Separating: %1$s…</string>
-    <string name="sep_downloading">Downloading the new version… (%1$s)</string>
-    <string name="sep_wait">Usually a minute or two. You can leave this screen; it carries on.</string>
-    <string name="sep_failed">It did not work: %1$s</string>
-    <string name="sep_done">Done: a version without %1$s is in your songs.</string>
     <string name="sep_open">Open it</string>
     <string name="stem_lead">Lead melody or voice (newest AI)</string>
     <string name="stem_short_wind">sax</string>
@@ -1066,4 +1059,24 @@
     <string name="version_original">Original</string>
     <string name="version_without">No %1$s</string>
     <string name="version_ai">AI version</string>
+    <string name="queue_title">AI queue</string>
+    <string name="queue_add">Add to the queue: version without %1$s</string>
+    <string name="queue_hint">Jobs run one after another in the background, even with the app closed. You get a notification when each version is ready.</string>
+    <string name="queue_open">See the queue</string>
+    <string name="queue_waiting">Without %1$s: waiting</string>
+    <string name="queue_uploading">Without %1$s: sending the song…</string>
+    <string name="queue_separating">Without %1$s: separating…</string>
+    <string name="queue_downloading">Without %1$s: downloading…</string>
+    <string name="queue_done">Without %1$s: ready</string>
+    <string name="queue_failed">Without %1$s: did not work</string>
+    <string name="queue_screen_hint">Separations run in this order in the background, one at a time, whenever the phone is online. You can close the app.</string>
+    <string name="queue_empty">Nothing in the queue. Open a song and add a version to make.</string>
+    <string name="queue_finished">Finished</string>
+    <string name="queue_clear">Clear</string>
+    <string name="queue_done_title">A version is ready</string>
+    <plurals name="queue_running">
+        <item quantity="one">AI queue: %1$d running or waiting</item>
+        <item quantity="other">AI queue: %1$d running or waiting</item>
+    </plurals>
+    <string name="sep_offline">The phone could not reach lalal.ai (no internet, or a Private DNS or ad-blocker in Settings, Network). Tap Retry when online.</string>
 </resources>

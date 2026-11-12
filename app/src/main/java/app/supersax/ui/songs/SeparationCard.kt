@@ -36,6 +36,7 @@ import app.supersax.separation.SeparationKey
 import app.supersax.ui.components.SectionCard
 import app.supersax.ui.nav.LocalContainer
 import app.supersax.ui.theme.Sax
+import kotlinx.coroutines.launch
 
 @Composable
 fun stemName(s: Lalal.Stem): String = stringResource(when (s) {
@@ -59,19 +60,21 @@ fun stemShort(s: Lalal.Stem): String = stringResource(when (s) {
 })
 
 /**
- * Remove an instrument from this song with the AI separation service, to play that part yourself: makes a new
- * song in the list ("Title (no sax)") with the same key, tempo and bars.
+ * Remove an instrument from this song with the AI separation service: adds a job to the queue, which runs in the
+ * background (the app can be closed). The new version appears under the song, with the same key, tempo and bars.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit) {
+fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit, onQueue: () -> Unit) {
     val c = LocalContainer.current
-    val jobs by c.separations.jobs.collectAsStateWithLifecycle()
-    val job = jobs[ref.id]
+    val jobs by c.separationQueue.jobs.collectAsStateWithLifecycle(emptyList())
+    val mine = jobs.filter { it.songId == ref.id }
     var hasKey by remember { mutableStateOf(SeparationKey.get(c) != null) }
     var stem by rememberSaveable { mutableStateOf(Lalal.Stem.WIND) }
     var keyText by rememberSaveable { mutableStateOf("") }
     val uri = LocalUriHandler.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val askNotify = app.supersax.ui.audio.rememberNotificationRequest()
     SectionCard(stringResource(R.string.sep_title)) {
         Text(stringResource(R.string.sep_body), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary)
         if (!hasKey) {
@@ -83,34 +86,76 @@ fun SeparationCard(ref: AudioRefRecord, onOpen: (String) -> Unit) {
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.sep_save_key)) }
             return@SectionCard
         }
-        val running = job != null && job.step != SeparationJob.Step.DONE && job.step != SeparationJob.Step.FAILED
-        if (!running) FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Lalal.Stem.entries.forEach { s -> FilterChip(selected = stem == s, onClick = { stem = s }, label = { Text(stemName(s)) }, modifier = Modifier.heightIn(min = 44.dp)) }
         }
         val suffix = stringResource(R.string.sep_suffix, stemShort(stem))
-        when {
-            running -> {
-                Text(stringResource(when (job!!.step) {
-                    SeparationJob.Step.UPLOADING -> R.string.sep_uploading
-                    SeparationJob.Step.SEPARATING -> R.string.sep_separating
-                    else -> R.string.sep_downloading
-                }, stemName(job.stem)), style = MaterialTheme.typography.titleSmall)
-                if (job.progress > 0) LinearProgressIndicator(progress = { job.progress / 100f }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)
-                else LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)
-                Text(stringResource(R.string.sep_wait), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        Button(onClick = { askNotify(); scope.launch { c.separationQueue.add(ref, stem, suffix) } }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
+            Text(stringResource(R.string.queue_add, stemShort(stem)))
+        }
+        Text(stringResource(R.string.queue_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        mine.sortedByDescending { it.addedAtMs }.take(4).forEach { j -> QueueRow(j, onOpen) }
+        Row {
+            TextButton(onClick = onQueue) { Text(stringResource(R.string.queue_open)) }
+            TextButton(onClick = { SeparationKey.set(c, null); hasKey = false }) { Text(stringResource(R.string.sep_forget_key)) }
+        }
+    }
+}
+
+/** One job: what it removes, where it is, and its result. */
+@Composable
+fun QueueRow(j: SeparationJob, onOpen: (String) -> Unit, showTitle: Boolean = false, onRetry: (() -> Unit)? = null, onRemove: (() -> Unit)? = null) {
+    androidx.compose.foundation.layout.Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (showTitle) Text(j.title, style = MaterialTheme.typography.titleSmall, maxLines = 2)
+        val what = stemShort(j.stemValue)
+        Text(stringResource(when (j.step) {
+            SeparationJob.Step.QUEUED -> R.string.queue_waiting
+            SeparationJob.Step.UPLOADING -> R.string.queue_uploading
+            SeparationJob.Step.SEPARATING -> R.string.queue_separating
+            SeparationJob.Step.DOWNLOADING -> R.string.queue_downloading
+            SeparationJob.Step.DONE -> R.string.queue_done
+            SeparationJob.Step.FAILED -> R.string.queue_failed
+        }, what), style = MaterialTheme.typography.bodyMedium,
+            color = when (j.step) { SeparationJob.Step.DONE -> Sax.colors.good; SeparationJob.Step.FAILED -> MaterialTheme.colorScheme.error; else -> Sax.colors.text })
+        if (j.step == SeparationJob.Step.FAILED) Text(if (j.error == app.supersax.separation.OFFLINE) stringResource(R.string.sep_offline) else j.error ?: "",
+            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+        if (j.active && j.step != SeparationJob.Step.QUEUED) {
+            if (j.progress > 0) LinearProgressIndicator(progress = { j.progress / 100f }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)
+            else LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)
+        }
+        Row {
+            if (j.step == SeparationJob.Step.DONE && j.resultSongId != null) TextButton(onClick = { onOpen(j.resultSongId) }) { Text(stringResource(R.string.sep_open)) }
+            if (j.step == SeparationJob.Step.FAILED && onRetry != null) TextButton(onClick = onRetry) { Text(stringResource(R.string.retry)) }
+            if (!j.active || j.step == SeparationJob.Step.QUEUED) onRemove?.let { TextButton(onClick = it) { Text(stringResource(R.string.remove)) } }
+        }
+    }
+}
+
+/** All separations: waiting, running, finished; they run in the background in this order. */
+@Composable
+fun SeparationQueueScreen(onBack: () -> Unit, onSong: (String) -> Unit) {
+    val c = LocalContainer.current
+    val jobs by c.separationQueue.jobs.collectAsStateWithLifecycle(emptyList())
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    androidx.compose.runtime.LaunchedEffect(Unit) { if (jobs.any { it.active } || c.separationQueue.all().any { it.active }) app.supersax.separation.SeparationQueue.kick(c.context) }
+    app.supersax.ui.components.ScreenScaffold(stringResource(R.string.queue_title), onBack = onBack) { padding ->
+        app.supersax.ui.components.ScrollColumn(padding) {
+            Text(stringResource(R.string.queue_screen_hint), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary)
+            if (jobs.isEmpty()) app.supersax.ui.components.EmptyState(stringResource(R.string.queue_empty))
+            val (active, finished) = jobs.partition { it.active }
+            active.sortedBy { it.addedAtMs }.forEach { j ->
+                SectionCard { QueueRow(j, onSong, showTitle = true, onRemove = { scope.launch { c.separationQueue.remove(j.id) } }) }
             }
-            else -> {
-                if (job?.step == SeparationJob.Step.FAILED) Text(stringResource(R.string.sep_failed, job.error ?: ""), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-                if (job?.step == SeparationJob.Step.DONE && job.resultSongId != null) {
-                    Text(stringResource(R.string.sep_done, stemShort(job.stem)), style = MaterialTheme.typography.titleSmall, color = Sax.colors.good)
-                    Button(onClick = { onOpen(job.resultSongId) }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) { Text(stringResource(R.string.sep_open)) }
+            if (finished.isNotEmpty()) {
+                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                    app.supersax.ui.components.Overline(stringResource(R.string.queue_finished), Modifier.weight(1f))
+                    TextButton(onClick = { scope.launch { c.separationQueue.clearFinished() } }) { Text(stringResource(R.string.queue_clear)) }
                 }
-                Button(onClick = { c.separations.start(ref, stem, suffix) }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
-                    Text(stringResource(R.string.sep_start, stemShort(stem)))
+                finished.sortedByDescending { it.addedAtMs }.forEach { j ->
+                    SectionCard { QueueRow(j, onSong, showTitle = true, onRetry = { scope.launch { c.separationQueue.retry(j.id) } },
+                        onRemove = { scope.launch { c.separationQueue.remove(j.id) } }) }
                 }
-                Row { TextButton(onClick = { SeparationKey.set(c, null); hasKey = false }) { Text(stringResource(R.string.sep_forget_key)) } }
             }
         }
     }

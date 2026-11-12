@@ -235,5 +235,14 @@
     "fr": [
       "Les morceaux et leurs versions IA sont liés : dans la liste, chaque version (« Sans sax », « Sans mélodie ») est rangée sous son morceau, et dans le lecteur une ligne passe de l'original à ses versions. Supprimer un morceau supprime aussi ses versions."
     ]
+  },
+  {
+    "id": 20,
+    "en": [
+      "AI queue: add as many \"version without…\" jobs as you like, from any song. They run one after another in the background, even with the app closed, and you get a notification when each is ready. See them all in Song player, AI queue."
+    ],
+    "fr": [
+      "File IA : ajoutez autant de tâches « version sans… » que vous voulez, depuis n'importe quel morceau. Elles s'enchaînent en arrière-plan, même application fermée, et une notification arrive quand chacune est prête. Retrouvez-les dans Lecteur de morceaux, File IA."
+    ]
   }
 ]

@@ -110,6 +110,7 @@ dependencies {
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
     implementation(libs.work.runtime.ktx)
+    testImplementation(libs.work.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)

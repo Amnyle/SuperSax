@@ -56,3 +56,13 @@ fun MicErrorBanner(state: MicState, onRetry: () -> Unit) {
         MicState.Reason.ERROR -> ErrorBanner(stringResource(R.string.mic_error), stringResource(R.string.retry), onRetry)
     }
 }
+
+/** Asks once for notifications (Android 13+) so finished background jobs can say so; never blocks. */
+@Composable
+fun rememberNotificationRequest(): () -> Unit {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    return {
+        if (android.os.Build.VERSION.SDK_INT >= 33 && !app.supersax.work.Reminders.canNotify(context)) launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+}

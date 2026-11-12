@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
     /** Incremented when the update notification asks to open the update settings. */
     private val updatesSignal = mutableIntStateOf(0)
     private val dailySignal = mutableIntStateOf(0)
+    private val queueSignal = mutableIntStateOf(0)
 
     override fun attachBaseContext(newBase: Context) {
         val app = newBase.applicationContext as SaxApp
@@ -38,13 +39,14 @@ class MainActivity : ComponentActivity() {
         if (intent?.getBooleanExtra(EXTRA_START_SESSION, false) == true && savedInstanceState == null) startSignal.intValue++
         if (intent?.getBooleanExtra(EXTRA_OPEN_UPDATES, false) == true && savedInstanceState == null) updatesSignal.intValue++
         if (intent?.getBooleanExtra(EXTRA_OPEN_DAILY, false) == true && savedInstanceState == null) dailySignal.intValue++
+        if (intent?.getBooleanExtra(EXTRA_OPEN_QUEUE, false) == true && savedInstanceState == null) queueSignal.intValue++
         setContent {
             val settings by container.settings.settings.collectAsStateWithLifecycle(initial)
             // Switching language recreates the activity so every string changes.
             LaunchedEffect(settings.language) { if (settings.language != appliedLanguage) recreate() }
             CompositionLocalProvider(LocalContainer provides container, LocalSettings provides settings) {
                 SaxTheme(settings.theme) {
-                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, updatesSignal = updatesSignal.intValue, dailySignal = dailySignal.intValue, onRecreate = { recreate() })
+                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, updatesSignal = updatesSignal.intValue, dailySignal = dailySignal.intValue, queueSignal = queueSignal.intValue, onRecreate = { recreate() })
                 }
             }
         }
@@ -55,11 +57,13 @@ class MainActivity : ComponentActivity() {
         if (intent.getBooleanExtra(EXTRA_START_SESSION, false)) startSignal.intValue++
         if (intent.getBooleanExtra(EXTRA_OPEN_UPDATES, false)) updatesSignal.intValue++
         if (intent.getBooleanExtra(EXTRA_OPEN_DAILY, false)) dailySignal.intValue++
+        if (intent.getBooleanExtra(EXTRA_OPEN_QUEUE, false)) queueSignal.intValue++
     }
 
     companion object {
         const val EXTRA_START_SESSION = "start_session"
         const val EXTRA_OPEN_UPDATES = "open_updates"
         const val EXTRA_OPEN_DAILY = "open_daily"
+        const val EXTRA_OPEN_QUEUE = "open_queue"
     }
 }

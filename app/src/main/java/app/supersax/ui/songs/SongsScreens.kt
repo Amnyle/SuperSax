@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -149,7 +150,7 @@ fun songSummary(s: SongSetup): String? {
 
 /** The song player's list: downloaded and imported songs, YouTube search, file import. */
 @Composable
-fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Unit) {
+fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Unit, onQueue: () -> Unit = {}) {
     val vm = appViewModel { SongsViewModel(it) }
     val songs by vm.songs.collectAsStateWithLifecycle()
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) vm.import(uri, onSong) }
@@ -163,6 +164,16 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                 }
                 OutlinedButton(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp), shape = RoundedCornerShape(18.dp)) {
                     Icon(Icons.Rounded.FileOpen, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.add_audio))
+                }
+            }
+            // The AI queue: how many separations are waiting or running.
+            val c = app.supersax.ui.nav.LocalContainer.current
+            val queue by c.separationQueue.jobs.collectAsStateWithLifecycle(emptyList())
+            if (queue.isNotEmpty()) {
+                val running = queue.count { it.active }
+                OutlinedButton(onClick = onQueue, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp), shape = RoundedCornerShape(18.dp)) {
+                    Icon(Icons.Rounded.AutoAwesome, null); Spacer(Modifier.width(8.dp))
+                    Text(if (running > 0) pluralStringResource(R.plurals.queue_running, running, running) else stringResource(R.string.queue_title))
                 }
             }
             val list = songs ?: return@ScrollColumn

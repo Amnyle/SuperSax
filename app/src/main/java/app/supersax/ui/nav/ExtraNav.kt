@@ -98,6 +98,7 @@ object ExtraRoutes {
     const val SONG = "song/{id}"
     fun song(id: String) = "song/$id"
     const val SCALE_CHECKER = "scale_checker"
+    const val QUEUE = "separation_queue"
     const val STATS = "stats"
     fun piece(id: String) = "piece/$id"
     fun pdf(file: String) = "pdf/$file"
@@ -181,15 +182,17 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.OVERTONES) { OvertoneScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.ALTISSIMO) { AltissimoScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.SLOW_DOWN) {
-        SongsScreen(onBack = { nav.popBackStack() }, onSong = { nav.navigate(ExtraRoutes.song(it)) }, onSearch = { nav.navigate(ExtraRoutes.YT_SEARCH) })
+        SongsScreen(onBack = { nav.popBackStack() }, onSong = { nav.navigate(ExtraRoutes.song(it)) }, onSearch = { nav.navigate(ExtraRoutes.YT_SEARCH) }, onQueue = { nav.navigate(ExtraRoutes.QUEUE) })
     }
     composable(ExtraRoutes.YT_SEARCH) {
         YouTubeSearchScreen(onBack = { nav.popBackStack() }, onSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(ExtraRoutes.YT_SEARCH) { inclusive = true } } })
     }
     composable(ExtraRoutes.SONG, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
-        SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() }, onOpenSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(e.destination.id) { inclusive = true } } })
+        SongPlayerScreen(e.arguments!!.getString("id")!!, onBack = { nav.popBackStack() }, onOpenSong = { id -> nav.navigate(ExtraRoutes.song(id)) { popUpTo(e.destination.id) { inclusive = true } } },
+            onQueue = { nav.navigate(ExtraRoutes.QUEUE) })
     }
     composable(ExtraRoutes.STATS) { app.supersax.ui.stats.StatsScreen(onBack = { nav.popBackStack() }) }
+    composable(ExtraRoutes.QUEUE) { app.supersax.ui.songs.SeparationQueueScreen(onBack = { nav.popBackStack() }, onSong = { nav.navigate(ExtraRoutes.song(it)) }) }
     composable(ExtraRoutes.SCALE_CHECKER) { ScaleCheckerScreen(onBack = { nav.popBackStack() }) }
 }
 

@@ -47,6 +47,7 @@ desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs_nio", version.
 glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "glance" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+work-testing = { module = "androidx.work:work-testing", version.ref = "work" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }

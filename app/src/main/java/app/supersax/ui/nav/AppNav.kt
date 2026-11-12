@@ -126,7 +126,7 @@ private fun TabItem(tab: Tab, selected: Boolean, modifier: Modifier, onClick: ()
 
 /** Navigation graph. [startOnboarding] is true on first launch; [startSignal] changes when the widget asks to start. */
 @Composable
-fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, updatesSignal: Int = 0, dailySignal: Int = 0, onRecreate: () -> Unit) {
+fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, updatesSignal: Int = 0, dailySignal: Int = 0, queueSignal: Int = 0, onRecreate: () -> Unit) {
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val container = LocalContainer.current
@@ -134,6 +134,7 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
         if (startSignal > 0 && !startOnboarding && container.startTodaySession()) nav.navigate(Routes.SESSION) { launchSingleTop = true }
     }
     LaunchedEffect(dailySignal) { if (dailySignal > 0 && !startOnboarding) nav.navigate(ExtraRoutes.DAILY) { launchSingleTop = true } }
+    LaunchedEffect(queueSignal) { if (queueSignal > 0 && !startOnboarding) nav.navigate(ExtraRoutes.QUEUE) { launchSingleTop = true } }
     LaunchedEffect(updatesSignal) { if (updatesSignal > 0 && !startOnboarding) nav.navigate(Routes.SETTINGS) { launchSingleTop = true } }
     app.supersax.ui.whatsnew.WhatsNewAfterUpdate()
     app.supersax.ui.whatsnew.CrashReportDialog()
