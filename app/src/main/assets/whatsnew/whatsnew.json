@@ -317,5 +317,16 @@
     "fr": [
       "Ouvrir une version IA (« Sans sax ») utilise maintenant l'audio déjà préparé du morceau d'origine : plus de « Préparation de l'audio » ; la version est alignée en arrière-plan et joue sans coupure."
     ]
+  },
+  {
+    "id": 28,
+    "en": [
+      "Fixed: on newer songs, tapping \"No sax\" opened and closed straight away and would not play. A version not ready yet now shows \"Preparing…\" and switches in by itself when ready.",
+      "Only one song plays at a time: starting a song stops the one before."
+    ],
+    "fr": [
+      "Corrigé : sur les morceaux récents, toucher « Sans sax » ouvrait puis fermait aussitôt et ne jouait pas. Une version pas encore prête affiche « Préparation… » et prend le relais toute seule quand elle est prête.",
+      "Un seul morceau à la fois : lancer un morceau arrête le précédent."
+    ]
   }
 ]

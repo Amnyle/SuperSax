@@ -16,6 +16,7 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -43,6 +44,8 @@ class PlaybackHub(private val c: AppContainer) {
     /** The practice engine kept between screens (one song at a time), with its song id. */
     private var practiceEngine: SongEngine? = null
     private var practiceSong: String? = null
+    /** Screens using the practice engine (a page reopened on the same song shares it). */
+    private var practiceUsers = 0
     private var practicePlayer: PracticePlayer? = null
 
     private suspend fun controller(): MediaController = withContext(Dispatchers.Main) {
@@ -99,6 +102,26 @@ class PlaybackHub(private val c: AppContainer) {
     var practiceVersions: MutableMap<String, Int> = mutableMapOf()
         private set
 
+    private val decoding = java.util.concurrent.ConcurrentHashMap<String, kotlinx.coroutines.Deferred<app.supersax.audio.AudioDecoder.PcmInfo?>>()
+
+    /**
+     * The song's decoded audio in the cache, decoding it if needed. Runs in the app scope, once per song at a time:
+     * leaving or reopening a page neither stops it nor starts a second decode of the same file.
+     */
+    suspend fun pcm(ref: AudioRefRecord, progress: (Double) -> Unit = {}): app.supersax.audio.AudioDecoder.PcmInfo? {
+        val f = pcmFile(ref.id)
+        app.supersax.audio.AudioDecoder.pcmInfo(f)?.let { return it }
+        val job = decoding.computeIfAbsent(ref.id) {
+            c.appScope.async(Dispatchers.IO) {
+                try { runCatching { app.supersax.audio.AudioDecoder.decodeToPcm(c.context, Uri.parse(ref.uri), f) { p -> progress(p) } }.getOrNull() }
+                finally { decoding.remove(ref.id) }
+            }
+        }
+        return job.await()
+    }
+
+    fun pcmFile(songId: String) = java.io.File(java.io.File(c.context.cacheDir, "songs").apply { mkdirs() }, "$songId.pcm")
+
     /** A version asked for (opened from the list): its original's page opens and selects it once loaded. */
     var openVersion: String? = null
 
@@ -123,9 +146,18 @@ class PlaybackHub(private val c: AppContainer) {
     /** The practice engine for [songId]: the one still playing in the background if it is that song, else a new one. */
     fun practiceEngine(songId: String): SongEngine {
         val e = practiceEngine
-        if (e != null && practiceSong == songId) { practicePlayer?.keepEngine = false; return e }
+        if (e != null && practiceSong == songId) { practicePlayer?.keepEngine = false; practiceUsers++; return e }
+        // Another song: the one before stops (only one song plays at a time). If no screen uses it any more
+        // (it was playing in the background), it is released now; else its screen releases it when closed.
+        e?.let { old ->
+            old.pause()
+            if (practiceUsers <= 0 || practicePlayer?.keepEngine == true) {
+                practicePlayer?.let { p -> PlaybackService.instance?.dropPractice(p) }
+                old.release()
+            }
+        }
         val n = SongEngine()
-        practiceEngine = n; practiceSong = songId; practicePlayer = null
+        practiceEngine = n; practiceSong = songId; practicePlayer = null; practiceUsers = 1
         practiceVersions = mutableMapOf(songId to 0)
         return n
     }
@@ -150,6 +182,9 @@ class PlaybackHub(private val c: AppContainer) {
      */
     fun practiceScreenClosed(engine: SongEngine) {
         if (engine !== practiceEngine) { engine.release(); return }
+        // Another screen still uses it (the page was reopened on the same song): keep it.
+        practiceUsers = (practiceUsers - 1).coerceAtLeast(0)
+        if (practiceUsers > 0) return
         if (engine.ui.value.playing && practicePlayer != null) { practicePlayer?.keepEngine = true; return }
         practicePlayer?.let { p -> PlaybackService.instance?.dropPractice(p) }
         engine.release()

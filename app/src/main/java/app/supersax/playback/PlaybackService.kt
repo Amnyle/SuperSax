@@ -49,7 +49,8 @@ class PlaybackService : MediaSessionService() {
     /** The song being practised takes the controls (the music player is paused). */
     fun usePractice(p: PracticePlayer) {
         exo.pause()
-        if (practice !== p) practice?.let { old -> if (!old.keepEngine) old.engine.release() }
+        // Only one song at a time: the song practised before stops.
+        if (practice !== p) practice?.let { old -> old.engine.pause(); if (!old.keepEngine) old.engine.release() }
         practice = p
         if (session.player !== p) session.player = p
     }

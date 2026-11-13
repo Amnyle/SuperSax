@@ -1138,4 +1138,6 @@
     <string name="version_delete">Supprimer cette version</string>
     <string name="version_delete_q">Supprimer « %1$s » ?</string>
     <string name="version_delete_body">Le morceau d\'origine reste. Vous pourrez refaire une version plus tard.</string>
+    <string name="version_preparing">Préparation de « %1$s » (la première fois seulement)… elle prend le relais toute seule quand elle est prête.</string>
+    <string name="version_preparing_original">Préparation de l\'original (la première fois seulement)…</string>
 </resources>

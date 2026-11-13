@@ -1130,4 +1130,6 @@
     <string name="version_delete">Delete this version</string>
     <string name="version_delete_q">Delete \"%1$s\"?</string>
     <string name="version_delete_body">The original song stays. You can make a new version later.</string>
+    <string name="version_preparing">Preparing \"%1$s\" (first time only)… it switches in by itself when ready.</string>
+    <string name="version_preparing_original">Preparing the original (first time only)…</string>
 </resources>

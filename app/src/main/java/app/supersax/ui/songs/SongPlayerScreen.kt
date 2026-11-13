@@ -174,7 +174,15 @@ private fun SongPlayerContent(songId: String, onBack: () -> Unit, onOpenSong: (S
             val active by vm.active.collectAsStateWithLifecycle()
             if (versions.size > 1) {
                 val root = versions.firstOrNull { it.second == null }?.first ?: songId
-                VersionChips(versions.filter { it.first != root }, active, original = root) { id -> if (!vm.selectVersion(id)) { vm.handoffTo(id); onOpenSong(id) } }
+                VersionChips(versions.filter { it.first != root }, active, original = root) { id -> vm.selectVersion(id) }
+                val loadingId by vm.loading.collectAsStateWithLifecycle()
+                if (loadingId != null) Row(verticalAlignment = Alignment.CenterVertically) {
+                    androidx.compose.material3.CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp, color = Sax.colors.accentInk)
+                    Spacer(Modifier.width(8.dp))
+                    val stem = versions.firstOrNull { it.first == loadingId }?.second?.let { app.supersax.separation.Removal.of(it) }
+                    Text(if (stem != null) stringResource(R.string.version_preparing, stringResource(R.string.version_without, stemShort(stem))) else stringResource(R.string.version_preparing_original),
+                        style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+                }
             }
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
             analysis.progress?.let { p ->
