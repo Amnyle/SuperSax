@@ -379,5 +379,16 @@
       "Filmer une vidéo (Entraînement → avec le sax) : choisissez un morceau et sa version (avec ou sans sax), la caméra avant ou arrière, la mesure de départ, la vitesse et la tonalité. Quatre clics vous lancent, puis le morceau joue pendant que vous filmez ; il s'arrête à la fin ou quand vous appuyez sur stop.",
       "Ensuite : réglez l'équilibre sax / musique, ajustez la synchro si besoin et coupez le début et la fin, écoutez, puis créez la vidéo, enregistrez-la dans la galerie (Movies/Super Sax) ou partagez-la. Avec des écouteurs la vidéo a la musique propre plus votre sax ; sur le haut-parleur elle garde ce qu'a entendu le micro."
     ]
+  },
+  {
+    "id": 34,
+    "en": [
+      "Daily exercise: choose 5, 10 or 15 minutes each time you start it (your last choice is offered first). Any length keeps your streak.",
+      "Video takes: the sync check now plays where you play. It starts just before your first note instead of during the song's intro, loops until you stop it, and the sync and balance change while you listen (with ±10 ms buttons)."
+    ],
+    "fr": [
+      "Exercice du jour : choisissez 5, 10 ou 15 minutes à chaque fois (votre dernier choix est proposé en premier). Toutes les durées comptent pour la série.",
+      "Vidéos : la vérification de la synchro joue là où vous jouez. Elle démarre juste avant votre première note au lieu de l'intro du morceau, tourne en boucle jusqu'à l'arrêt, et la synchro et l'équilibre changent pendant l'écoute (avec des boutons ±10 ms)."
+    ]
   }
 ]

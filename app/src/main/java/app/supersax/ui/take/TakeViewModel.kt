@@ -59,6 +59,9 @@ data class TakeReviewUi(
     val fromMs: Long = 0,
     val toMs: Long = 0,
     val previewing: Boolean = false,
+    /** Where the sync check plays from (ms on the video), and the first note you played (null if not found). */
+    val listenMs: Long = 0,
+    val firstNoteMs: Long? = null,
     val exportProgress: Float? = null,
     val exported: File? = null,
     val saved: String? = null,
@@ -239,7 +242,11 @@ class TakeViewModel(private val c: AppContainer) : ViewModel() {
             val from = (songAt - 500).coerceIn(0, maxOf(0, vi.durationMs - 1000))
             val balance = if (_setup.value.headphones) 0.5f else 1f
             m.setBalance(balance)
-            _review.value = TakeReviewUi(durationMs = vi.durationMs, aspect = vi.aspect, balance = balance, fromMs = from, toMs = vi.durationMs)
+            // The sync is checked where the sax plays: from just before your first note, not during the intro.
+            val first = withContext(Dispatchers.IO) { m.firstSoundMs(maxOf(0L, songAt).toDouble(), vi.durationMs.toDouble())?.toLong() }
+            val listen = ((first ?: from) - 1500).coerceIn(0, maxOf(0, vi.durationMs - 1000))
+            _review.value = TakeReviewUi(durationMs = vi.durationMs, aspect = vi.aspect, balance = balance, fromMs = from, toMs = vi.durationMs,
+                listenMs = listen, firstNoteMs = first)
             _stage.value = TakeStage.REVIEW
         }
     }
@@ -248,7 +255,16 @@ class TakeViewModel(private val c: AppContainer) : ViewModel() {
     fun setNudge(ms: Int) { mixer?.setNudgeMs(ms.toDouble()); _review.value = _review.value.copy(nudgeMs = ms, exported = null, saved = null) }
     fun setTrim(from: Long, to: Long) { _review.value = _review.value.copy(fromMs = from, toMs = maxOf(to, from + 1000), exported = null, saved = null) }
 
-    /** Plays the mix (audio only) from the trim start, for ten seconds, to check balance and sync. */
+    fun setListenAt(ms: Long) {
+        _review.value = _review.value.copy(listenMs = ms.coerceIn(0, maxOf(0, _review.value.durationMs - 1000)))
+    }
+
+    fun listenAtFirstNote() { _review.value.firstNoteMs?.let { setListenAt(it - 1500) } }
+
+    /**
+     * Plays the mix (audio only) as a 6-second loop from [TakeReviewUi.listenMs] until stopped, so the balance and
+     * sync sliders can be moved while listening (they apply at once).
+     */
     fun togglePreview() {
         if (previewJob != null) { stopPreview(); return }
         val m = mixer ?: return
@@ -261,15 +277,21 @@ class TakeViewModel(private val c: AppContainer) : ViewModel() {
                 .setBufferSizeInBytes(AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_FLOAT) * 2)
                 .setTransferMode(AudioTrack.MODE_STREAM).build()
             try {
-                val r = _review.value
-                var frame = r.fromMs * rate / 1000
-                val end = minOf(r.toMs, r.fromMs + 10_000) * rate / 1000
+                // The loop follows the "listen from" slider: moving it jumps there.
+                var at = -1L
+                var start = 0L; var end = 0L; var frame = 0L
                 val buf = FloatArray(1024 * 2)
                 track.play()
-                while (isActive && frame < end) {
+                while (isActive) {
+                    val r = _review.value
+                    if (r.listenMs != at) {
+                        at = r.listenMs
+                        start = at * rate / 1000; end = minOf(r.durationMs, at + 6_000) * rate / 1000; frame = start
+                    }
                     m.render(frame, buf, 1024)
                     track.write(buf, 0, buf.size, AudioTrack.WRITE_BLOCKING)
                     frame += 1024
+                    if (frame >= end) frame = start
                 }
             } finally {
                 runCatching { track.stop() }; track.release()

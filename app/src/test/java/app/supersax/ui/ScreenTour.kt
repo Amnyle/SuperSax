@@ -67,7 +67,7 @@ class ScreenTour {
         click("C"); waitFor("Continue"); shot("11-feedback")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
-        click("Daily exercise"); waitFor("1/", substring = true); shot("12-daily")
+        click("Daily exercise"); waitFor("How much time do you have?"); click("5 minutes"); waitFor("1/", substring = true); shot("12-daily")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("Ear training"); waitFor("Higher or lower?"); shot("24-ear-levels")
         click("Level 1"); click("I understand · start level 1"); waitFor("Is the second note higher or lower?"); shot("25-ear-question")

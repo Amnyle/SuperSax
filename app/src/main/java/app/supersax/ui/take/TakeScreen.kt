@@ -280,6 +280,15 @@ private fun TakeReview(vm: TakeViewModel, onBack: () -> Unit) {
                 Slider(r.balance, vm::setBalance)
             }
             SectionCard(stringResource(R.string.take_sync)) {
+                Text(stringResource(R.string.take_sync_how), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(R.string.take_listen_from, ms(r.listenMs)), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                    if (r.firstNoteMs != null) androidx.compose.material3.TextButton(onClick = vm::listenAtFirstNote) { Text(stringResource(R.string.take_first_note)) }
+                }
+                if (r.durationMs > 1000) Slider(r.listenMs.toFloat(), { vm.setListenAt(it.toLong()) }, valueRange = 0f..r.durationMs.toFloat())
+                OutlinedButton(onClick = vm::togglePreview, modifier = Modifier.heightIn(min = 48.dp)) {
+                    Text(stringResource(if (r.previewing) R.string.stop else R.string.take_listen))
+                }
                 Text(
                     when {
                         r.nudgeMs > 0 -> stringResource(R.string.take_music_later, r.nudgeMs)
@@ -289,13 +298,17 @@ private fun TakeReview(vm: TakeViewModel, onBack: () -> Unit) {
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Slider(r.nudgeMs.toFloat(), { vm.setNudge((it / 5).roundToInt() * 5) }, valueRange = -300f..300f)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(-10, 10).forEach { d ->
+                        FilledTonalButton(onClick = { vm.setNudge((r.nudgeMs + d).coerceIn(-300, 300)) }, modifier = Modifier.heightIn(min = 48.dp)) {
+                            Text(if (d < 0) stringResource(R.string.take_music_minus) else stringResource(R.string.take_music_plus))
+                        }
+                    }
+                }
             }
             SectionCard(stringResource(R.string.take_trim)) {
                 Text("${ms(r.fromMs)} – ${ms(r.toMs)}", style = MaterialTheme.typography.bodyMedium)
                 if (r.durationMs > 1000) RangeSlider(r.fromMs.toFloat()..r.toMs.toFloat(), { v -> vm.setTrim(v.start.toLong(), v.endInclusive.toLong()) }, valueRange = 0f..r.durationMs.toFloat())
-            }
-            OutlinedButton(onClick = vm::togglePreview, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text(stringResource(if (r.previewing) R.string.stop else R.string.take_listen))
             }
             r.exportProgress?.let { p ->
                 Text(stringResource(R.string.take_making), style = MaterialTheme.typography.bodySmall)

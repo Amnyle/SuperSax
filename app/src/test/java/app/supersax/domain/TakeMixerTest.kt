@@ -86,4 +86,15 @@ class TakeMixerTest {
         // Silence before the next beat.
         assertTrue((rate * 2 - 2000 until rate * 2).all { c[it] == 0f })
     }
+
+    @Test fun firstNoteIsFoundAfterASilentIntro() {
+        val rate = 8000
+        val mic = FloatArray(rate * 10)
+        // Faint noise during the intro, then the sax from 6.2 s on the mic clock.
+        for (i in mic.indices) mic[i] = if (i >= (6.2 * rate).toInt()) 0.4f * kotlin.math.sin(i * 0.3f) else 0.002f * kotlin.math.sin(i * 1.7f)
+        val m = TakeMixer(Buf(FloatArray(rate * 10), rate, 1), ClockMap(rate, 0, 0), Buf(mic, rate, 1), ClockMap(rate, 0, 1_000_000_000L), 0)
+        val first = m.firstSoundMs(0.0, 11_000.0)!!
+        assertTrue("got $first", abs(first - 7200.0) < 25)
+        assertEquals(null, TakeMixer(Buf(FloatArray(rate), rate, 1), ClockMap(rate, 0, 0), Buf(FloatArray(rate), rate, 1), ClockMap(rate, 0, 0), 0).firstSoundMs(0.0, 1000.0))
+    }
 }

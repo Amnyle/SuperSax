@@ -100,8 +100,17 @@ fun dailyDays(results: List<DrillResultRecord>, zone: ZoneId = ZoneId.systemDefa
 class DailyViewModel(c: AppContainer) : RoundViewModel(c) {
     private val _streak = MutableStateFlow<Int?>(null)
     val streak = _streak.asStateFlow()
+    private val prefs = c.context.getSharedPreferences("daily", android.content.Context.MODE_PRIVATE)
+    /** The length picked last time (offered first). */
+    val lastMinutes: Int get() = prefs.getInt("minutes", 5)
+    /** Minutes chosen for this session; null until the player picks. */
+    private val _minutes = MutableStateFlow<Int?>(null)
+    val minutes = _minutes.asStateFlow()
 
-    init {
+    fun start(minutes: Int) {
+        if (_minutes.value != null) return
+        _minutes.value = minutes
+        prefs.edit().putInt("minutes", minutes).apply()
         viewModelScope.launch {
             val results = c.progress.drills.first()
             val seed = c.clock.nowMs()
@@ -110,7 +119,7 @@ class DailyViewModel(c: AppContainer) : RoundViewModel(c) {
             val theory = lessons.filter { Levels.best(results, DrillKind.THEORY_QUIZ, it.order) >= 1 }
                 .flatMap { l -> l.quiz.map { DrillItem.Theory(l.id, it) } }.shuffled(Random(seed))
             val accuracy = DailyMix.KINDS.mapNotNull { k -> Levels.recentAccuracy(results, k, 5)?.let { k to it } }.toMap()
-            val counts = DailyMix.counts(theory.isNotEmpty(), accuracy)
+            val counts = DailyMix.counts(theory.isNotEmpty(), accuracy, minutes)
             val pools = counts.mapValues { (k, n) ->
                 if (k == DrillKind.THEORY_QUIZ) theory.take(n)
                 else levelItems(c, k, Levels.unlocked(results, k, Levels.count(k, 0)), n, seed + k.ordinal)
@@ -132,6 +141,8 @@ fun DailyScreen(onClose: () -> Unit) {
     val vm = appViewModel(key = "daily") { DailyViewModel(it) }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val streak by vm.streak.collectAsStateWithLifecycle()
+    val minutes by vm.minutes.collectAsStateWithLifecycle()
+    if (minutes == null) { DailyLengthPicker(vm.lastMinutes, onClose, vm::start); return }
     RoundScreen(vm, ui, onClose) {
         val s = streak ?: return@RoundScreen
         Column(Modifier.fillMaxWidth().padding(top = 40.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -144,6 +155,31 @@ fun DailyScreen(onClose: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
                 Text(stringResource(R.string.daily_finish), style = MaterialTheme.typography.titleMedium)
             }
+        }
+    }
+}
+
+/** "How much time do you have?" before the daily exercise: 5, 10 or 15 minutes, last choice highlighted. */
+@Composable
+private fun DailyLengthPicker(last: Int, onClose: () -> Unit, onPick: (Int) -> Unit) {
+    app.supersax.ui.components.ScreenScaffold(stringResource(R.string.daily_title), onBack = onClose) { padding ->
+        Column(
+            Modifier.fillMaxWidth().padding(padding).padding(horizontal = 16.dp, vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Icon(Icons.Rounded.LocalFireDepartment, null, tint = Sax.colors.warn, modifier = Modifier.size(72.dp))
+            Text(stringResource(R.string.daily_how_long), style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+            DailyMix.MINUTES.forEach { m ->
+                val label = stringResource(R.string.daily_minutes, m)
+                if (m == last) Button(onClick = { onPick(m) }, modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Sax.colors.accent, contentColor = Sax.colors.onAccent)) {
+                    Text(label, style = MaterialTheme.typography.titleLarge)
+                }
+                else androidx.compose.material3.OutlinedButton(onClick = { onPick(m) }, modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp)) {
+                    Text(label, style = MaterialTheme.typography.titleLarge)
+                }
+            }
+            Text(stringResource(R.string.daily_length_hint), style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary, textAlign = TextAlign.Center)
         }
     }
 }

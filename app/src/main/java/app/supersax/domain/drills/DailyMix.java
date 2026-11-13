@@ -10,7 +10,7 @@ import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The daily 5-minute exercise: a short mix of the phone drills, each at the player's open level.
+ * The daily exercise (5, 10 or 15 minutes, chosen each time): a short mix of the phone drills, each at the player's open level.
  * Base mix: 4 notes to read, 3 scales, 3 fingerings, 2 ear questions, 2 theory questions (theory only once a lesson was
  * passed; otherwise one more note and one more scale). The drill with the lowest recent accuracy gets
  * 2 extra questions. The order alternates drills so the same kind never comes twice in a row when avoidable.
@@ -21,8 +21,21 @@ public final class DailyMix {
     public static final List<DrillKind> KINDS = List.of(DrillKind.READING, DrillKind.SCALE_RECOGNITION, DrillKind.FINGERING, DrillKind.THEORY_QUIZ,
         DrillKind.EAR);
 
-    /** How many questions of each drill. {@code accuracy}: recent share of right answers per drill (missing = never played). */
+    /** The lengths offered, in minutes. */
+    public static final List<Integer> MINUTES = List.of(5, 10, 15);
+
+    /** The 5-minute mix. */
     public static Map<DrillKind, Integer> counts(boolean theoryAvailable, Map<DrillKind, Double> accuracy) {
+        return counts(theoryAvailable, accuracy, 5);
+    }
+
+    /**
+     * How many questions of each drill for a session of [minutes] (5, 10 or 15: the 5-minute mix times 1, 2 or 3,
+     * extra questions on the weakest drill included). {@code accuracy}: recent share of right answers per drill
+     * (missing = never played).
+     */
+    public static Map<DrillKind, Integer> counts(boolean theoryAvailable, Map<DrillKind, Double> accuracy, int minutes) {
+        int times = Math.max(1, Math.min(3, Math.round(minutes / 5f)));
         Map<DrillKind, Integer> n = new EnumMap<>(DrillKind.class);
         n.put(DrillKind.READING, 4);
         n.put(DrillKind.SCALE_RECOGNITION, 3);
@@ -37,6 +50,7 @@ public final class DailyMix {
             if (a != null && a < low) { low = a; weakest = k; }
         }
         if (weakest != null && low < 0.9) n.put(weakest, n.get(weakest) + 2);
+        if (times > 1) n.replaceAll((k, v) -> v * times);
         return n;
     }
 

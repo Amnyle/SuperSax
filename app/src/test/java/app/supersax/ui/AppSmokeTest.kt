@@ -62,7 +62,7 @@ class AppSmokeTest {
         click("Level 1"); click("I understand · start level 1"); waitFor("Which note is this?")
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
-        click("Daily exercise"); waitFor("1/", substring = true)
+        click("Daily exercise"); waitFor("How much time do you have?"); click("5 minutes"); waitFor("1/", substring = true)
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         rule.onAllNodesWithText("Library").assertCountEquals(0)
         click("Progress"); waitFor("Rank")

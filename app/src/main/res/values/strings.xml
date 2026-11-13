@@ -657,21 +657,21 @@
     <string name="level_retry">Try again</string>
     <string name="level_back">All levels</string>
     <string name="daily_title">Daily exercise</string>
-    <string name="daily_sub">5 minutes: notes, scales, fingerings and theory</string>
+    <string name="daily_sub">5, 10 or 15 minutes: notes, scales, fingerings and theory</string>
     <string name="daily_go">Go</string>
     <string name="daily_done_today">Done for today. Come back tomorrow!</string>
     <string name="daily_done_body">Come back tomorrow to keep your streak.</string>
     <string name="daily_finish">Finish</string>
     <string name="daily_reminder">Daily exercise reminder</string>
     <string name="daily_reminder_hint">One notification at this time, only if you have not done it yet that day.</string>
-    <string name="daily_reminder_text">Your 5-minute exercise is waiting.</string>
+    <string name="daily_reminder_text">Your daily exercise is waiting.</string>
     <plurals name="streak_days">
         <item quantity="one">%1$d day in a row</item>
         <item quantity="other">%1$d days in a row</item>
     </plurals>
     <plurals name="daily_reminder_streak">
-        <item quantity="one">Keep your %1$d-day streak: 5 minutes today.</item>
-        <item quantity="other">Keep your %1$d-day streak: 5 minutes today.</item>
+        <item quantity="one">Keep your %1$d-day streak: a few minutes today.</item>
+        <item quantity="other">Keep your %1$d-day streak: a few minutes today.</item>
     </plurals>
     <string name="songs_hint">Find a song on YouTube or import an audio file. Each song is analysed for its key and tempo.</string>
     <string name="songs_empty">No songs yet.</string>
@@ -1208,11 +1208,19 @@
     <string name="take_music_later">Music %1$d ms later</string>
     <string name="take_music_earlier">Music %1$d ms earlier</string>
     <string name="take_trim">Length</string>
-    <string name="take_listen">Listen (10 s)</string>
+    <string name="take_listen">Listen (loop)</string>
     <string name="take_make">Make the video</string>
     <string name="take_making">Making the video…</string>
     <string name="take_save">Save to gallery</string>
     <string name="take_saved">Saved in %1$s.</string>
     <string name="take_edit_hint">Change a setting below to make it again.</string>
     <string name="take_again">New take</string>
+    <string name="daily_how_long">How much time do you have?</string>
+    <string name="daily_minutes">%1$d minutes</string>
+    <string name="daily_length_hint">Longer sessions have more questions of each kind. Any length keeps your streak.</string>
+    <string name="take_sync_how">Listen where you play: the loop starts just before your first note. Move the slider while it plays.</string>
+    <string name="take_listen_from">Listen from %1$s</string>
+    <string name="take_first_note">My first note</string>
+    <string name="take_music_minus">Music −10 ms</string>
+    <string name="take_music_plus">Music +10 ms</string>
 </resources>

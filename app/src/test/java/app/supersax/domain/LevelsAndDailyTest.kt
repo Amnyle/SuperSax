@@ -83,6 +83,11 @@ class LevelsAndDailyTest {
         assertEquals(16, order.size)
         withTheory.forEach { (k, n) -> assertEquals(n, order.count { it == k }) }
         assertTrue(order.zipWithNext().none { (a, b) -> a == b }, "$order")
+        // 10 and 15 minutes: the same mix two and three times over.
+        val ten = DailyMix.counts(true, mapOf(DrillKind.FINGERING to 0.5), 10)
+        assertEquals(32, ten.values.sum())
+        assertEquals(10, ten[DrillKind.FINGERING])
+        assertEquals(48, DailyMix.counts(true, mapOf(DrillKind.FINGERING to 0.5), 15).values.sum())
     }
 
     @Test fun streakCountsDaysInARow() {

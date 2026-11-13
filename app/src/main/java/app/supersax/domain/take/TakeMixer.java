@@ -13,8 +13,9 @@ public final class TakeMixer {
     private final ClockMap musicClock, micClock;
     private final long videoStartNanos;
     private final int rate;
-    private float musicGain = 1f, saxGain = 1f, micScale = 1f;
-    private double nudgeMs;
+    // Read by the preview thread while the sliders move.
+    private volatile float musicGain = 1f, saxGain = 1f, micScale = 1f;
+    private volatile double nudgeMs;
 
     public TakeMixer(SongRenderer.Source music, ClockMap musicClock, SongRenderer.Source mic, ClockMap micClock, long videoStartNanos) {
         this.music = music; this.mic = mic; this.musicClock = musicClock; this.micClock = micClock;
@@ -40,6 +41,34 @@ public final class TakeMixer {
         for (long i = 0; i < n; i++) peak = Math.max(peak, Math.abs(mic.sample(0, i)));
         if (peak < 1e-4f) return 1f;
         return Math.min(12f, 0.7f / peak);
+    }
+
+    /**
+     * Video time (ms) of the first clearly played note heard by the mic at or after [fromMs]: the first 20 ms
+     * window louder than 30 % of the loudest one (and above a noise floor). Null when nothing stands out. Used to
+     * check the sync where the sax actually plays, not during a song's intro.
+     */
+    public Double firstSoundMs(double fromMs, double toMs) {
+        int win = Math.max(1, mic.sampleRate() / 50);
+        long first = (long) Math.max(0, micClock.frameAt(videoStartNanos + fromMs * 1e6));
+        long last = (long) Math.min(mic.frames(), micClock.frameAt(videoStartNanos + toMs * 1e6));
+        if (last - first < win) return null;
+        int n = (int) ((last - first) / win);
+        double[] rms = new double[n];
+        double peak = 0;
+        for (int w = 0; w < n; w++) {
+            double sum = 0;
+            long base = first + (long) w * win;
+            for (int i = 0; i < win; i++) { float x = mic.sample(0, base + i); sum += x * x; }
+            rms[w] = Math.sqrt(sum / win);
+            peak = Math.max(peak, rms[w]);
+        }
+        double threshold = Math.max(0.3 * peak, 0.003);
+        if (peak < 0.003) return null;
+        for (int w = 0; w < n; w++) {
+            if (rms[w] >= threshold) return (micClock.nanosAt(first + (long) w * win) - videoStartNanos) / 1e6;
+        }
+        return null;
     }
 
     /** Length of the time line covered by both the video ([videoMs]) and the music, in output frames. */
