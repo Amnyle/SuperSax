@@ -96,7 +96,25 @@ class PlaybackHub(private val c: AppContainer) {
     fun toggle() = c.appScope.launch(Dispatchers.Main) { val ctl = controller(); if (ctl.isPlaying || ctl.playWhenReady) ctl.pause() else ctl.play() }
     fun next() = c.appScope.launch(Dispatchers.Main) { controller().seekToNextMediaItem() }
     fun previous() = c.appScope.launch(Dispatchers.Main) { controller().seekToPreviousMediaItem() }
-    fun stop() = c.appScope.launch(Dispatchers.Main) { val ctl = controller(); ctl.stop(); ctl.clearMediaItems() }
+    /**
+     * The mini player's ✕: stops whatever plays and closes the bar (and the notification). A practised song stops
+     * and leaves the session; if no screen shows it any more, its engine is released.
+     */
+    fun stop() = c.appScope.launch(Dispatchers.Main) {
+        val ctl = controller()
+        practicePlayer?.let { p ->
+            p.engine.pause()
+            PlaybackService.instance?.dropPractice(p)
+            if (p.keepEngine || practiceUsers <= 0) {
+                p.engine.release()
+                if (practiceEngine === p.engine) { practiceEngine = null; practiceSong = null; practiceUsers = 0 }
+            }
+            practicePlayer = null
+        }
+        ctl.stop()
+        ctl.clearMediaItems()
+        _now.value = null
+    }
 
     /** For the practice engine: which song id each loaded version is (0 = the song opened). */
     var practiceVersions: MutableMap<String, Int> = mutableMapOf()

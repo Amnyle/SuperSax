@@ -328,5 +328,14 @@
       "Corrigé : sur les morceaux récents, toucher « Sans sax » ouvrait puis fermait aussitôt et ne jouait pas. Une version pas encore prête affiche « Préparation… » et prend le relais toute seule quand elle est prête.",
       "Un seul morceau à la fois : lancer un morceau arrête le précédent."
     ]
+  },
+  {
+    "id": 29,
+    "en": [
+      "The ✕ on the mini player now stops the music and closes the bar and the notification (it used to only pause)."
+    ],
+    "fr": [
+      "Le ✕ du mini-lecteur arrête maintenant la musique et ferme la barre et la notification (avant il mettait seulement en pause)."
+    ]
   }
 ]
