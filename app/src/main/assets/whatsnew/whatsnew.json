@@ -308,5 +308,14 @@
     "fr": [
       "Passer de l'Original à Sans sax est maintenant sans coupure : les deux jouent dans le même lecteur, alignés à l'échantillon près, et le passage se fait en fondu de 30 ms à l'endroit exact, avec votre vitesse, tonalité, boucle et clics."
     ]
+  },
+  {
+    "id": 27,
+    "en": [
+      "Opening an AI version (\"No sax\") now uses the original song's prepared audio: no more \"Preparing the audio\"; the version is lined up in the background and plays without a gap."
+    ],
+    "fr": [
+      "Ouvrir une version IA (« Sans sax ») utilise maintenant l'audio déjà préparé du morceau d'origine : plus de « Préparation de l'audio » ; la version est alignée en arrière-plan et joue sans coupure."
+    ]
   }
 ]

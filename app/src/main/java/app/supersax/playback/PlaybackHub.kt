@@ -99,6 +99,9 @@ class PlaybackHub(private val c: AppContainer) {
     var practiceVersions: MutableMap<String, Int> = mutableMapOf()
         private set
 
+    /** A version asked for (opened from the list): its original's page opens and selects it once loaded. */
+    var openVersion: String? = null
+
     /** Set just before opening another version of the song: the new screen carries on from here. */
     var handoff: Handoff? = null
 

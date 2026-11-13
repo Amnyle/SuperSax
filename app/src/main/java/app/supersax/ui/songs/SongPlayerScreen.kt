@@ -1,5 +1,7 @@
 package app.supersax.ui.songs
 
+import kotlinx.coroutines.flow.first
+
 import androidx.compose.material.icons.rounded.Download
 
 import androidx.compose.material.icons.rounded.Share
@@ -89,6 +91,21 @@ private fun keyName(tonic: Int, minor: Boolean): String {
 /** The song player: tempo and key changes, bars, a part to loop or stop at, checkpoints, bar corrections. */
 @Composable
 fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) -> Unit = {}, onQueue: () -> Unit = {}) {
+    // An AI version opens on its original's page (already prepared), which then plays the version.
+    val c = app.supersax.ui.nav.LocalContainer.current
+    val parent by androidx.compose.runtime.produceState<String?>(null, songId) {
+        val p = c.songs.get(songId).parentId
+        value = if (p != null && c.media.audioRefs.first().any { it.id == p }) p else ""
+    }
+    when (val p = parent) {
+        null -> return
+        "" -> SongPlayerContent(songId, onBack, onOpenSong, onQueue)
+        else -> androidx.compose.runtime.LaunchedEffect(p) { c.playback.openVersion = songId; onOpenSong(p) }
+    }
+}
+
+@Composable
+private fun SongPlayerContent(songId: String, onBack: () -> Unit, onOpenSong: (String) -> Unit, onQueue: () -> Unit) {
     val vm = appViewModel(key = "song-$songId") { SongPlayerViewModel(it, songId) }
     val ref by vm.ref.collectAsStateWithLifecycle()
     val s by vm.setup.collectAsStateWithLifecycle()

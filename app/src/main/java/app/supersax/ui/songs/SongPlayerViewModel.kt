@@ -51,6 +51,8 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     private val _versions = MutableStateFlow<List<Pair<String, String?>>>(emptyList())
     val versions = _versions.asStateFlow()
     private val _active = MutableStateFlow(songId)
+    /** The version to switch to as soon as it is loaded (opened from the list). */
+    private var pendingVersion: String? = null
     val active = _active.asStateFlow()
     private val _mix = MutableStateFlow((c.playback.practiceMix?.takeIf { it.first == songId }?.second as? MixUi) ?: MixUi())
     val mix = _mix.asStateFlow()
@@ -61,6 +63,9 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             _ref.value = r
             // The version chips show at once; the versions load into the engine in the background.
             _versions.value = familySetups().map { (id, s) -> id to s.removed }
+            pendingVersion = c.playback.openVersion?.takeIf { v -> _versions.value.any { it.first == v } }
+            c.playback.openVersion = null
+            pendingVersion?.let { v -> _active.value = v; c.media.audioRefs.first().firstOrNull { it.id == v }?.let { _ref.value = it } }
             if (!prepare(r)) return@launch
             carryOn()
             prepareFamily()
@@ -120,7 +125,7 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             if (h.playing) player.play()
             return
         }
-        val listening = c.playback.takeListening(songId) ?: return
+        val listening = c.playback.takeListening(songId) ?: pendingVersion?.let { c.playback.takeListening(it) } ?: return
         player.seekTo(listening.first)
         if (listening.second) player.play()
     }
@@ -143,10 +148,9 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         // The engine may still be playing a version from before (kept in the background): show it as heard.
         val heard = player.version
         loaded.entries.firstOrNull { it.value == heard }?.key?.let { id -> _active.value = id; refs.firstOrNull { it.id == id }?.let { _ref.value = it } }
-        val family = familySetups()
-        _versions.value = family.map { (id, s) -> id to s.removed }
+        val family = familySetups().sortedBy { if (it.first == pendingVersion) 0 else 1 }
         for ((id, _) in family) {
-            if (id in loaded) continue
+            if (id in loaded) { if (id == pendingVersion) { pendingVersion = null; withContext(Dispatchers.Main) { selectVersion(id) } }; continue }
             val f = java.io.File(dir, "$id.pcm")
             var info = AudioDecoder.pcmInfo(f)
             if (info == null) {
@@ -155,6 +159,7 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             }
             val index = runCatching { player.addVersion(f, info) }.getOrDefault(-1)
             if (index >= 0) loaded[id] = index
+            if (id == pendingVersion && index >= 0) { pendingVersion = null; withContext(Dispatchers.Main) { selectVersion(id) } }
         }
     }
 
