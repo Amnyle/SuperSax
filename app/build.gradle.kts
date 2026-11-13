@@ -115,6 +115,10 @@ dependencies {
     implementation(libs.glance.appwidget)
     implementation(libs.glance.material3)
     implementation(libs.work.runtime.ktx)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.video)
+    implementation(libs.camera.view)
     testImplementation(libs.work.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
 

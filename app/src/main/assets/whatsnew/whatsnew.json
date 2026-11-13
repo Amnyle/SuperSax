@@ -368,5 +368,16 @@
       "Nouveau coach sons filés (Entraînement → avec le sax, et dans les blocs sons filés de vos séances) : un grand cercle d'accordage avec la note, les cents, les Hz et le volume ; un chrono de tenue, le pourcentage juste et votre meilleure tenue ; un graphique hauteur et volume des dernières secondes.",
       "Bourdon : « Tenir d'abord » le lance sur la première note que vous tenez, avec unisson, tierce majeure et quinte à activer. Choisissez son son (pur, chaud, orgue ou le sax enregistré) et son volume. Utilisez des écouteurs pour que le micro vous entende, vous, et pas le bourdon."
     ]
+  },
+  {
+    "id": 33,
+    "en": [
+      "Record a video (Training → with the sax): pick a song and its version (with or without sax), front or back camera, the bar to start from, speed and key. Four clicks count you in, then the song plays while you film; it stops at the end or when you press stop.",
+      "Afterwards: set the sax / music balance, nudge the sync if needed and trim the start and end, listen, then make the video, save it to your gallery (Movies/Super Sax) or share it. With headphones the video gets the clean music plus your sax; on the speaker it keeps what the mic heard."
+    ],
+    "fr": [
+      "Filmer une vidéo (Entraînement → avec le sax) : choisissez un morceau et sa version (avec ou sans sax), la caméra avant ou arrière, la mesure de départ, la vitesse et la tonalité. Quatre clics vous lancent, puis le morceau joue pendant que vous filmez ; il s'arrête à la fin ou quand vous appuyez sur stop.",
+      "Ensuite : réglez l'équilibre sax / musique, ajustez la synchro si besoin et coupez le début et la fin, écoutez, puis créez la vidéo, enregistrez-la dans la galerie (Movies/Super Sax) ou partagez-la. Avec des écouteurs la vidéo a la musique propre plus votre sax ; sur le haut-parleur elle garde ce qu'a entendu le micro."
+    ]
   }
 ]

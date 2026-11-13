@@ -47,6 +47,7 @@ import app.supersax.ui.songs.SongsScreen
 import app.supersax.ui.songs.YouTubeSearchScreen
 import app.supersax.ui.advanced.ScaleCheckerScreen
 import androidx.compose.material.icons.rounded.SlowMotionVideo
+import androidx.compose.material.icons.rounded.Videocam
 import androidx.compose.material.icons.rounded.Waves
 import androidx.compose.material.icons.rounded.North
 import androidx.compose.material.icons.rounded.Science
@@ -65,6 +66,7 @@ import app.supersax.ui.review.WeeklyReviewScreen
 object ExtraRoutes {
     const val TUNER = "tuner"
     const val LONG_TONE = "long_tone"
+    const val TAKE = "video_take"
     const val TUNER_HISTORY = "tuner_history"
     const val METRONOME = "metronome"
     const val MATCH = "match_note"
@@ -112,6 +114,7 @@ object ExtraRoutes {
 /** Destinations of the listening, reading and later phases. */
 fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.TUNER) { TunerScreen(onBack = { nav.popBackStack() }, onHistory = { nav.navigate(ExtraRoutes.TUNER_HISTORY) }) }
+    composable(ExtraRoutes.TAKE) { app.supersax.ui.take.TakeScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.LONG_TONE) { app.supersax.ui.longtone.LongToneScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.TUNER_HISTORY) { TunerHistoryScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.METRONOME) { MetronomeScreen(onBack = { nav.popBackStack() }) }
@@ -230,6 +233,7 @@ fun extraLogEntries(nav: NavHostController): List<HubEntry> = listOf(
 @Composable
 fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
     HubEntry(stringResource(R.string.solo_title), stringResource(R.string.solo_sub), Icons.Rounded.MusicNote) { nav.navigate(ExtraRoutes.SOLO) },
+    HubEntry(stringResource(R.string.take_title), stringResource(R.string.take_sub), Icons.Rounded.Videocam) { nav.navigate(ExtraRoutes.TAKE) },
     HubEntry(stringResource(R.string.playalong_title), stringResource(R.string.playalong_sub), Icons.AutoMirrored.Rounded.MenuBook) { nav.navigate(ExtraRoutes.PLAY_ALONG) },
     HubEntry(stringResource(R.string.tuner), stringResource(R.string.tuner_sub), Icons.Rounded.GraphicEq) { nav.navigate(ExtraRoutes.TUNER) },
     HubEntry(stringResource(R.string.longtone_title), stringResource(R.string.longtone_sub), Icons.Rounded.Adjust) { nav.navigate(ExtraRoutes.LONG_TONE) },

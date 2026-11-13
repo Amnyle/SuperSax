@@ -161,6 +161,20 @@ class PlaybackHub(private val c: AppContainer) {
 
     // --- practice ------------------------------------------------------------------------------
 
+    /** Pauses whatever plays (song, playlist or practice), e.g. before recording a video. */
+    fun pauseAll() {
+        practiceEngine?.pause()
+        if (_now.value != null) c.appScope.launch(Dispatchers.Main) { runCatching { controller().pause() } }
+    }
+
+    /** Speed and key of the practised song if it is one of [ids] (the song player's settings), else null. */
+    fun practiceSettings(ids: Collection<String>): Pair<Float, Int>? {
+        val e = practiceEngine ?: return null
+        if (practiceSong !in ids) return null
+        val u = e.ui.value
+        return u.speed to u.semitones
+    }
+
     /** The practice engine for [songId]: the one still playing in the background if it is that song, else a new one. */
     fun practiceEngine(songId: String): SongEngine {
         val e = practiceEngine
