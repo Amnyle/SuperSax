@@ -1,5 +1,11 @@
 package app.supersax.ui.songs
 
+import androidx.compose.material.icons.rounded.Download
+
+import androidx.compose.material.icons.rounded.Share
+
+import kotlinx.coroutines.launch
+
 import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 
 import androidx.compose.foundation.background
@@ -92,7 +98,38 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
     val mix by vm.mix.collectAsStateWithLifecycle()
     var addTo by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     if (addTo) AddToPlaylistDialog(songId) { addTo = false }
+    val ctx = androidx.compose.ui.platform.LocalContext.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val savedFmt = stringResource(R.string.export_saved)
+    val failedFmt = stringResource(R.string.export_failed)
+    fun toast(s: String) = android.widget.Toast.makeText(ctx, s, android.widget.Toast.LENGTH_LONG).show()
+    // Older Android: the user picks where to save.
+    val saveAs = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.CreateDocument("audio/*")) { target ->
+        val r = ref
+        if (target != null && r != null) scope.launch {
+            val ok = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { runCatching { app.supersax.playback.SongExport.copy(ctx, android.net.Uri.parse(r.uri), target) } }
+            toast(if (ok.isSuccess) String.format(savedFmt, r.title) else String.format(failedFmt, ok.exceptionOrNull()?.message ?: ""))
+        }
+    }
     ScreenScaffold(ref?.title ?: "", onBack = onBack, actions = {
+        androidx.compose.material3.IconButton(onClick = {
+            val r = ref ?: return@IconButton
+            scope.launch {
+                val i = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { runCatching { app.supersax.playback.SongExport.shareIntent(ctx, r) } }
+                i.onSuccess { ctx.startActivity(it) }.onFailure { toast(String.format(failedFmt, it.message ?: "")) }
+            }
+        }) { androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Share, stringResource(R.string.export_share)) }
+        androidx.compose.material3.IconButton(onClick = {
+            val r = ref ?: return@IconButton
+            if (android.os.Build.VERSION.SDK_INT < 29) {
+                saveAs.launch(app.supersax.playback.SongExport.fileName(r.title, app.supersax.playback.SongExport.extension(ctx, android.net.Uri.parse(r.uri))))
+                return@IconButton
+            }
+            scope.launch {
+                val res = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { runCatching { app.supersax.playback.SongExport.saveToDownloads(ctx, r) } }
+                toast(res.fold({ String.format(savedFmt, it) }, { String.format(failedFmt, it.message ?: "") }))
+            }
+        }) { androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Download, stringResource(R.string.export_save)) }
         androidx.compose.material3.IconButton(onClick = { addTo = true }) {
             androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.AutoMirrored.Rounded.PlaylistAdd, stringResource(R.string.pl_add))
         }

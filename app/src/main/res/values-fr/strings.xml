@@ -1131,4 +1131,8 @@
     <string name="search_phone_allow">Autoriser l\'accès à la musique</string>
     <string name="search_add">Ajouter à mes morceaux</string>
     <string name="search_in_songs">Déjà dans vos morceaux : ouvrir</string>
+    <string name="export_share">Partager le morceau</string>
+    <string name="export_save">Enregistrer sur le téléphone (Téléchargements)</string>
+    <string name="export_saved">Enregistré dans Téléchargements/Super Sax : %1$s</string>
+    <string name="export_failed">Impossible d\'enregistrer ou de partager : %1$s</string>
 </resources>

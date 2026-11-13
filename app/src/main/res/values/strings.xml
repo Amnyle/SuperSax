@@ -1123,4 +1123,8 @@
     <string name="search_phone_allow">Allow access to music</string>
     <string name="search_add">Add to my songs</string>
     <string name="search_in_songs">Already in your songs: open</string>
+    <string name="export_share">Share the song</string>
+    <string name="export_save">Save to the phone (Download)</string>
+    <string name="export_saved">Saved in Download/Super Sax: %1$s</string>
+    <string name="export_failed">Could not save or share: %1$s</string>
 </resources>

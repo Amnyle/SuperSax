@@ -275,5 +275,14 @@
       "Les versions IA reprennent la tonalité, le tempo et les mesures du morceau d'origine : plus de nouvelle analyse. Les réglages de mesures, le tempo et les repères s'appliquent au morceau et à toutes ses versions.",
       "Recherche dans le lecteur de morceaux : tapez un titre, un artiste ou un dossier pour trouver vos morceaux et toute la musique du téléphone, dans tous les dossiers ; lisez-la ou ajoutez-la en un geste."
     ]
+  },
+  {
+    "id": 24,
+    "en": [
+      "Save and share songs: in the song player, the download button saves the song (YouTube or AI version) to Download/Super Sax, and the share button sends it to WhatsApp, Discord or any app."
+    ],
+    "fr": [
+      "Enregistrer et partager : dans le lecteur de morceaux, le bouton téléchargement enregistre le morceau (YouTube ou version IA) dans Téléchargements/Super Sax, et le bouton partager l'envoie sur WhatsApp, Discord ou toute autre appli."
+    ]
   }
 ]
