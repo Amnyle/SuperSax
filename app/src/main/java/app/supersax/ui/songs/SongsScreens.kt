@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.remember
@@ -134,6 +135,15 @@ class SongsViewModel(private val c: AppContainer) : ViewModel() {
         onAdded(rec.id)
     }
 
+    /** Adds a song found on the phone (it stays where it is) and opens it. */
+    fun addPhoneTrack(t: app.supersax.playback.PhoneTrack, onAdded: (String) -> Unit) = viewModelScope.launch {
+        val existing = c.media.audioRefs.first().firstOrNull { it.uri == t.uri }
+        if (existing != null) { onAdded(existing.id); return@launch }
+        val rec = AudioRefRecord(UUID.randomUUID().toString(), t.uri, t.title, c.clock.nowMs())
+        c.media.saveAudioRef(rec)
+        onAdded(rec.id)
+    }
+
     /** Removes the song; a downloaded file is deleted too, an imported file stays where it is. */
     fun remove(r: AudioRefRecord) = viewModelScope.launch {
         c.media.deleteAudioRef(r.id)
@@ -171,6 +181,18 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                 OutlinedButton(onClick = { picker.launch(arrayOf("audio/*")) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp), shape = RoundedCornerShape(18.dp)) {
                     Icon(Icons.Rounded.FileOpen, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.add_audio))
                 }
+            }
+            // Search your songs and all the music on the phone.
+            var query by rememberSaveable { mutableStateOf("") }
+            OutlinedTextField(
+                query, { query = it }, Modifier.fillMaxWidth(), singleLine = true, shape = RoundedCornerShape(18.dp),
+                placeholder = { Text(stringResource(R.string.search_music)) },
+                leadingIcon = { Icon(Icons.Rounded.Search, null) },
+                trailingIcon = { if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Rounded.Close, stringResource(R.string.close)) } },
+            )
+            if (query.isNotBlank()) {
+                MusicSearchResults(query, songs ?: emptyList(), onSong) { t, open -> vm.addPhoneTrack(t, open) }
+                return@ScrollColumn
             }
             // The AI queue: how many separations are waiting or running.
             val c = app.supersax.ui.nav.LocalContainer.current

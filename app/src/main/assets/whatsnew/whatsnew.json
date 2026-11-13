@@ -264,5 +264,16 @@
       "Les morceaux continuent écran éteint, comme une appli de musique : lecture, pause, suivant et précédent depuis la notification, l'écran de verrouillage ou vos écouteurs. Un morceau en pratique garde sa vitesse, sa tonalité, sa boucle et ses clics.",
       "Playlists : « À apprendre » et « Appris » sont prêtes, créez les vôtres (genres…), ajoutez des morceaux avec le bouton playlist, et lisez une playlist dans l'ordre ou en aléatoire."
     ]
+  },
+  {
+    "id": 23,
+    "en": [
+      "AI versions use the original song's key, tempo and bars: no new analysis. Bar fixes, tempo and checkpoints apply to the song and all its versions.",
+      "Search in the song player: type a title, artist or folder to find your songs and any music on the phone, in every folder; play it or add it in one tap."
+    ],
+    "fr": [
+      "Les versions IA reprennent la tonalité, le tempo et les mesures du morceau d'origine : plus de nouvelle analyse. Les réglages de mesures, le tempo et les repères s'appliquent au morceau et à toutes ses versions.",
+      "Recherche dans le lecteur de morceaux : tapez un titre, un artiste ou un dossier pour trouver vos morceaux et toute la musique du téléphone, dans tous les dossiers ; lisez-la ou ajoutez-la en un geste."
+    ]
   }
 ]

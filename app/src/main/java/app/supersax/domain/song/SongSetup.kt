@@ -33,3 +33,13 @@ data class SongSetup(
     val parentId: String? = null,
     val removed: String? = null,
 )
+
+/**
+ * A song and its AI versions ("no sax"…) are the same recording: they share the analysis and the bar settings.
+ * Copies those shared fields from [from] into this setup, keeping this one's source and version link.
+ */
+fun SongSetup.withSharedFrom(from: SongSetup): SongSetup = copy(
+    analyzed = from.analyzed, detectedBpm = from.detectedBpm, bpm = from.bpm, firstBeatMs = from.firstBeatMs,
+    beatsPerBar = from.beatsPerBar, keyTonic = from.keyTonic, keyMinor = from.keyMinor, keyConfidence = from.keyConfidence,
+    checkpoints = from.checkpoints, analysisVersion = from.analysisVersion,
+)

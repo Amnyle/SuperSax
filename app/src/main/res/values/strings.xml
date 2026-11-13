@@ -1114,4 +1114,13 @@
         <item quantity="one">%1$d song</item>
         <item quantity="other">%1$d songs</item>
     </plurals>
+    <string name="search_music">Search your music (songs, artists, folders)</string>
+    <string name="search_your_songs">Your songs</string>
+    <string name="search_phone">On this phone (all folders)</string>
+    <string name="search_none">No song of yours matches.</string>
+    <string name="search_none_phone">Nothing on the phone matches.</string>
+    <string name="search_phone_why">To search the music stored on this phone (every folder and subfolder), allow access to your audio files.</string>
+    <string name="search_phone_allow">Allow access to music</string>
+    <string name="search_add">Add to my songs</string>
+    <string name="search_in_songs">Already in your songs: open</string>
 </resources>

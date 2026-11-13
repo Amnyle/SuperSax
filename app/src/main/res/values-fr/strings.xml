@@ -1122,4 +1122,13 @@
         <item quantity="many">%1$d morceaux</item>
         <item quantity="other">%1$d morceaux</item>
     </plurals>
+    <string name="search_music">Chercher dans votre musique (titres, artistes, dossiers)</string>
+    <string name="search_your_songs">Vos morceaux</string>
+    <string name="search_phone">Sur ce téléphone (tous les dossiers)</string>
+    <string name="search_none">Aucun de vos morceaux ne correspond.</string>
+    <string name="search_none_phone">Rien ne correspond sur le téléphone.</string>
+    <string name="search_phone_why">Pour chercher la musique de ce téléphone (tous les dossiers et sous-dossiers), autorisez l\'accès à vos fichiers audio.</string>
+    <string name="search_phone_allow">Autoriser l\'accès à la musique</string>
+    <string name="search_add">Ajouter à mes morceaux</string>
+    <string name="search_in_songs">Déjà dans vos morceaux : ouvrir</string>
 </resources>

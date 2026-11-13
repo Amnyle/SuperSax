@@ -11,6 +11,7 @@ import app.supersax.domain.song.KeyDetector
 import app.supersax.domain.song.SongBars
 import app.supersax.domain.song.SongSetup
 import app.supersax.domain.song.TempoDetector
+import app.supersax.domain.song.withSharedFrom
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,8 +55,12 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             val r = c.media.audioRefs.first().firstOrNull { it.id == songId } ?: return@launch
             _ref.value = r
             if (!prepare(r)) return@launch
+            // A version of a song (or the original of versions) uses the family's analysis: never analysed twice.
+            val shared = familySetups().filter { (id, s) -> id != songId && s.analyzed && s.analysisVersion >= app.supersax.domain.song.CURRENT_ANALYSIS }
             val saved = c.songs.get(songId)
-            if (!saved.analyzed || saved.analysisVersion < app.supersax.domain.song.CURRENT_ANALYSIS) analyse()
+            val best = shared.firstOrNull { it.first == (saved.parentId ?: songId) } ?: shared.firstOrNull()
+            if (best != null) c.songs.save(songId, saved.withSharedFrom(best.second))
+            else if (!saved.analyzed || saved.analysisVersion < app.supersax.domain.song.CURRENT_ANALYSIS) analyse()
         }
         viewModelScope.launch {
             var wasPlaying = false
@@ -111,16 +116,35 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             }
             val (tempo, key) = result.getOrNull() ?: run { _analysis.value = AnalysisUi(null, failed = true); return@launch }
             val old = c.songs.get(songId)
-            c.songs.save(songId, old.copy(
+            val analysed = old.copy(
                 analyzed = true, detectedBpm = tempo.bpm, bpm = tempo.bpm, firstBeatMs = (tempo.firstBeatSec * 1000).roundToLong(),
                 keyTonic = key.tonic, keyMinor = key.minor, keyConfidence = key.confidence,
                 analysisVersion = app.supersax.domain.song.CURRENT_ANALYSIS,
-            ))
+            )
+            c.songs.save(songId, analysed)
+            // The original and its versions get the result too.
+            familySetups().forEach { (id, s) -> if (id != songId) c.songs.save(id, s.withSharedFrom(analysed)) }
             _analysis.value = AnalysisUi()
         }
     }
 
-    private fun update(f: (SongSetup) -> SongSetup) = viewModelScope.launch { c.songs.save(songId, f(c.songs.get(songId))) }
+    /** Changes this song's setup, and the bars, tempo and checkpoints of its whole family with it. */
+    private fun update(f: (SongSetup) -> SongSetup) = viewModelScope.launch {
+        val changed = f(c.songs.get(songId))
+        c.songs.save(songId, changed)
+        familySetups().forEach { (id, s) -> if (id != songId) c.songs.save(id, s.withSharedFrom(changed)) }
+    }
+
+    /** This song, its original and the original's other versions, with their setups. */
+    private suspend fun familySetups(): List<Pair<String, SongSetup>> {
+        val me = c.songs.get(songId)
+        val root = me.parentId ?: songId
+        val refs = c.media.audioRefs.first()
+        return refs.mapNotNull { r ->
+            val s = if (r.id == songId) me else c.songs.get(r.id)
+            if (r.id == root || s.parentId == root) r.id to s else null
+        }
+    }
 
     // --- tempo and key ------------------------------------------------------------------------
 
