@@ -21,6 +21,9 @@ data class TunerReading(
     val holding: Boolean = false,
     val holdSec: Double = 0.0,
     val lastReport: HoldReport? = null,
+    /** Microphone level (RMS) and frame time, for loudness and live meters. */
+    val rms: Double = 0.0,
+    val timeSec: Double = 0.0,
 )
 
 /**
@@ -56,6 +59,7 @@ class LiveTuner(
                     frequencyHz = hz, concertMidi = midiF?.roundToInt(), cents = cents,
                     holding = tracker.holding, holdSec = tracker.holdSeconds(),
                     lastReport = report ?: _reading.value.lastReport,
+                    rms = f.rms, timeSec = f.timeSec,
                 )
                 if (report != null) onHold(report)
             }

@@ -39,6 +39,8 @@ public final class AudioEngine {
 
     private @Nullable MetronomeGenerator metronome;
     private @Nullable ToneVoice drone;
+    private @Nullable app.supersax.domain.longtone.DroneChord chord;
+    private @Nullable app.supersax.domain.longtone.DroneChord chordOut;
     private final List<Tone> tones = new ArrayList<>();
     private @Nullable MelodyPlayer melody;
     private @Nullable Runnable onMelodyDone;
@@ -105,6 +107,24 @@ public final class AudioEngine {
         }
         update(s -> s.withDroneMidi(concertMidi));
         ensureRunning();
+    }
+
+    /**
+     * Starts (or changes) the long-tone drone: [concertMidis] sounded together with [sound] at [volume] (0 to 1);
+     * an empty list stops it. The old chord fades out while the new one fades in. [sax] is the recorded alto sax
+     * for {@link app.supersax.domain.longtone.DroneSound#SAX} (a synth stands in when it is null).
+     */
+    public void setDroneChord(List<Integer> concertMidis, app.supersax.domain.longtone.DroneSound sound, float volume,
+                              @Nullable app.supersax.domain.audio.SampledInstrument sax) {
+        synchronized (lock) {
+            if (chord != null) { chord.release(); chordOut = chord; }
+            chord = concertMidis.isEmpty() ? null : new app.supersax.domain.longtone.DroneChord(SAMPLE_RATE, concertMidis, a4, sound, volume, sax);
+        }
+        ensureRunning();
+    }
+
+    public void setDroneChordVolume(float volume) {
+        synchronized (lock) { if (chord != null) chord.setVolume(volume); }
     }
 
     /** Plays a reference tone (concert MIDI) for millis. */
@@ -181,12 +201,12 @@ public final class AudioEngine {
     }
 
     public void stopAll() {
-        synchronized (lock) { metronome = null; drone = null; tones.clear(); melody = null; clips.clear(); clipPos.clear(); hold = null; holdTone = null; }
+        synchronized (lock) { metronome = null; drone = null; chord = null; chordOut = null; tones.clear(); melody = null; clips.clear(); clipPos.clear(); hold = null; holdTone = null; }
         update(s -> new OutputState(false, s.getBpm(), s.getBeatsPerBar(), s.getSubdivision(), s.getAccent(), null, false, -1, null));
     }
 
     private boolean busy() {
-        synchronized (lock) { return metronome != null || drone != null || !tones.isEmpty() || melody != null || !clips.isEmpty() || hold != null || holdTone != null; }
+        synchronized (lock) { return metronome != null || drone != null || chord != null || chordOut != null || !tones.isEmpty() || melody != null || !clips.isEmpty() || hold != null || holdTone != null; }
     }
 
     private void ensureRunning() {
@@ -238,6 +258,8 @@ public final class AudioEngine {
                         drone.mixInto(buf);
                         if (drone.getFinished()) drone = null;
                     }
+                    if (chord != null) { chord.mixInto(buf, buf.length); if (chord.getFinished()) chord = null; }
+                    if (chordOut != null) { chordOut.mixInto(buf, buf.length); if (chordOut.getFinished()) chordOut = null; }
                     Iterator<Tone> it = tones.iterator();
                     while (it.hasNext()) {
                         Tone t = it.next();

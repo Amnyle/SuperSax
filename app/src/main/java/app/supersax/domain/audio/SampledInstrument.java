@@ -74,6 +74,12 @@ public final class SampledInstrument {
     Zone zone(int midi) { return zone(midi, 100); }
 
     /** True when a sample exists for exactly this key (kits: one zone per drum). */
+    /** True when the note's sample has a sustain loop, so it can be held for as long as needed. */
+    public boolean loops(int midi) {
+        Zone z = zone(midi);
+        return z != null && z.loopEnd > z.loopStart && z.loopStart >= 0;
+    }
+
     public boolean has(int midi) {
         for (Zone z : zones) if (midi >= z.lo && midi <= z.hi) return true;
         return false;

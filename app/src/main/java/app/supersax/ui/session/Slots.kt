@@ -43,28 +43,10 @@ fun MetronomeSlot(bpm: Int) {
     if (s.metronomeOn) Text(stringResource(R.string.headphones_warning), style = MaterialTheme.typography.bodySmall)
 }
 
-/** Optional tuner inside a long-tone block; holds are saved to the tuner history. */
+/** Optional long-tone coach inside a long-tone block (circle, hold timer, graph, drone); holds go to the tuner history. */
 @Composable
 fun TunerSlot(step: PlannedStep) {
-    val c = LocalContainer.current
-    val context = LocalContext.current
-    var on by rememberSaveable { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val tuner = remember { LiveTuner(scope, c.mic, { c.audio.a4 }) { c.saveHold(it) } }
-    val request = rememberMicRequest { granted -> if (granted) { on = true; tuner.start(true) } }
-    DisposableEffect(Unit) { onDispose { tuner.stop() } }
-    LaunchedEffect(step.target.targetMidi) { tuner.targetMidi = step.target.targetMidi }
-    if (!on) {
-        OutlinedButton(onClick = request, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.show_coach)) }
-        return
-    }
-    val reading by tuner.reading.collectAsStateWithLifecycle()
-    val mic by c.mic.state.collectAsStateWithLifecycle()
-    MicErrorBanner(mic) { tuner.stop(); c.mic.retry(hasMicPermission(context)); tuner.start(hasMicPermission(context)) }
-    TunerDisplay(reading, large = false)
-    app.supersax.ui.listen.PitchTrace(reading)
-    reading.lastReport?.let { app.supersax.ui.listen.SteadinessCard(it); HoldReportCard(it) }
-    OutlinedButton(onClick = { tuner.stop(); on = false }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.hide_tuner)) }
+    app.supersax.ui.longtone.LongToneCoach(step.target.targetMidi, autoStart = false, onStop = {})
 }
 
 /** Piece of a new-material or play-for-fun block: its section on the staff, Listen, and the stage buttons. */

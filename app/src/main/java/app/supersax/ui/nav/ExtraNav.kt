@@ -2,6 +2,7 @@ package app.supersax.ui.nav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.MenuBook
+import androidx.compose.material.icons.rounded.Adjust
 import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Hearing
 import androidx.compose.material.icons.rounded.Summarize
@@ -63,6 +64,7 @@ import app.supersax.ui.review.WeeklyReviewScreen
 
 object ExtraRoutes {
     const val TUNER = "tuner"
+    const val LONG_TONE = "long_tone"
     const val TUNER_HISTORY = "tuner_history"
     const val METRONOME = "metronome"
     const val MATCH = "match_note"
@@ -110,6 +112,7 @@ object ExtraRoutes {
 /** Destinations of the listening, reading and later phases. */
 fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
     composable(ExtraRoutes.TUNER) { TunerScreen(onBack = { nav.popBackStack() }, onHistory = { nav.navigate(ExtraRoutes.TUNER_HISTORY) }) }
+    composable(ExtraRoutes.LONG_TONE) { app.supersax.ui.longtone.LongToneScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.TUNER_HISTORY) { TunerHistoryScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.METRONOME) { MetronomeScreen(onBack = { nav.popBackStack() }) }
     composable(ExtraRoutes.MATCH) { MatchNoteScreen(onBack = { nav.popBackStack() }) }
@@ -229,6 +232,7 @@ fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
     HubEntry(stringResource(R.string.solo_title), stringResource(R.string.solo_sub), Icons.Rounded.MusicNote) { nav.navigate(ExtraRoutes.SOLO) },
     HubEntry(stringResource(R.string.playalong_title), stringResource(R.string.playalong_sub), Icons.AutoMirrored.Rounded.MenuBook) { nav.navigate(ExtraRoutes.PLAY_ALONG) },
     HubEntry(stringResource(R.string.tuner), stringResource(R.string.tuner_sub), Icons.Rounded.GraphicEq) { nav.navigate(ExtraRoutes.TUNER) },
+    HubEntry(stringResource(R.string.longtone_title), stringResource(R.string.longtone_sub), Icons.Rounded.Adjust) { nav.navigate(ExtraRoutes.LONG_TONE) },
     HubEntry(stringResource(R.string.metronome_drone), stringResource(R.string.metronome_sub), Icons.Rounded.Timer) { nav.navigate(ExtraRoutes.METRONOME) },
     HubEntry(stringResource(R.string.match_note), stringResource(R.string.match_sub), Icons.Rounded.Hearing) { nav.navigate(ExtraRoutes.MATCH) },
     HubEntry(stringResource(R.string.overtones), stringResource(R.string.overtones_sub), Icons.Rounded.Waves) { nav.navigate(ExtraRoutes.OVERTONES) },
