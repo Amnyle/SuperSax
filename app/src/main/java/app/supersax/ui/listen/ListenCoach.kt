@@ -66,7 +66,7 @@ fun upAndDown(scaleKey: String): List<Int> {
  * is compared with the scale up and down and logged as clean or as a mistake, with the first wrong note.
  */
 @Composable
-fun ScaleListenSlot(scaleKey: String, onRun: (Boolean) -> Unit) {
+fun ScaleListenSlot(scaleKey: String, onRun: (Boolean, Double?) -> Unit) {
     val c = LocalContainer.current
     val naming = LocalSettings.current.noteNaming
     var on by rememberSaveable { mutableStateOf(false) }
@@ -81,7 +81,7 @@ fun ScaleListenSlot(scaleKey: String, onRun: (Boolean) -> Unit) {
     DisposableEffect(Unit) { c.mic.start(true); onDispose { c.mic.stop() } }
     LaunchedEffect(scaleKey) {
         val detector = RunDetector(upAndDown(scaleKey), c.audio.a4)
-        c.mic.frames.collect { f -> detector.feed(f)?.let { run -> last = run; onRun(run.clean) } }
+        c.mic.frames.collect { f -> detector.feed(f)?.let { run -> last = run; onRun(run.clean, run.path.bpm) } }
     }
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(Sax.colors.elevated).padding(14.dp),
@@ -93,12 +93,18 @@ fun ScaleListenSlot(scaleKey: String, onRun: (Boolean) -> Unit) {
                 Icon(if (run.clean) Icons.Rounded.CheckCircle else Icons.Rounded.Cancel, null,
                     tint = if (run.clean) Sax.colors.good else MaterialTheme.colorScheme.error, modifier = Modifier.size(28.dp))
                 Spacer(Modifier.width(8.dp))
-                val m = run.firstMistake()
+                val p = run.path
+                val root = written(run.expected[0], naming)
                 Text(
-                    when {
-                        run.clean -> stringResource(R.string.listen_run_clean, run.check.notesPerMinute.roundToInt())
-                        m != null && m[1] >= 0 -> stringResource(R.string.listen_run_wrong, m[0] + 1, written(run.expected[m[0]], naming), written(m[1], naming))
-                        else -> stringResource(R.string.listen_run_short)
+                    when (p.problem) {
+                        app.supersax.domain.audio.ScalePath.Problem.NONE ->
+                            if (p.bpm != null) stringResource(R.string.path_clean_bpm, p.notes, p.bpm!!.roundToInt()) else stringResource(R.string.path_clean, p.notes)
+                        app.supersax.domain.audio.ScalePath.Problem.TOO_SHORT -> stringResource(R.string.listen_run_short)
+                        app.supersax.domain.audio.ScalePath.Problem.WRONG_START -> stringResource(R.string.path_start, written(p.played, naming), root)
+                        app.supersax.domain.audio.ScalePath.Problem.NOT_IN_SCALE -> stringResource(R.string.path_not_in_scale, p.index + 1, written(p.played, naming))
+                        app.supersax.domain.audio.ScalePath.Problem.NOT_NEIGHBOUR -> stringResource(R.string.path_jump, p.index + 1, written(p.before, naming), written(p.played, naming))
+                        app.supersax.domain.audio.ScalePath.Problem.NO_OCTAVE -> stringResource(R.string.path_octave, root)
+                        app.supersax.domain.audio.ScalePath.Problem.NOT_HOME -> stringResource(R.string.path_home, written(p.played, naming), written(p.before, naming))
                     },
                     style = MaterialTheme.typography.titleSmall,
                 )

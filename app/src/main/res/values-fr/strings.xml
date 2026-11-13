@@ -914,7 +914,7 @@
     <string name="rhythm_wrong">Moins de 85 pour cent : regardez les notes en rouge, écoutez, et recommencez</string>
     <string name="listen_runs_on">Écouter et compter mes passages</string>
     <string name="listen_runs_off">Arrêter l\'écoute</string>
-    <string name="listen_runs_hint">Joue la gamme en montant et en descendant, puis fais une pause : chaque passage est vérifié et noté tout seul.</string>
+    <string name="listen_runs_hint">Jouez la gamme à votre façon : montée et descente, plus haut, aller-retour, tant que chaque note est la suivante de la gamme, que vous atteignez l\'octave et que vous finissez sur la note de départ. Une courte pause termine le passage.</string>
     <string name="listen_run_clean">Passage propre (%1$d notes par minute)</string>
     <string name="listen_run_wrong">Note %1$d : attendu %2$s, entendu %3$s</string>
     <string name="listen_run_short">Passage incomplet : joue toute la gamme en montant et en descendant</string>
@@ -1140,4 +1140,11 @@
     <string name="version_delete_body">Le morceau d\'origine reste. Vous pourrez refaire une version plus tard.</string>
     <string name="version_preparing">Préparation de « %1$s » (la première fois seulement)… elle prend le relais toute seule quand elle est prête.</string>
     <string name="version_preparing_original">Préparation de l\'original (la première fois seulement)…</string>
+    <string name="path_clean">Passage propre · %1$d notes</string>
+    <string name="path_clean_bpm">Passage propre · %1$d notes · environ %2$d BPM</string>
+    <string name="path_start">Commencé sur %1$s : commencez sur %2$s, la tonique de la gamme.</string>
+    <string name="path_not_in_scale">Note %1$d : %2$s n\'est pas dans cette gamme.</string>
+    <string name="path_jump">Note %1$d : de %2$s à %3$s, vous sautez une note. Avancez note par note.</string>
+    <string name="path_octave">Montez (ou descendez) jusqu\'à l\'octave %1$s avant de revenir.</string>
+    <string name="path_home">Fini sur %1$s : finissez sur %2$s, là où vous avez commencé.</string>
 </resources>

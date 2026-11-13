@@ -19,15 +19,16 @@ import app.supersax.ui.components.SectionCard
 /** Scale block: clean-run / mistake logging (the metronome panel is added in phase 2). */
 @Composable
 fun ScalePanel(step: PlannedStep, run: SessionRun, vm: SessionViewModel) {
+    val c = app.supersax.ui.nav.LocalContainer.current
     val key = step.target.scaleKey ?: return
     val bpm = step.target.bpm ?: 60
     SectionCard(stringResource(R.string.scale_runs_title)) {
         Text(stringResource(R.string.scale_runs_hint), style = MaterialTheme.typography.bodyMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { vm.scaleRun(key, bpm, clean = true) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp)) {
+            Button(onClick = { vm.scaleRun(key, playedBpm(c, bpm, null), clean = true) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp)) {
                 Text(stringResource(R.string.clean_run))
             }
-            OutlinedButton(onClick = { vm.scaleRun(key, bpm, clean = false) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp)) {
+            OutlinedButton(onClick = { vm.scaleRun(key, playedBpm(c, bpm, null), clean = false) }, modifier = Modifier.weight(1f).heightIn(min = 56.dp)) {
                 Text(stringResource(R.string.mistake))
             }
         }
@@ -35,7 +36,7 @@ fun ScalePanel(step: PlannedStep, run: SessionRun, vm: SessionViewModel) {
         val total = run.runs.count { it.scaleKey == key }
         Text(stringResource(R.string.runs_summary, total, streak), style = MaterialTheme.typography.bodyMedium)
         MetronomeSlot(bpm)
-        app.supersax.ui.listen.ScaleListenSlot(key) { clean -> vm.scaleRun(key, bpm, clean) }
+        app.supersax.ui.listen.ScaleListenSlot(key) { clean, heard -> vm.scaleRun(key, playedBpm(c, bpm, heard), clean) }
     }
 }
 
@@ -59,5 +60,18 @@ fun BreathingPanel(nowMs: Long) {
             stringResource(if (inhale) R.string.breathe_in else R.string.breathe_out, count),
             style = MaterialTheme.typography.displaySmall,
         )
+    }
+}
+
+/**
+ * The tempo a run was really played at: the metronome's when it is on (you may have changed it), else the tempo
+ * heard in the notes (microphone), else the block's planned tempo.
+ */
+fun playedBpm(c: app.supersax.AppContainer, planned: Int, heard: Double?): Int {
+    val s = c.audio.state.value
+    return when {
+        s.metronomeOn -> s.bpm
+        heard != null -> Math.round(heard).toInt()
+        else -> planned
     }
 }

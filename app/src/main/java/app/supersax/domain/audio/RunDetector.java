@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Listens to a stream of pitch frames and cuts it into scale runs: a run starts with sound and ends after
  * {@link #SILENCE_SEC} of silence once at least {@link #MIN_NOTES} notes were heard. Each finished run is
- * checked against the expected scale (up and down), lined up with the octave the player chose.
+ * checked as a path on the scale ({@link ScalePath}): neighbouring notes, through the octave, back home.
  */
 public final class RunDetector {
     public static final double SILENCE_SEC = 0.7;
@@ -23,14 +23,16 @@ public final class RunDetector {
         this.checker = new ScaleChecker(a4);
     }
 
-    /** A checked run, and whether it was clean (every note right, at most one extra note). */
+    /** A checked run (see {@link ScalePath}): clean, or what went wrong, and the tempo it was played at. */
     public static final class Run {
         private final ScaleCheck check;
         private final List<Integer> expected;
-        Run(ScaleCheck check, List<Integer> expected) { this.check = check; this.expected = expected; }
+        private final ScalePath.Result path;
+        Run(ScaleCheck check, List<Integer> expected, ScalePath.Result path) { this.check = check; this.expected = expected; this.path = path; }
         public ScaleCheck getCheck() { return check; }
         public List<Integer> getExpected() { return expected; }
-        public boolean getClean() { return check.getWrong() == 0 && check.getMissing() == 0 && check.getExtra() <= 1; }
+        public ScalePath.Result getPath() { return path; }
+        public boolean getClean() { return path.getClean(); }
         /** First wrong note: index into the expected notes and the note played instead (null when none). */
         public @Nullable int[] firstMistake() {
             List<DetectedNote> played = check.getPlayed();
@@ -57,7 +59,7 @@ public final class RunDetector {
         List<DetectedNote> notes = checker.segment(run);
         if (notes.size() < MIN_NOTES) return null;
         List<Integer> aligned = alignOctave(expected, notes.get(0).getMidi());
-        return new Run(checker.check(run, aligned), aligned);
+        return new Run(checker.check(run, aligned), aligned, ScalePath.check(notes, aligned));
     }
 
     /** The expected notes moved by whole octaves so they start nearest to the first note played. */

@@ -346,5 +346,16 @@
     "fr": [
       "Ralentissement et changement de tonalité bien meilleurs dans le lecteur : un étirement temporel de qualité professionnelle (Signalsmith Stretch) garde les attaques nettes et le son naturel, sans le son baveux et « phasé »."
     ]
+  },
+  {
+    "id": 31,
+    "en": [
+      "Scale coach: play the scale your way. Up and down, further up, back and forth: a run counts if each note is the next one in the scale, you reach the octave and you end on the note you started on. Mistakes are named (a skipped note, not back home…).",
+      "The tempo of a run is now the one you really played: the metronome's when it is on, else heard from your notes. No more \"go up to 70\" after playing at 120."
+    ],
+    "fr": [
+      "Coach de gammes : jouez la gamme à votre façon. Montée et descente, plus haut, aller-retour : un passage compte si chaque note est la suivante de la gamme, que vous atteignez l'octave et finissez sur la note de départ. Les erreurs sont nommées (une note sautée, pas revenu au départ…).",
+      "Le tempo d'un passage est maintenant celui que vous avez vraiment joué : celui du métronome s'il est allumé, sinon entendu dans vos notes. Plus de « montez à 70 » après avoir joué à 120."
+    ]
   }
 ]

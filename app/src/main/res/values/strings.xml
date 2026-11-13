@@ -910,7 +910,7 @@
     <string name="rhythm_wrong">Below 85 percent: look at the red notes, listen, and try again</string>
     <string name="listen_runs_on">Listen and count my runs</string>
     <string name="listen_runs_off">Stop listening</string>
-    <string name="listen_runs_hint">Play the scale up and down, then pause: each run is checked and logged by itself.</string>
+    <string name="listen_runs_hint">Play the scale your way: up and down, further up, back and forth, as long as each note is the next one in the scale, you reach the octave and you end on the note you started on. A short pause ends the run.</string>
     <string name="listen_run_clean">Clean run (%1$d notes a minute)</string>
     <string name="listen_run_wrong">Note %1$d: expected %2$s, heard %3$s</string>
     <string name="listen_run_short">Incomplete run: play the whole scale up and down</string>
@@ -1132,4 +1132,11 @@
     <string name="version_delete_body">The original song stays. You can make a new version later.</string>
     <string name="version_preparing">Preparing \"%1$s\" (first time only)… it switches in by itself when ready.</string>
     <string name="version_preparing_original">Preparing the original (first time only)…</string>
+    <string name="path_clean">Clean run · %1$d notes</string>
+    <string name="path_clean_bpm">Clean run · %1$d notes · about %2$d BPM</string>
+    <string name="path_start">Started on %1$s: start on %2$s, the root of the scale.</string>
+    <string name="path_not_in_scale">Note %1$d: %2$s is not in this scale.</string>
+    <string name="path_jump">Note %1$d: from %2$s to %3$s skips a note. Go by neighbouring notes.</string>
+    <string name="path_octave">Go up (or down) to the octave %1$s before coming back.</string>
+    <string name="path_home">Ended on %1$s: finish on %2$s, where you started.</string>
 </resources>
