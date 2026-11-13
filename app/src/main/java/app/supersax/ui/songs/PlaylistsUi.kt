@@ -67,13 +67,14 @@ import kotlinx.coroutines.launch
 
 /** What plays in the background (songs, playlists or the practised song): title, position, previous / play-pause / next. */
 @Composable
-fun NowPlayingBar(onOpen: (String) -> Unit) {
+fun NowPlayingBar(hideFor: String? = null, modifier: Modifier = Modifier, onOpen: (String) -> Unit) {
     val c = LocalContainer.current
     val now by c.playback.now.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { while (true) { c.playback.tick(); delay(1000) } }
     val n = now ?: return
+    if (n.songId == hideFor) return
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Sax.colors.onAccent).clickable { onOpen(n.songId) }
+        modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Sax.colors.onAccent).clickable { onOpen(n.songId) }
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -192,7 +193,6 @@ fun PlaylistScreen(id: String, onBack: () -> Unit, onSong: (String) -> Unit) {
     }) { padding ->
         ScrollColumn(padding) {
             if (p == null) return@ScrollColumn
-            NowPlayingBar(onSong)
             val byId = refs.associateBy { it.id }
             val songs: List<AudioRefRecord> = p.songIds.mapNotNull { byId[it] }
             if (songs.isEmpty()) { EmptyState(stringResource(R.string.pl_empty)); return@ScrollColumn }

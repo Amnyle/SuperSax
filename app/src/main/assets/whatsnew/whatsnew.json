@@ -284,5 +284,20 @@
     "fr": [
       "Enregistrer et partager : dans le lecteur de morceaux, le bouton téléchargement enregistre le morceau (YouTube ou version IA) dans Téléchargements/Super Sax, et le bouton partager l'envoie sur WhatsApp, Discord ou toute autre appli."
     ]
+  },
+  {
+    "id": 25,
+    "en": [
+      "A mini player stays at the bottom of every screen while music plays (play, pause, next, tap to open the song).",
+      "Switch between Original and No sax while playing: it carries on at the same place, speed and key. The versions are prepared in the background so the switch is quick.",
+      "Delete an AI version you don't like with the bin button at the top of its page.",
+      "Opening a song that plays from the list or a playlist carries on from where it is, with the bars following."
+    ],
+    "fr": [
+      "Un mini-lecteur reste en bas de chaque écran pendant la musique (lecture, pause, suivant, touchez pour ouvrir le morceau).",
+      "Passez de l'Original à Sans sax pendant la lecture : ça continue au même endroit, à la même vitesse et dans la même tonalité. Les versions sont préparées en arrière-plan pour un passage rapide.",
+      "Supprimez une version IA qui ne vous plaît pas avec la corbeille en haut de sa page.",
+      "Ouvrir un morceau en cours de lecture depuis la liste ou une playlist continue là où il en est, les mesures suivent."
+    ]
   }
 ]

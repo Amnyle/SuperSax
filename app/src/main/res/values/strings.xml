@@ -1127,4 +1127,7 @@
     <string name="export_save">Save to the phone (Download)</string>
     <string name="export_saved">Saved in Download/Super Sax: %1$s</string>
     <string name="export_failed">Could not save or share: %1$s</string>
+    <string name="version_delete">Delete this version</string>
+    <string name="version_delete_q">Delete \"%1$s\"?</string>
+    <string name="version_delete_body">The original song stays. You can make a new version later.</string>
 </resources>

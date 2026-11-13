@@ -20,6 +20,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
+/** Playback carried to another screen: switching between a song and its AI version, at the same spot. */
+data class Handoff(val songId: String, val positionMs: Long, val playing: Boolean, val speed: Float, val semitones: Int)
+
 /** What the mini player shows. */
 data class NowPlaying(val songId: String, val title: String, val playing: Boolean, val hasNext: Boolean, val hasPrevious: Boolean,
                       val practice: Boolean, val positionMs: Long, val durationMs: Long)
@@ -91,6 +94,22 @@ class PlaybackHub(private val c: AppContainer) {
     fun next() = c.appScope.launch(Dispatchers.Main) { controller().seekToNextMediaItem() }
     fun previous() = c.appScope.launch(Dispatchers.Main) { controller().seekToPreviousMediaItem() }
     fun stop() = c.appScope.launch(Dispatchers.Main) { val ctl = controller(); ctl.stop(); ctl.clearMediaItems() }
+
+    /** Set just before opening another version of the song: the new screen carries on from here. */
+    var handoff: Handoff? = null
+
+    /**
+     * If the music player is playing [songId] (started from the song list or a playlist), pauses it and returns
+     * where it was and whether it played, so the song's practice screen can carry on from there.
+     */
+    suspend fun takeListening(songId: String): Pair<Long, Boolean>? = withContext(Dispatchers.Main) {
+        val svc = PlaybackService.instance ?: return@withContext null
+        val exo = svc.exo
+        if (svc.current !== exo || exo.currentMediaItem?.mediaId != songId) return@withContext null
+        val at = exo.currentPosition to (exo.isPlaying || exo.playWhenReady)
+        exo.pause()
+        at
+    }
 
     // --- practice ------------------------------------------------------------------------------
 

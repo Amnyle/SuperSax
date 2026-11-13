@@ -142,8 +142,19 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            if (tabs.any { it.route == route }) BottomBar(route) { r ->
-                nav.navigate(r) { popUpTo(Routes.TODAY) { saveState = true }; launchSingleTop = true; restoreState = true }
+            androidx.compose.foundation.layout.Column {
+                // What plays in the background, on every screen (not on the playing song's own screen).
+                val entry by nav.currentBackStackEntryAsState()
+                val openSong = entry?.destination?.route == ExtraRoutes.SONG && entry?.arguments?.getString("id") != null
+                val shownSong = if (openSong) entry?.arguments?.getString("id") else null
+                if (route != Routes.ONBOARDING && route != Routes.SESSION) app.supersax.ui.songs.NowPlayingBar(
+                    hideFor = shownSong,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        .then(if (tabs.any { it.route == route }) Modifier else Modifier.navigationBarsPadding()),
+                ) { id -> nav.navigate(ExtraRoutes.song(id)) { launchSingleTop = true } }
+                if (tabs.any { it.route == route }) BottomBar(route) { r ->
+                    nav.navigate(r) { popUpTo(Routes.TODAY) { saveState = true }; launchSingleTop = true; restoreState = true }
+                }
             }
         },
     ) { padding ->

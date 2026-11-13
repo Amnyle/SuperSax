@@ -93,10 +93,22 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
     val ref by vm.ref.collectAsStateWithLifecycle()
     val s by vm.setup.collectAsStateWithLifecycle()
     val ui by vm.player.ui.collectAsStateWithLifecycle()
+    val scopeDel = androidx.compose.runtime.rememberCoroutineScope()
     val analysis by vm.analysis.collectAsStateWithLifecycle()
     val part by vm.part.collectAsStateWithLifecycle()
     val mix by vm.mix.collectAsStateWithLifecycle()
     var addTo by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var deleting by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    if (deleting) androidx.compose.material3.AlertDialog(
+        onDismissRequest = { deleting = false },
+        title = { Text(stringResource(R.string.version_delete_q, ref?.title ?: "")) },
+        text = { Text(stringResource(R.string.version_delete_body)) },
+        confirmButton = { androidx.compose.material3.TextButton(onClick = {
+            deleting = false
+            scopeDel.launch { vm.deleteVersion()?.let { onOpenSong(it) } ?: onBack() }
+        }) { Text(stringResource(R.string.version_delete)) } },
+        dismissButton = { androidx.compose.material3.TextButton(onClick = { deleting = false }) { Text(stringResource(R.string.cancel)) } },
+    )
     if (addTo) AddToPlaylistDialog(songId) { addTo = false }
     val ctx = androidx.compose.ui.platform.LocalContext.current
     val scope = androidx.compose.runtime.rememberCoroutineScope()
@@ -130,12 +142,15 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
                 toast(res.fold({ String.format(savedFmt, it) }, { String.format(failedFmt, it.message ?: "") }))
             }
         }) { androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Download, stringResource(R.string.export_save)) }
+        if (s.parentId != null) androidx.compose.material3.IconButton(onClick = { deleting = true }) {
+            androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Delete, stringResource(R.string.version_delete))
+        }
         androidx.compose.material3.IconButton(onClick = { addTo = true }) {
             androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.AutoMirrored.Rounded.PlaylistAdd, stringResource(R.string.pl_add))
         }
     }) { padding ->
         ScrollColumn(padding) {
-            SongVersionsRow(songId, s, onOpenSong)
+            SongVersionsRow(songId, s) { id -> vm.handoffTo(id); onOpenSong(id) }
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
             analysis.progress?.let { p ->
                 SectionCard {

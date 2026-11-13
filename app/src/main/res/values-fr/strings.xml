@@ -1135,4 +1135,7 @@
     <string name="export_save">Enregistrer sur le téléphone (Téléchargements)</string>
     <string name="export_saved">Enregistré dans Téléchargements/Super Sax : %1$s</string>
     <string name="export_failed">Impossible d\'enregistrer ou de partager : %1$s</string>
+    <string name="version_delete">Supprimer cette version</string>
+    <string name="version_delete_q">Supprimer « %1$s » ?</string>
+    <string name="version_delete_body">Le morceau d\'origine reste. Vous pourrez refaire une version plus tard.</string>
 </resources>

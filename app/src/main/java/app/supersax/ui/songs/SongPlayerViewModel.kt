@@ -55,6 +55,8 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             val r = c.media.audioRefs.first().firstOrNull { it.id == songId } ?: return@launch
             _ref.value = r
             if (!prepare(r)) return@launch
+            carryOn()
+            prepareFamily()
             // A version of a song (or the original of versions) uses the family's analysis: never analysed twice.
             val shared = familySetups().filter { (id, s) -> id != songId && s.analyzed && s.analysisVersion >= app.supersax.domain.song.CURRENT_ANALYSIS }
             val saved = c.songs.get(songId)
@@ -96,6 +98,61 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         if (!player.isReady) withContext(Dispatchers.IO) { player.open(pcm, info) }
         _analysis.value = AnalysisUi()
         return true
+    }
+
+    /**
+     * Carries on playback: from the other version of this song (switching Original / No sax keeps the place,
+     * speed and key), or from the music player if it was playing this song.
+     */
+    private suspend fun carryOn() {
+        val h = c.playback.handoff?.takeIf { it.songId == songId }
+        if (h != null) {
+            c.playback.handoff = null
+            player.setSpeed(h.speed); player.setSemitones(h.semitones)
+            player.seekTo(h.positionMs)
+            if (h.playing) player.play()
+            return
+        }
+        val listening = c.playback.takeListening(songId) ?: return
+        player.seekTo(listening.first)
+        if (listening.second) player.play()
+    }
+
+    /** Before opening [otherId] (another version of this song): note where we are and stop here. */
+    fun handoffTo(otherId: String) {
+        val u = player.ui.value
+        c.playback.handoff = app.supersax.playback.Handoff(otherId, u.positionMs, u.playing, u.speed, u.semitones)
+        player.pause()
+    }
+
+    /** Decodes the other versions of this song in the background, so switching to them is immediate. */
+    private fun prepareFamily() = viewModelScope.launch(Dispatchers.IO) {
+        val dir = java.io.File(c.context.cacheDir, "songs")
+        val refs = c.media.audioRefs.first()
+        for ((id, _) in familySetups()) {
+            if (id == songId) continue
+            val f = java.io.File(dir, "$id.pcm")
+            if (AudioDecoder.pcmInfo(f) != null) continue
+            val r = refs.firstOrNull { it.id == id } ?: continue
+            runCatching { AudioDecoder.decodeToPcm(c.context, Uri.parse(r.uri), f) { } }
+        }
+    }
+
+    /** Deletes this song if it is an AI version (its file, cache and playlist places); returns its original's id. */
+    suspend fun deleteVersion(): String? {
+        val s = c.songs.get(songId)
+        val parent = s.parentId ?: return null
+        val r = _ref.value ?: return null
+        player.pause()
+        c.media.deleteAudioRef(r.id)
+        c.songs.delete(r.id)
+        c.playlists.forget(r.id)
+        withContext(Dispatchers.IO) {
+            pcm.delete()
+            val path = Uri.parse(r.uri).path
+            if (r.uri.startsWith("file:") && path != null && path.startsWith(c.songsDir.absolutePath)) java.io.File(path).delete()
+        }
+        return parent
     }
 
     /** Detects tempo, first beat and key from the cached audio; keeps the checkpoints and the source. */

@@ -204,7 +204,6 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                     Text(if (running > 0) pluralStringResource(R.plurals.queue_running, running, running) else stringResource(R.string.queue_title))
                 }
             }
-            NowPlayingBar(onSong)
             val playlists by c.playlists.all.collectAsStateWithLifecycle(emptyList())
             PlaylistsSection(playlists, onPlaylist)
             val list = songs ?: return@ScrollColumn
