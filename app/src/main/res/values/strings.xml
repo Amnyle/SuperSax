@@ -1088,4 +1088,30 @@
     <string name="sep_get_mvsep">Get a token at mvsep.com</string>
     <string name="sep_mvsep_token">MVSEP API token</string>
     <string name="sep_forget_mvsep">Forget the MVSEP token</string>
+    <string name="pl_to_learn">To learn</string>
+    <string name="pl_learnt">Learnt</string>
+    <string name="done">Done</string>
+    <string name="np_practice">Practising · keeps playing with the screen off</string>
+    <string name="np_listening">Playing · keeps playing with the screen off</string>
+    <string name="np_previous">Previous</string>
+    <string name="np_next">Next</string>
+    <string name="pl_title">Playlists</string>
+    <string name="pl_new">New playlist</string>
+    <string name="pl_name">Name</string>
+    <string name="pl_play">Play</string>
+    <string name="pl_shuffle">Shuffle</string>
+    <string name="pl_rename">Rename</string>
+    <string name="pl_delete">Delete playlist</string>
+    <string name="pl_delete_q">Delete \"%1$s\"?</string>
+    <string name="pl_delete_body">The songs stay in your song list.</string>
+    <string name="pl_empty">No songs yet. Add songs with the playlist button next to each song, or in the player.</string>
+    <string name="pl_add_title">Add to playlists</string>
+    <string name="pl_add">Add to a playlist</string>
+    <string name="pl_remove_song">Remove from this playlist</string>
+    <string name="songs_all">All songs</string>
+    <string name="songs_play_all">Play all</string>
+    <plurals name="pl_songs">
+        <item quantity="one">%1$d song</item>
+        <item quantity="other">%1$d songs</item>
+    </plurals>
 </resources>

@@ -89,7 +89,7 @@ class ScreenTour {
                 c.songs.save("tour-song-nosax", c.songs.get("tour-song").copy(parentId = "tour-song", removed = "WIND"))
             }
         }
-        click("Song player"); waitFor("Search YouTube"); waitFor("No sax"); shot("14-songs")
+        click("Song player"); waitFor("Search YouTube"); waitFor("No sax"); waitFor("To learn"); shot("14-songs")
         click("Practice song"); waitFor("Show the key signature"); waitFor("Original"); shot("17-song-player")
         click("Show the key signature"); waitFor("Written for alto"); shot("18-key-signature")
         click("Metronome clicks"); shot("19-song-mix")

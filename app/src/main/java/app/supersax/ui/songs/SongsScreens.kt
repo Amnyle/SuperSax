@@ -18,6 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.remember
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Download
@@ -132,6 +137,7 @@ class SongsViewModel(private val c: AppContainer) : ViewModel() {
     /** Removes the song; a downloaded file is deleted too, an imported file stays where it is. */
     fun remove(r: AudioRefRecord) = viewModelScope.launch {
         c.media.deleteAudioRef(r.id)
+        c.playlists.forget(r.id)
         c.songs.delete(r.id)
         withContext(Dispatchers.IO) { File(File(c.context.cacheDir, "songs"), "${r.id}.pcm").delete() }
         val path = Uri.parse(r.uri).path
@@ -150,7 +156,7 @@ fun songSummary(s: SongSetup): String? {
 
 /** The song player's list: downloaded and imported songs, YouTube search, file import. */
 @Composable
-fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Unit, onQueue: () -> Unit = {}) {
+fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Unit, onQueue: () -> Unit = {}, onPlaylist: (String) -> Unit = {}) {
     val vm = appViewModel { SongsViewModel(it) }
     val songs by vm.songs.collectAsStateWithLifecycle()
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) vm.import(uri, onSong) }
@@ -176,7 +182,19 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                     Text(if (running > 0) pluralStringResource(R.plurals.queue_running, running, running) else stringResource(R.string.queue_title))
                 }
             }
+            NowPlayingBar(onSong)
+            val playlists by c.playlists.all.collectAsStateWithLifecycle(emptyList())
+            PlaylistsSection(playlists, onPlaylist)
             val list = songs ?: return@ScrollColumn
+            var addTo by remember { mutableStateOf<String?>(null) }
+            addTo?.let { id -> AddToPlaylistDialog(id) { addTo = null } }
+            val originals = list.filter { it.setup.parentId == null || it.setup.parentId !in list.map { r -> r.ref.id }.toSet() }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                app.supersax.ui.components.Overline(stringResource(R.string.songs_all), Modifier.weight(1f).padding(start = 4.dp))
+                if (originals.isNotEmpty()) TextButton(onClick = { c.playback.playSongs(originals.map { it.ref }) }) {
+                    Icon(Icons.Rounded.PlayArrow, null); Spacer(Modifier.width(4.dp)); Text(stringResource(R.string.songs_play_all))
+                }
+            }
             if (list.isEmpty()) EmptyState(stringResource(R.string.songs_empty))
             // AI versions ("no sax"…) are listed under their original song.
             val ids = list.map { it.ref.id }.toSet()
@@ -190,6 +208,10 @@ fun SongsScreen(onBack: () -> Unit, onSong: (String) -> Unit, onSearch: () -> Un
                             Text(row.ref.title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                             Text(songSummary(row.setup) ?: stringResource(R.string.song_not_analysed), style = MaterialTheme.typography.bodySmall,
                                 color = Sax.colors.textSecondary)
+                        }
+                        IconButton(onClick = { c.playback.playSongs(listOf(row.ref)) }) { Icon(Icons.Rounded.PlayArrow, stringResource(R.string.play), tint = Sax.colors.accentInk) }
+                        IconButton(onClick = { addTo = row.ref.id }) {
+                            Icon(Icons.AutoMirrored.Rounded.PlaylistAdd, stringResource(R.string.pl_add), tint = Sax.colors.accentInk)
                         }
                         IconButton(onClick = { vm.remove(row.ref); versions[row.ref.id]?.forEach { v -> vm.remove(v.ref) } }) {
                             Icon(Icons.Rounded.Delete, stringResource(R.string.remove), tint = Sax.colors.textTertiary)

@@ -1,5 +1,7 @@
 package app.supersax.ui.songs
 
+import androidx.compose.material.icons.automirrored.rounded.PlaylistAdd
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -88,7 +90,13 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
     val analysis by vm.analysis.collectAsStateWithLifecycle()
     val part by vm.part.collectAsStateWithLifecycle()
     val mix by vm.mix.collectAsStateWithLifecycle()
-    ScreenScaffold(ref?.title ?: "", onBack = onBack) { padding ->
+    var addTo by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    if (addTo) AddToPlaylistDialog(songId) { addTo = false }
+    ScreenScaffold(ref?.title ?: "", onBack = onBack, actions = {
+        androidx.compose.material3.IconButton(onClick = { addTo = true }) {
+            androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.AutoMirrored.Rounded.PlaylistAdd, stringResource(R.string.pl_add))
+        }
+    }) { padding ->
         ScrollColumn(padding) {
             SongVersionsRow(songId, s, onOpenSong)
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }

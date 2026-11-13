@@ -35,7 +35,8 @@ data class MixUi(val clicks: Boolean = false, val clickVolume: Float = 0.7f, val
 data class AnalysisUi(val progress: Float? = null, val failed: Boolean = false, val preparing: Boolean = false)
 
 class SongPlayerViewModel(private val c: AppContainer, val songId: String) : ViewModel() {
-    val player = app.supersax.audio.SongEngine()
+    /** The engine is kept by the playback hub, so the song can go on playing with the screen closed. */
+    val player = c.playback.practiceEngine(songId)
     private val pcm = java.io.File(java.io.File(c.context.cacheDir, "songs").apply { mkdirs() }, "$songId.pcm")
     private var pcmInfo: AudioDecoder.PcmInfo? = null
     private val _ref = MutableStateFlow<AudioRefRecord?>(null)
@@ -45,7 +46,7 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     val analysis = _analysis.asStateFlow()
     private val _part = MutableStateFlow<Part?>(null)
     val part = _part.asStateFlow()
-    private val _mix = MutableStateFlow(MixUi())
+    private val _mix = MutableStateFlow((c.playback.practiceMix?.takeIf { it.first == songId }?.second as? MixUi) ?: MixUi())
     val mix = _mix.asStateFlow()
 
     init {
@@ -57,8 +58,16 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
             if (!saved.analyzed || saved.analysisVersion < app.supersax.domain.song.CURRENT_ANALYSIS) analyse()
         }
         viewModelScope.launch {
+            var wasPlaying = false
+            var lastPos = 0L
             while (isActive) {
                 player.tick()
+                val u = player.ui.value
+                // Playing from this screen hands the controls to the notification and lock screen.
+                if (u.playing && !wasPlaying) _ref.value?.let { r -> c.playback.attachPractice(player, songId, r.title) }
+                else if (u.playing != wasPlaying || kotlin.math.abs(u.positionMs - lastPos) > 1500) c.playback.practiceChanged(player)
+                wasPlaying = u.playing; lastPos = u.positionMs
+                c.playback.practiceMix = songId to _mix.value
                 val st = setup.value
                 val m = _mix.value
                 player.setClicks(m.clicks, m.clickVolume, if (st.analyzed) st.bpm else 0.0, st.firstBeatMs, st.beatsPerBar)
@@ -78,7 +87,8 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         }
         if (info == null) { _analysis.value = AnalysisUi(null, failed = true); return false }
         pcmInfo = info
-        withContext(Dispatchers.IO) { player.open(pcm, info) }
+        // Still open from before (it kept playing in the background): carry on where it is.
+        if (!player.isReady) withContext(Dispatchers.IO) { player.open(pcm, info) }
         _analysis.value = AnalysisUi()
         return true
     }
@@ -186,5 +196,5 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         playPart(cp.ms, next, stop)
     }
 
-    override fun onCleared() { player.release() }
+    override fun onCleared() { c.playback.practiceScreenClosed(player) }
 }

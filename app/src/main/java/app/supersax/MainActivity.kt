@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
     private val updatesSignal = mutableIntStateOf(0)
     private val dailySignal = mutableIntStateOf(0)
     private val queueSignal = mutableIntStateOf(0)
+    private val songsSignal = mutableIntStateOf(0)
 
     override fun attachBaseContext(newBase: Context) {
         val app = newBase.applicationContext as SaxApp
@@ -40,13 +41,14 @@ class MainActivity : ComponentActivity() {
         if (intent?.getBooleanExtra(EXTRA_OPEN_UPDATES, false) == true && savedInstanceState == null) updatesSignal.intValue++
         if (intent?.getBooleanExtra(EXTRA_OPEN_DAILY, false) == true && savedInstanceState == null) dailySignal.intValue++
         if (intent?.getBooleanExtra(EXTRA_OPEN_QUEUE, false) == true && savedInstanceState == null) queueSignal.intValue++
+        if (intent?.getBooleanExtra(EXTRA_OPEN_SONGS, false) == true && savedInstanceState == null) songsSignal.intValue++
         setContent {
             val settings by container.settings.settings.collectAsStateWithLifecycle(initial)
             // Switching language recreates the activity so every string changes.
             LaunchedEffect(settings.language) { if (settings.language != appliedLanguage) recreate() }
             CompositionLocalProvider(LocalContainer provides container, LocalSettings provides settings) {
                 SaxTheme(settings.theme) {
-                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, updatesSignal = updatesSignal.intValue, dailySignal = dailySignal.intValue, queueSignal = queueSignal.intValue, onRecreate = { recreate() })
+                    AppNav(rememberNavController(), startOnboarding = !initial.onboardingDone, startSignal = startSignal.intValue, updatesSignal = updatesSignal.intValue, dailySignal = dailySignal.intValue, queueSignal = queueSignal.intValue, songsSignal = songsSignal.intValue, onRecreate = { recreate() })
                 }
             }
         }
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
         if (intent.getBooleanExtra(EXTRA_OPEN_UPDATES, false)) updatesSignal.intValue++
         if (intent.getBooleanExtra(EXTRA_OPEN_DAILY, false)) dailySignal.intValue++
         if (intent.getBooleanExtra(EXTRA_OPEN_QUEUE, false)) queueSignal.intValue++
+        if (intent.getBooleanExtra(EXTRA_OPEN_SONGS, false)) songsSignal.intValue++
     }
 
     companion object {
@@ -65,5 +68,6 @@ class MainActivity : ComponentActivity() {
         const val EXTRA_OPEN_UPDATES = "open_updates"
         const val EXTRA_OPEN_DAILY = "open_daily"
         const val EXTRA_OPEN_QUEUE = "open_queue"
+        const val EXTRA_OPEN_SONGS = "open_songs"
     }
 }

@@ -1095,4 +1095,31 @@
     <string name="sep_get_mvsep">Obtenir un jeton sur mvsep.com</string>
     <string name="sep_mvsep_token">Jeton API MVSEP</string>
     <string name="sep_forget_mvsep">Oublier le jeton MVSEP</string>
+    <string name="pl_to_learn">À apprendre</string>
+    <string name="pl_learnt">Appris</string>
+    <string name="done">Terminé</string>
+    <string name="np_practice">En pratique · continue écran éteint</string>
+    <string name="np_listening">En lecture · continue écran éteint</string>
+    <string name="np_previous">Précédent</string>
+    <string name="np_next">Suivant</string>
+    <string name="pl_title">Playlists</string>
+    <string name="pl_new">Nouvelle playlist</string>
+    <string name="pl_name">Nom</string>
+    <string name="pl_play">Lire</string>
+    <string name="pl_shuffle">Aléatoire</string>
+    <string name="pl_rename">Renommer</string>
+    <string name="pl_delete">Supprimer la playlist</string>
+    <string name="pl_delete_q">Supprimer « %1$s » ?</string>
+    <string name="pl_delete_body">Les morceaux restent dans votre liste.</string>
+    <string name="pl_empty">Pas encore de morceaux. Ajoutez-en avec le bouton playlist à côté de chaque morceau, ou dans le lecteur.</string>
+    <string name="pl_add_title">Ajouter aux playlists</string>
+    <string name="pl_add">Ajouter à une playlist</string>
+    <string name="pl_remove_song">Retirer de cette playlist</string>
+    <string name="songs_all">Tous les morceaux</string>
+    <string name="songs_play_all">Tout lire</string>
+    <plurals name="pl_songs">
+        <item quantity="one">%1$d morceau</item>
+        <item quantity="many">%1$d morceaux</item>
+        <item quantity="other">%1$d morceaux</item>
+    </plurals>
 </resources>

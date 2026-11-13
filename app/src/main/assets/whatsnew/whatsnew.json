@@ -253,5 +253,16 @@
     "fr": [
       "Suppression du sax bien meilleure : « Sax » utilise maintenant le modèle saxophone dédié de MVSEP (BS Roformer), bien plus propre qu'avant. Il faut un compte MVSEP gratuit : collez son jeton API une fois. « Tous les vents » retire tous les instruments à vent ; voix, piano, guitare, batterie et basse passent toujours par LALAL.AI."
     ]
+  },
+  {
+    "id": 22,
+    "en": [
+      "Songs keep playing with the screen off, like a music app: play, pause, next and previous from the notification, the lock screen or your headphones. A song you are practising keeps its speed, key, loop and clicks.",
+      "Playlists: \"To learn\" and \"Learnt\" are ready, make your own (genres…), add songs with the playlist button, and play a playlist in order or shuffled."
+    ],
+    "fr": [
+      "Les morceaux continuent écran éteint, comme une appli de musique : lecture, pause, suivant et précédent depuis la notification, l'écran de verrouillage ou vos écouteurs. Un morceau en pratique garde sa vitesse, sa tonalité, sa boucle et ses clics.",
+      "Playlists : « À apprendre » et « Appris » sont prêtes, créez les vôtres (genres…), ajoutez des morceaux avec le bouton playlist, et lisez une playlist dans l'ordre ou en aléatoire."
+    ]
   }
 ]
