@@ -95,7 +95,7 @@ public final class SongEngine {
         map.order(ByteOrder.LITTLE_ENDIAN);
         VersionSource vs = new VersionSource(new PcmSource(map, info));
         versions = vs;
-        SongRenderer r = new SongRenderer(vs);
+        SongRenderer r = new SongRenderer(vs, NativeStretch.create(info.channels, info.rate));
         r.setSpeed(speed);
         r.setSemitones(semitones);
         renderer = r;
@@ -112,8 +112,14 @@ public final class SongEngine {
     private synchronized void close() {
         running = false;
         playing = false;
+        SongRenderer old = renderer;
         renderer = null;
         versions = null;
+        if (old != null) {
+            // Free the native stretcher once the audio thread has stopped using it.
+            Thread t = thread;
+            new Thread(() -> { if (t != null) { try { t.join(1000); } catch (InterruptedException ignored) { } } old.release(); }, "sax-song-free").start();
+        }
         for (RandomAccessFile f : versionFiles) { try { f.close(); } catch (IOException ignored) { } }
         versionFiles.clear();
         if (file != null) { try { file.close(); } catch (IOException ignored) { } file = null; }

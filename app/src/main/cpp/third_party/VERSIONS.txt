@@ -1,0 +1,1 @@
+Signalsmith Stretch 88061fd, Signalsmith Linear 7bb1c8f — MIT, vendored unchanged.

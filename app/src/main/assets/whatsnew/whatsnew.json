@@ -337,5 +337,14 @@
     "fr": [
       "Le ✕ du mini-lecteur arrête maintenant la musique et ferme la barre et la notification (avant il mettait seulement en pause)."
     ]
+  },
+  {
+    "id": 30,
+    "en": [
+      "Much better slow-down and key change in the song player: a professional-grade time stretch (Signalsmith Stretch) keeps the attacks clear and the sound natural, without the washy, phasey sound."
+    ],
+    "fr": [
+      "Ralentissement et changement de tonalité bien meilleurs dans le lecteur : un étirement temporel de qualité professionnelle (Signalsmith Stretch) garde les attaques nettes et le son naturel, sans le son baveux et « phasé »."
+    ]
   }
 ]

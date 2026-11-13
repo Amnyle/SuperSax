@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Renders a song block by block for the song player: at normal speed and key the original samples
- * pass through untouched; otherwise a {@link TimeStretcher} changes the duration (speed) and a cubic
- * resampler shifts the pitch. Loops, "stop at the end of the part" and metronome clicks are applied
+ * pass through untouched; otherwise a {@link StretchEngine} (Signalsmith Stretch, high quality) changes speed and
+ * key together, or, where it is missing, a {@link TimeStretcher} changes the duration and a cubic resampler the pitch. Loops, "stop at the end of the part" and metronome clicks are applied
  * here, in the same samples, so clicks can never drift from the music.
  *
  * <p>Thread use: setters may be called from the UI thread; {@link #render} runs on the audio thread.
@@ -55,7 +55,15 @@ public final class SongRenderer {
     private final List<double[]> voices = new ArrayList<>(); // {sampleIndex (negative = not started), accent}
     private final float[] accentClick, beatClick;
 
-    public SongRenderer(Source src) {
+    private final @Nullable StretchEngine engine;
+    private double inCursor, inFrac;
+    private int engineSemis = Integer.MIN_VALUE;
+    private float[] inBuf = new float[0];
+
+    public SongRenderer(Source src) { this(src, null); }
+
+    public SongRenderer(Source src, @Nullable StretchEngine engine) {
+        this.engine = engine;
         this.src = src;
         this.channels = src.channels();
         this.rate = src.sampleRate();
@@ -86,7 +94,13 @@ public final class SongRenderer {
 
     public double durationMs() { return src.frames() * 1000.0 / rate; }
     /** Song position (ms of the original) at the start of the next block. */
-    public double positionMs() { double s = seekRequestMs; return s >= 0 ? s : songPos * 1000.0 / rate; }
+    public double positionMs() {
+        double s = seekRequestMs;
+        if (s >= 0) return s;
+        // While the high-quality stretch plays, what is heard lags the processing by its output latency.
+        double lag = stretching && engine != null ? engine.outputLatency() * (double) speed : 0;
+        return Math.max(0, songPos - lag) * 1000.0 / rate;
+    }
     public float speed() { return speed; }
 
     private void jump(double ms) {
@@ -114,6 +128,30 @@ public final class SongRenderer {
             long p0 = (long) Math.floor(songPos);
             for (int i = 0; i < frames; i++) for (int c = 0; c < channels; c++) out[i * channels + c] = src.sample(c, p0 + i);
             songPos += frames;
+        } else if (engine != null) {
+            if (!stretching) {
+                // Start (or jump): reset, then hand it the input ending where processing starts.
+                engine.reset();
+                engineSemis = Integer.MIN_VALUE;
+                int lat = engine.inputLatency();
+                fillInput((long) Math.floor(songPos), lat);
+                engine.seek(inBuf, lat, sp);
+                inCursor = Math.floor(songPos) + lat;
+                inFrac = songPos - Math.floor(songPos);
+                stretching = true;
+            }
+            if (st != engineSemis) { engine.setTranspose(st, (float) (8000.0 / rate)); engineSemis = st; }
+            double want = frames * (double) sp + inFrac;
+            int n = (int) Math.floor(want);
+            inFrac = want - n;
+            fillInput((long) inCursor, n);
+            engine.process(inBuf, n, out, frames);
+            inCursor += n;
+            songPos += frames * (double) sp;
+            // What is heard in this block lags the processing by the output latency.
+            double lag = engine.outputLatency() * (double) sp;
+            b.songStartMs = Math.max(0, startPos - lag) * 1000.0 / rate;
+            b.songEndMs = Math.max(0, songPos - lag) * 1000.0 / rate;
         } else {
             double pitch = Math.pow(2, st / 12.0);
             double stretch = pitch / sp; // output duration / input duration before resampling
@@ -150,7 +188,7 @@ public final class SongRenderer {
             }
             songPos += frames * (double) sp;
         }
-        b.songEndMs = songPos * 1000.0 / rate;
+        if (!(engine != null && stretching)) b.songEndMs = songPos * 1000.0 / rate;
 
         float mg = musicGain;
         if (mg != 1f) for (int i = 0; i < frames * channels; i++) out[i] *= mg;
@@ -192,6 +230,15 @@ public final class SongRenderer {
             if (voice[0] >= samples.length) voices.remove(v);
         }
     }
+
+    /** Interleaved input from frame [from], [n] frames (silence past the ends). */
+    private void fillInput(long from, int n) {
+        if (inBuf.length < n * channels) inBuf = new float[Math.max(n * channels, 4096 * channels)];
+        for (int i = 0; i < n; i++) for (int c = 0; c < channels; c++) inBuf[i * channels + c] = src.sample(c, from + i);
+    }
+
+    /** Frees the native stretcher. */
+    public void release() { if (engine != null) engine.release(); }
 
     private void ensureCapacity(int frames) {
         if (stretched.length == channels && stretched[0].length >= frames) return;

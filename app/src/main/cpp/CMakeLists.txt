@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(supersax_stretch CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_library(supersax_stretch SHARED stretch_jni.cpp)
+target_include_directories(supersax_stretch PRIVATE third_party/signalsmith-stretch third_party/signalsmith-linear/include third_party/signalsmith-linear)
+target_compile_options(supersax_stretch PRIVATE -O3 -ffast-math -fno-exceptions -Wno-deprecated-declarations)
+target_link_libraries(supersax_stretch log)
