@@ -36,8 +36,11 @@ public final class SongEngine {
     private volatile long durationMs;
     private Thread thread;
 
+    private @Nullable VersionSource versions;
+    private final java.util.List<RandomAccessFile> versionFiles = new java.util.ArrayList<>();
+
     /** A memory-mapped cached PCM file as renderer source. */
-    private static final class PcmSource implements SongRenderer.Source {
+    static final class PcmSource implements SongRenderer.Source, VersionSource.Pcm {
         private final MappedByteBuffer map;
         private final AudioDecoder.PcmInfo info;
         PcmSource(MappedByteBuffer map, AudioDecoder.PcmInfo info) { this.map = map; this.info = info; }
@@ -52,6 +55,36 @@ public final class SongEngine {
 
     public StateFlow<PlayerUi> getUi() { return ui; }
 
+    /**
+     * Adds another recording of this song (an AI version) that can be switched to without a gap; it is lined up
+     * with the main one first. Returns its index, or -1 if nothing is open.
+     */
+    public int addVersion(File pcm, AudioDecoder.PcmInfo info) throws IOException {
+        VersionSource vs = versions;
+        if (vs == null) return -1;
+        RandomAccessFile f = new RandomAccessFile(pcm, "r");
+        MappedByteBuffer map = f.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, f.length());
+        map.order(ByteOrder.LITTLE_ENDIAN);
+        PcmSource v = new PcmSource(map, info);
+        double offset = VersionSource.align(vs.versions0(), v);
+        synchronized (this) {
+            if (versions != vs) { f.close(); return -1; }
+            versionFiles.add(f);
+            return vs.add(v, offset);
+        }
+    }
+
+    /** Switches to version [index] (0 = the song opened) at the place being played, with a short crossfade. */
+    public void setVersion(int index) {
+        VersionSource vs = versions;
+        SongRenderer r = renderer;
+        if (vs == null || r == null) return;
+        long frame = (long) (r.positionMs() * vs.sampleRate() / 1000.0);
+        vs.select(index, frame);
+    }
+
+    public int getVersion() { VersionSource vs = versions; return vs == null ? 0 : vs.current(); }
+
     public boolean isReady() { return renderer != null; }
 
     /** Opens a cached PCM file (see {@link AudioDecoder#decodeToPcm}). */
@@ -60,7 +93,9 @@ public final class SongEngine {
         file = new RandomAccessFile(pcm, "r");
         MappedByteBuffer map = file.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
         map.order(ByteOrder.LITTLE_ENDIAN);
-        SongRenderer r = new SongRenderer(new PcmSource(map, info));
+        VersionSource vs = new VersionSource(new PcmSource(map, info));
+        versions = vs;
+        SongRenderer r = new SongRenderer(vs);
         r.setSpeed(speed);
         r.setSemitones(semitones);
         renderer = r;
@@ -78,6 +113,9 @@ public final class SongEngine {
         running = false;
         playing = false;
         renderer = null;
+        versions = null;
+        for (RandomAccessFile f : versionFiles) { try { f.close(); } catch (IOException ignored) { } }
+        versionFiles.clear();
         if (file != null) { try { file.close(); } catch (IOException ignored) { } file = null; }
     }
 
@@ -156,6 +194,8 @@ public final class SongEngine {
         if (r == null) return;
         long t = Math.max(0, Math.min(durationMs, ms));
         r.seek(t);
+        VersionSource vs = versions;
+        if (vs != null) vs.settle();
         heardMs = t;
         publish();
     }

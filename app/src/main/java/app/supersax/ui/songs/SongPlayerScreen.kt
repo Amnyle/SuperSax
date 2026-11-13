@@ -105,7 +105,7 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
         text = { Text(stringResource(R.string.version_delete_body)) },
         confirmButton = { androidx.compose.material3.TextButton(onClick = {
             deleting = false
-            scopeDel.launch { vm.deleteVersion()?.let { onOpenSong(it) } ?: onBack() }
+            scopeDel.launch { vm.deleteVersion()?.let { onOpenSong(it) } }
         }) { Text(stringResource(R.string.version_delete)) } },
         dismissButton = { androidx.compose.material3.TextButton(onClick = { deleting = false }) { Text(stringResource(R.string.cancel)) } },
     )
@@ -142,7 +142,9 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
                 toast(res.fold({ String.format(savedFmt, it) }, { String.format(failedFmt, it.message ?: "") }))
             }
         }) { androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Download, stringResource(R.string.export_save)) }
-        if (s.parentId != null) androidx.compose.material3.IconButton(onClick = { deleting = true }) {
+        val activeId by vm.active.collectAsStateWithLifecycle()
+        val activeIsVersion = vm.versions.collectAsStateWithLifecycle().value.firstOrNull { it.first == activeId }?.second != null || (activeId == songId && s.parentId != null)
+        if (activeIsVersion) androidx.compose.material3.IconButton(onClick = { deleting = true }) {
             androidx.compose.material3.Icon(androidx.compose.material.icons.Icons.Rounded.Delete, stringResource(R.string.version_delete))
         }
         androidx.compose.material3.IconButton(onClick = { addTo = true }) {
@@ -150,7 +152,13 @@ fun SongPlayerScreen(songId: String, onBack: () -> Unit, onOpenSong: (String) ->
         }
     }) { padding ->
         ScrollColumn(padding) {
-            SongVersionsRow(songId, s) { id -> vm.handoffTo(id); onOpenSong(id) }
+            // The song and its AI versions: switching keeps playing, at the same place, without a gap.
+            val versions by vm.versions.collectAsStateWithLifecycle()
+            val active by vm.active.collectAsStateWithLifecycle()
+            if (versions.size > 1) {
+                val root = versions.firstOrNull { it.second == null }?.first ?: songId
+                VersionChips(versions.filter { it.first != root }, active, original = root) { id -> if (!vm.selectVersion(id)) { vm.handoffTo(id); onOpenSong(id) } }
+            }
             ui.error?.let { ErrorBanner(stringResource(R.string.audio_open_failed, it)) }
             analysis.progress?.let { p ->
                 SectionCard {

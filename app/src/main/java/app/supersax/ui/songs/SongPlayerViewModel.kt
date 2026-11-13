@@ -47,6 +47,11 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
     val analysis = _analysis.asStateFlow()
     private val _part = MutableStateFlow<Part?>(null)
     val part = _part.asStateFlow()
+    /** The song and its versions loaded in the engine (id → removed instrument or null), and the one heard. */
+    private val _versions = MutableStateFlow<List<Pair<String, String?>>>(emptyList())
+    val versions = _versions.asStateFlow()
+    private val _active = MutableStateFlow(songId)
+    val active = _active.asStateFlow()
     private val _mix = MutableStateFlow((c.playback.practiceMix?.takeIf { it.first == songId }?.second as? MixUi) ?: MixUi())
     val mix = _mix.asStateFlow()
 
@@ -54,6 +59,8 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         viewModelScope.launch {
             val r = c.media.audioRefs.first().firstOrNull { it.id == songId } ?: return@launch
             _ref.value = r
+            // The version chips show at once; the versions load into the engine in the background.
+            _versions.value = familySetups().map { (id, s) -> id to s.removed }
             if (!prepare(r)) return@launch
             carryOn()
             prepareFamily()
@@ -125,34 +132,62 @@ class SongPlayerViewModel(private val c: AppContainer, val songId: String) : Vie
         player.pause()
     }
 
-    /** Decodes the other versions of this song in the background, so switching to them is immediate. */
+    /**
+     * Loads the other versions of this song into the engine (decoding them once, in the background), lined up
+     * with this one, so switching between them is seamless.
+     */
     private fun prepareFamily() = viewModelScope.launch(Dispatchers.IO) {
         val dir = java.io.File(c.context.cacheDir, "songs")
         val refs = c.media.audioRefs.first()
-        for ((id, _) in familySetups()) {
-            if (id == songId) continue
+        val loaded = c.playback.practiceVersions
+        // The engine may still be playing a version from before (kept in the background): show it as heard.
+        val heard = player.version
+        loaded.entries.firstOrNull { it.value == heard }?.key?.let { id -> _active.value = id; refs.firstOrNull { it.id == id }?.let { _ref.value = it } }
+        val family = familySetups()
+        _versions.value = family.map { (id, s) -> id to s.removed }
+        for ((id, _) in family) {
+            if (id in loaded) continue
             val f = java.io.File(dir, "$id.pcm")
-            if (AudioDecoder.pcmInfo(f) != null) continue
-            val r = refs.firstOrNull { it.id == id } ?: continue
-            runCatching { AudioDecoder.decodeToPcm(c.context, Uri.parse(r.uri), f) { } }
+            var info = AudioDecoder.pcmInfo(f)
+            if (info == null) {
+                val r = refs.firstOrNull { it.id == id } ?: continue
+                info = runCatching { AudioDecoder.decodeToPcm(c.context, Uri.parse(r.uri), f) { } }.getOrNull() ?: continue
+            }
+            val index = runCatching { player.addVersion(f, info) }.getOrDefault(-1)
+            if (index >= 0) loaded[id] = index
         }
     }
 
-    /** Deletes this song if it is an AI version (its file, cache and playlist places); returns its original's id. */
+    /** Hears version [id] from here on, without a gap. False if it is not loaded yet (then open it instead). */
+    fun selectVersion(id: String): Boolean {
+        val index = c.playback.practiceVersions[id] ?: return false
+        player.setVersion(index)
+        _active.value = id
+        viewModelScope.launch { c.media.audioRefs.first().firstOrNull { it.id == id }?.let { _ref.value = it } }
+        return true
+    }
+
+    /**
+     * Deletes the AI version being heard (its file, cache and playlist places). Returns the song to open next:
+     * the original when this page was opened on that version, null to stay here (switched back to the original).
+     */
     suspend fun deleteVersion(): String? {
-        val s = c.songs.get(songId)
+        val id = _active.value
+        val s = c.songs.get(id)
         val parent = s.parentId ?: return null
-        val r = _ref.value ?: return null
-        player.pause()
+        val r = c.media.audioRefs.first().firstOrNull { it.id == id } ?: return null
+        if (id == songId) player.pause() else selectVersion(c.playback.practiceVersions.entries.firstOrNull { it.value == 0 }?.key ?: songId)
+        c.playback.practiceVersions.remove(id)
+        _versions.value = _versions.value.filterNot { it.first == id }
         c.media.deleteAudioRef(r.id)
         c.songs.delete(r.id)
         c.playlists.forget(r.id)
         withContext(Dispatchers.IO) {
-            pcm.delete()
+            java.io.File(java.io.File(c.context.cacheDir, "songs"), "${r.id}.pcm").delete()
             val path = Uri.parse(r.uri).path
             if (r.uri.startsWith("file:") && path != null && path.startsWith(c.songsDir.absolutePath)) java.io.File(path).delete()
         }
-        return parent
+        return if (id == songId) parent else null
     }
 
     /** Detects tempo, first beat and key from the cached audio; keeps the checkpoints and the source. */

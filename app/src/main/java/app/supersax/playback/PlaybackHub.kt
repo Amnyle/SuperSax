@@ -95,6 +95,10 @@ class PlaybackHub(private val c: AppContainer) {
     fun previous() = c.appScope.launch(Dispatchers.Main) { controller().seekToPreviousMediaItem() }
     fun stop() = c.appScope.launch(Dispatchers.Main) { val ctl = controller(); ctl.stop(); ctl.clearMediaItems() }
 
+    /** For the practice engine: which song id each loaded version is (0 = the song opened). */
+    var practiceVersions: MutableMap<String, Int> = mutableMapOf()
+        private set
+
     /** Set just before opening another version of the song: the new screen carries on from here. */
     var handoff: Handoff? = null
 
@@ -119,6 +123,7 @@ class PlaybackHub(private val c: AppContainer) {
         if (e != null && practiceSong == songId) { practicePlayer?.keepEngine = false; return e }
         val n = SongEngine()
         practiceEngine = n; practiceSong = songId; practicePlayer = null
+        practiceVersions = mutableMapOf(songId to 0)
         return n
     }
 

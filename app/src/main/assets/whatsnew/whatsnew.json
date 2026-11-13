@@ -299,5 +299,14 @@
       "Supprimez une version IA qui ne vous plaît pas avec la corbeille en haut de sa page.",
       "Ouvrir un morceau en cours de lecture depuis la liste ou une playlist continue là où il en est, les mesures suivent."
     ]
+  },
+  {
+    "id": 26,
+    "en": [
+      "Switching between Original and No sax is now seamless: both play in the same player, lined up to the sample, and the switch crossfades in 30 ms at the exact spot, with your speed, key, loop and clicks."
+    ],
+    "fr": [
+      "Passer de l'Original à Sans sax est maintenant sans coupure : les deux jouent dans le même lecteur, alignés à l'échantillon près, et le passage se fait en fondu de 30 ms à l'endroit exact, avec votre vitesse, tonalité, boucle et clics."
+    ]
   }
 ]
