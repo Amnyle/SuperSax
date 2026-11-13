@@ -19,11 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      VERSION: 1.0.${{ github.run_number }}
+      # Version MAJOR.MINOR.PATCH: PATCH counts releases since the run that started this MINOR.
+      # For a new minor (e.g. 1.2), set MINOR and FIRST_RUN to the next run number.
+      MAJOR: 1
+      MINOR: 1
+      FIRST_RUN: 45
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 20
+
+      - name: Version
+        run: echo "VERSION=$MAJOR.$MINOR.$(( ${{ github.run_number }} - FIRST_RUN ))" >> "$GITHUB_ENV"
 
       - uses: actions/setup-java@v4
         with:
