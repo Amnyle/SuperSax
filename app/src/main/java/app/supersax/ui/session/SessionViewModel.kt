@@ -9,6 +9,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -22,7 +25,11 @@ class SessionViewModel(private val c: AppContainer) : ViewModel() {
     val now: StateFlow<Long> = _now.asStateFlow()
 
     /** Offer to raise the tempo now, after two clean runs in a row: (scaleKey, newBpm). */
+    /** The scale and the tempo offered after two clean runs (scale tempo + the player's step). */
     private val _bumpOffer = MutableStateFlow<Pair<String, Int>?>(null)
+    private var bumpFrom = 0
+    /** The tempo step for scales (5, 10, 15 or 20 BPM; 10 by default). */
+    val bpmStep: StateFlow<Int> = c.settings.settings.map { it.scaleBpmStep }.stateIn(viewModelScope, SharingStarted.Eagerly, 10)
     val bumpOffer: StateFlow<Pair<String, Int>?> = _bumpOffer.asStateFlow()
 
     /** Fired once per step change, so the screen can play a soft cue. */
@@ -61,7 +68,8 @@ class SessionViewModel(private val c: AppContainer) : ViewModel() {
         val r = run.value ?: return
         val step = c.content.generatorConfig.adaptation
         if (clean && r.cleanStreak(scaleKey) > 0 && r.cleanStreak(scaleKey) % step.cleanRunsForBump == 0) {
-            _bumpOffer.value = scaleKey to (bpm + step.bpmStep).coerceAtMost(step.maxBpm)
+            bumpFrom = bpm
+            _bumpOffer.value = scaleKey to (bpm + bpmStep.value).coerceAtMost(step.maxBpm)
         }
     }
 
@@ -77,6 +85,12 @@ class SessionViewModel(private val c: AppContainer) : ViewModel() {
     }
 
     fun dismissBump() { _bumpOffer.value = null }
+
+    /** Changes the tempo step (kept for later bumps) and the tempo offered now. */
+    fun setBpmStep(step: Int) {
+        viewModelScope.launch { c.settings.update { it.copy(scaleBpmStep = step) } }
+        _bumpOffer.value?.let { (key, _) -> _bumpOffer.value = key to (bumpFrom + step).coerceAtMost(c.content.generatorConfig.adaptation.maxBpm) }
+    }
 
     fun complete(tiredness: Int?, note: String, onSaved: () -> Unit) {
         viewModelScope.launch { c.sessions.complete(tiredness, note); onSaved() }

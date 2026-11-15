@@ -19,7 +19,7 @@
   "minBlockMinutes": 1,
   "phoneDrills": { "sessionsPerWeek": 3, "minutes": 5, "maxShareOfSaxMinutes": 0.20 },
   "adaptation": {
-    "bpmStep": 5,
+    "bpmStep": 10,
     "cleanRunsForBump": 2,
     "minBpm": 40,
     "maxBpm": 240,

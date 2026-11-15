@@ -160,7 +160,7 @@ class SessionManager(
     }
 
     private suspend fun applyAdaptation(record: SessionRecord, now: Long) {
-        val cfg = content.generatorConfig.adaptation
+        val cfg = content.generatorConfig.adaptation.let { a -> a.copy(bpmStep = settings.current().scaleBpmStep.takeIf { it > 0 } ?: a.bpmStep) }
         var player = practice.playerNow()
         record.runs.forEach { run ->
             val before = player.scale(run.scaleKey)?.consecutiveClean ?: 0

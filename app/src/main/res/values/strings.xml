@@ -1223,4 +1223,15 @@
     <string name="take_first_note">My first note</string>
     <string name="take_music_minus">Music −10 ms</string>
     <string name="take_music_plus">Music +10 ms</string>
+    <string name="bump_step">Tempo step</string>
+    <string name="lt_coach">Next note</string>
+    <string name="lt_coach_picks">The coach picks the notes</string>
+    <string name="lt_play_next">Play</string>
+    <string name="lt_reason_new">New note for you: hold it %1$d s, nice and steady.</string>
+    <string name="lt_reason_work">You struggle with this one lately: hold it %1$d s in tune.</string>
+    <string name="lt_reason_review">Holding well: keep it fresh, %1$d s.</string>
+    <string name="lt_skip">Another note</string>
+    <string name="lt_last_try">Last try: %1$d s, %2$d %% in tune.</string>
+    <string name="lt_needs_work">Comes up more often: %1$s</string>
+    <string name="lt_drone_follow">Follow me</string>
 </resources>

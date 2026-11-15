@@ -155,7 +155,18 @@ fun SessionScreen(onFinished: () -> Unit, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = vm::dismissBump,
             title = { Text(stringResource(R.string.bump_title)) },
-            text = { Text(stringResource(R.string.bump_body, scaleLabel(key), bpm)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.bump_body, scaleLabel(key), bpm))
+                    Text(stringResource(R.string.bump_step), style = MaterialTheme.typography.labelLarge)
+                    val step by vm.bpmStep.collectAsStateWithLifecycle()
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf(5, 10, 15, 20).forEach { s ->
+                            androidx.compose.material3.FilterChip(step == s, { vm.setBpmStep(s) }, { Text("+$s") })
+                        }
+                    }
+                }
+            },
             confirmButton = { Button(onClick = vm::acceptBump) { Text(stringResource(R.string.bump_now, bpm)) } },
             dismissButton = { TextButton(onClick = vm::dismissBump) { Text(stringResource(R.string.bump_later)) } },
         )

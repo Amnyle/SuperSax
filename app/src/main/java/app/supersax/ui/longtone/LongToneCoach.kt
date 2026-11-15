@@ -56,6 +56,10 @@ import app.supersax.domain.longtone.DroneInterval
 import app.supersax.domain.longtone.DroneSound
 import app.supersax.domain.longtone.HoldFirstLatch
 import app.supersax.domain.longtone.LongToneMeter
+import app.supersax.domain.longtone.LongTonePlan
+import app.supersax.domain.common.RankEventKind
+import app.supersax.ui.nav.LocalSettings
+import androidx.compose.runtime.rememberUpdatedState
 import app.supersax.ui.audio.LiveTuner
 import app.supersax.ui.audio.MicErrorBanner
 import app.supersax.ui.audio.TunerReading
@@ -90,6 +94,9 @@ private class DronePrefs(context: Context) {
     var volume: Float
         get() = p.getFloat("volume", 0.6f)
         set(v) { p.edit().putFloat("volume", v).apply() }
+    var coachPicks: Boolean
+        get() = p.getBoolean("coach_picks", true)
+        set(v) { p.edit().putBoolean("coach_picks", v).apply() }
 }
 
 /** The long-tone coach on its own page (Training). */
@@ -104,8 +111,8 @@ fun LongToneScreen(onBack: () -> Unit) {
 
 /**
  * Tuning circle, hold timer, in-tune share, pitch + volume graph and a drone. With [targetMidi] (a session block)
- * cents are measured against that note and the drone can sound it; otherwise "Hold first" latches the first
- * steady note played. Holds are saved to the tuner history.
+ * cents are measured against that note; in Training the coach picks the notes (more often those held worst lately).
+ * The drone sounds the note to play, or follows each new note held ("Follow me"). Holds are saved to the tuner history.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -118,7 +125,36 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
     var listening by remember { mutableStateOf(false) }
     val request = rememberMicRequest { granted -> if (granted) { listening = true; tuner.start(true) } }
     LaunchedEffect(Unit) { if (autoStart) request() }
-    LaunchedEffect(targetMidi) { tuner.targetMidi = targetMidi }
+
+    // Training: the coach picks the next note, more often the ones held worst lately (session blocks have their own).
+    val instrument = LocalSettings.current.instrument
+    var coachPicks by remember { mutableStateOf(targetMidi == null && prefs.coachPicks) }
+    val holdsRaw by c.progress.holds.collectAsStateWithLifecycle(emptyList())
+    val events by c.progress.rankEvents.collectAsStateWithLifecycle(emptyList())
+    // Only holds on the right note count (a wrong note is not a bad long tone).
+    val planHolds = remember(holdsRaw) {
+        holdsRaw.filter { abs(it.meanCents) <= 50 && it.stableSec >= 1 }
+            .map { LongTonePlan.Hold(instrument.concertToWrittenMidi(it.refMidi), it.atMs, it.stableSec, it.inTuneShare) }
+    }
+    val candidates = remember(events, planHolds) {
+        val known = events.filter { it.kind == RankEventKind.RANGE_NOTE && it.verified }.mapNotNull { it.writtenMidi }.distinct()
+        val (lo, hi) = if (known.size >= 4) known.min() to known.max() else 62 to 74
+        LongTonePlan.candidates(lo.coerceAtLeast(instrument.writtenLowMidi), hi.coerceAtMost(instrument.writtenHighMidi), planHolds)
+    }
+    var pick by remember { mutableStateOf<LongTonePlan.Pick?>(null) }
+    var lastHold by remember { mutableStateOf<app.supersax.domain.audio.HoldReport?>(null) }
+    val recent = remember { mutableStateListOf<Int>() }
+    val latestHolds by rememberUpdatedState(planHolds)
+    val latestCandidates by rememberUpdatedState(candidates)
+    fun nextPick() {
+        if (latestCandidates.isEmpty()) return
+        val p = LongTonePlan.next(latestCandidates, latestHolds, recent.takeLast(2), java.util.Random())
+        pick = p; recent += p.writtenMidi
+    }
+    LaunchedEffect(coachPicks, candidates.isNotEmpty()) { if (coachPicks && pick == null) nextPick() }
+    val coachTarget = if (coachPicks) pick?.let { instrument.writtenToConcertMidi(it.writtenMidi) } else null
+    val effectiveTarget = targetMidi ?: coachTarget
+    LaunchedEffect(effectiveTarget) { tuner.targetMidi = effectiveTarget }
 
     val meter = remember { LongToneMeter(TOLERANCE, 0.3) }
     val latch = remember { HoldFirstLatch() }
@@ -127,7 +163,10 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
     val volume = remember { mutableStateListOf<Float>() }
 
     var droneOn by remember { mutableStateOf(false) }
-    var holdFirst by remember { mutableStateOf(targetMidi == null) }
+    // Follow me: the drone moves to each new note you hold. Target: it sounds the note to play.
+    var followChoice by remember { mutableStateOf<Boolean?>(null) }
+    val follow = followChoice ?: (effectiveTarget == null)
+    LaunchedEffect(Unit) { latch.setFollow(true) }
     var latched by remember { mutableStateOf<Int?>(null) }
     var sound by remember { mutableStateOf(prefs.sound) }
     var intervals by remember { mutableStateOf(prefs.intervals) }
@@ -140,7 +179,7 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
         val midi = r.concertMidi?.takeIf { r.frequencyHz != null }
         meter.push(r.timeSec, midi, r.cents)
         stats = Triple(meter.holdSec, meter.inTunePercent, meter.bestSec)
-        if (droneOn && holdFirst && latched == null) latch.push(r.timeSec, midi)?.let { latched = it }
+        if (droneOn && follow) latch.push(r.timeSec, midi)?.let { if (it != latched) latched = it }
         pitch += if (midi != null) r.cents.toFloat().coerceIn(-50f, 50f) else Float.NaN
         volume += ((LongToneMeter.decibels(r.rms) + 60) / 60).toFloat().coerceIn(0f, 1f)
         if (pitch.size > 300) pitch.removeAt(0)
@@ -148,7 +187,18 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
     }
 
     // The drone follows the root (latched note or target), the chosen intervals and the sound.
-    val root = if (holdFirst) latched else targetMidi
+    val root = if (follow) latched else effectiveTarget
+
+    // A real try on the coach's note (4 s or more, on the right note) moves on to the next one.
+    LaunchedEffect(reading.lastReport) {
+        val r = reading.lastReport ?: return@LaunchedEffect
+        if (!coachPicks || targetMidi != null || r.refMidi != coachTarget) return@LaunchedEffect
+        if (abs(r.meanCents) > 50 || r.stableSec < 4) return@LaunchedEffect
+        lastHold = r
+        tuner.clearReport()
+        kotlinx.coroutines.delay(1200)
+        nextPick()
+    }
     LaunchedEffect(droneOn, root, sound, intervals, revision) {
         val notes = if (droneOn && root != null) DroneInterval.notes(root, intervals).toList() else emptyList()
         val sax = if (sound == DroneSound.SAX && notes.isNotEmpty()) withContext(Dispatchers.IO) { runCatching { c.band.altoSax }.getOrNull() } else null
@@ -163,6 +213,43 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
     }
     val mic by c.mic.state.collectAsStateWithLifecycle()
     MicErrorBanner(mic) { tuner.stop(); c.mic.retry(hasMicPermission(context)); tuner.start(hasMicPermission(context)) }
+
+    if (targetMidi == null) SectionCard(stringResource(R.string.lt_coach)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(R.string.lt_coach_picks), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+            Switch(coachPicks, { coachPicks = it; prefs.coachPicks = it; if (it && pick == null) nextPick() })
+        }
+        val p = pick
+        if (coachPicks && p != null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(stringResource(R.string.lt_play_next), style = MaterialTheme.typography.labelLarge, color = Sax.colors.textSecondary)
+                    Text(writtenNoteLabel(instrument.writtenToConcertMidi(p.writtenMidi)), fontSize = 40.sp, fontWeight = FontWeight.Medium)
+                    Text(
+                        stringResource(when (p.reason) {
+                            LongTonePlan.Reason.NEW -> R.string.lt_reason_new
+                            LongTonePlan.Reason.WORK_ON -> R.string.lt_reason_work
+                            LongTonePlan.Reason.REVIEW -> R.string.lt_reason_review
+                        }, LongTonePlan.GOAL_SEC.roundToInt()),
+                        style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary,
+                    )
+                }
+                OutlinedButton(onClick = { nextPick() }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.lt_skip)) }
+            }
+            lastHold?.let { h ->
+                Text(stringResource(R.string.lt_last_try, h.stableSec.roundToInt(), (h.inTuneShare * 100).roundToInt()), style = MaterialTheme.typography.bodyMedium)
+            }
+            // The priority index: the notes that come up most often right now.
+            val work = remember(planHolds, candidates) {
+                candidates.map { it to LongTonePlan.struggle(it, planHolds) }.filter { it.second >= 0.35 }.sortedByDescending { it.second }.take(4)
+            }
+            val names = work.map { (m, _) -> writtenNoteLabel(instrument.writtenToConcertMidi(m)) }
+            if (names.isNotEmpty()) Text(
+                stringResource(R.string.lt_needs_work, names.joinToString(" · ")),
+                style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary,
+            )
+        }
+    }
 
     TuningCircle(reading, stats.second, Modifier.fillMaxWidth().padding(horizontal = 24.dp))
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -186,13 +273,12 @@ fun LongToneCoach(targetMidi: Int?, autoStart: Boolean, onStop: (() -> Unit)? = 
                 },
                 style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f),
             )
-            Switch(droneOn, { droneOn = it; if (it && holdFirst) { latch.reset(); latched = null } })
+            Switch(droneOn, { droneOn = it; if (it && follow) { latch.reset(); latched = null } })
         }
         if (droneOn) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                FilterChip(holdFirst, { holdFirst = true; latch.reset(); latched = null }, { Text(stringResource(R.string.lt_drone_hold_first)) })
-                if (targetMidi != null) FilterChip(!holdFirst, { holdFirst = false }, { Text(stringResource(R.string.lt_drone_target)) })
-                if (holdFirst && latched != null) TextButton(onClick = { latch.reset(); latched = null }) { Text(stringResource(R.string.lt_drone_reset)) }
+                FilterChip(follow, { followChoice = true; latch.reset(); latched = null }, { Text(stringResource(R.string.lt_drone_follow)) })
+                if (effectiveTarget != null) FilterChip(!follow, { followChoice = false }, { Text(stringResource(R.string.lt_drone_target)) })
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(DroneInterval.UNISON to R.string.lt_unison, DroneInterval.MAJOR_THIRD to R.string.lt_third, DroneInterval.FIFTH to R.string.lt_fifth).forEach { (i, label) ->

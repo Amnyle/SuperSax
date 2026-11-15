@@ -5,9 +5,11 @@ import app.supersax.domain.longtone.DroneInterval
 import app.supersax.domain.longtone.DroneSound
 import app.supersax.domain.longtone.HoldFirstLatch
 import app.supersax.domain.longtone.LongToneMeter
+import app.supersax.domain.longtone.LongTonePlan
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import kotlin.test.assertTrue as check
 import org.junit.Test
 import kotlin.math.abs
 
@@ -77,5 +79,45 @@ class LongToneTest {
         val buf = FloatArray(44100)
         repeat(20) { buf.fill(0f); d.mixInto(buf, buf.size) }
         assertTrue(buf.maxOf { abs(it) } > 0.02f)
+    }
+
+    @Test fun followLatchMovesToANewSteadyNote() {
+        val l = HoldFirstLatch(0.6, 0.15)
+        l.setFollow(true)
+        var t = 0.0
+        repeat(40) { l.push(t, 62); t += 0.02 }
+        assertEquals(62, l.latched)
+        // A quick passing note does not move it; a held one does.
+        repeat(10) { l.push(t, 64); t += 0.02 }
+        assertEquals(62, l.latched)
+        repeat(40) { l.push(t, 64); t += 0.02 }
+        assertEquals(64, l.latched)
+    }
+
+    @Test fun planWorksMoreOnTheNotesHeldWorst() {
+        val c = LongTonePlan.candidates(62, 74, emptyList())
+        assertEquals(listOf(62, 64, 65, 67, 69, 71, 72, 74), c)
+        // C5 (72) held badly, every other note held well.
+        val holds = c.flatMap { m ->
+            (0 until 3).map { i -> if (m == 72) LongTonePlan.Hold(m, i.toLong(), 2.0, 0.3) else LongTonePlan.Hold(m, i.toLong(), 9.0, 0.95) }
+        }
+        assertTrue(LongTonePlan.struggle(72, holds) > 0.6)
+        assertTrue(LongTonePlan.struggle(64, holds) < 0.1)
+        assertEquals(-1.0, LongTonePlan.struggle(66, holds), 0.0)
+        val rnd = java.util.Random(1)
+        val counts = mutableMapOf<Int, Int>()
+        repeat(4000) { counts.merge(LongTonePlan.next(c, holds, emptyList(), rnd).writtenMidi, 1, Int::plus) }
+        val c5 = counts[72]!!
+        // The struggling note comes up several times as often as any other, but every note still comes up.
+        check(c.all { (counts[it] ?: 0) > 100 }, "$counts")
+        check(c.filter { it != 72 }.all { c5 > 3 * counts[it]!! }, "$counts")
+        // Never the same note twice in a row.
+        assertTrue((0 until 50).none { LongTonePlan.next(c, holds, listOf(72), rnd).writtenMidi == 72 })
+    }
+
+    @Test fun planAddsAccidentalsAlreadyPlayed() {
+        val c = LongTonePlan.candidates(62, 74, listOf(LongTonePlan.Hold(66, 0, 5.0, 0.8), LongTonePlan.Hold(80, 0, 5.0, 0.8)))
+        assertTrue(66 in c)
+        assertTrue(80 !in c)
     }
 }

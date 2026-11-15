@@ -310,3 +310,9 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 ## Daily exercise length
 
 - The daily exercise asks "How much time do you have?" (5, 10 or 15 minutes, last choice first, kept in SharedPreferences `daily`). `DailyMix.counts(…, minutes)` multiplies the 5-minute mix (weakest-drill extras included) by 1, 2 or 3. Every length counts for the streak.
+
+## Long-tone coach picks the notes; drone follows; scale step 10
+
+- `LongTonePlan`: candidates are the natural notes of the player's verified range (a beginner's D4–D5 written while fewer than 4 notes are known) plus accidentals already held there. Struggle per note = 1 − weighted mean of the last 8 holds' quality (0.6 × in-tune share + 0.4 × min(1, held / 8 s)), newest weighing most; holds on a wrong note (|mean| > 50 cents) or under 1 s are ignored. Weight 0.4 + 1.6 × struggle (never held: 1.2), weighted random, never one of the last two notes, so weak notes come up up to five times as often and every note still comes up. A try of at least 4 s on the note moves on.
+- Drone: "Follow me" re-latches on every new note held 0.6 s (`HoldFirstLatch.setFollow`); "Target note" sounds the coach's (or the session block's) note and changes with it.
+- Scale tempo step is 10 BPM (generator `bpmStep` and the new setting `scaleBpmStep`, default 10); the bump dialog offers +5/+10/+15/+20 and keeps the choice, used for later bumps and the stored adaptation.

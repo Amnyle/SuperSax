@@ -390,5 +390,18 @@
       "Exercice du jour : choisissez 5, 10 ou 15 minutes à chaque fois (votre dernier choix est proposé en premier). Toutes les durées comptent pour la série.",
       "Vidéos : la vérification de la synchro joue là où vous jouez. Elle démarre juste avant votre première note au lieu de l'intro du morceau, tourne en boucle jusqu'à l'arrêt, et la synchro et l'équilibre changent pendant l'écoute (avec des boutons ±10 ms)."
     ]
+  },
+  {
+    "id": 35,
+    "en": [
+      "Long-tone coach: the coach now tells you which note to play. Notes you have struggled to hold lately come up more often, the others still come back. After a real try (4 s or more) it moves on; \"Another note\" skips.",
+      "The drone follows you: in \"Follow me\" it moves to each new note you hold. With the coach, \"Target note\" sounds the note to play.",
+      "Scales: the tempo now goes up by 10 BPM after two clean runs. Change the step (+5, +10, +15, +20) in the tempo pop-up; it is kept."
+    ],
+    "fr": [
+      "Coach sons filés : le coach vous dit maintenant quelle note jouer. Les notes que vous avez eu du mal à tenir ces derniers temps reviennent plus souvent, les autres reviennent quand même. Après un vrai essai (4 s ou plus) il passe à la suivante ; « Autre note » en change.",
+      "Le bourdon vous suit : en « Me suivre », il passe à chaque nouvelle note tenue. Avec le coach, « Note cible » joue la note à faire.",
+      "Gammes : le tempo monte maintenant de 10 BPM après deux passages propres. Changez le pas (+5, +10, +15, +20) dans la fenêtre du tempo ; il est gardé."
+    ]
   }
 ]

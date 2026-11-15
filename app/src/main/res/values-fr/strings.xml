@@ -1231,4 +1231,15 @@
     <string name="take_first_note">Ma première note</string>
     <string name="take_music_minus">Musique −10 ms</string>
     <string name="take_music_plus">Musique +10 ms</string>
+    <string name="bump_step">Pas de tempo</string>
+    <string name="lt_coach">Note suivante</string>
+    <string name="lt_coach_picks">Le coach choisit les notes</string>
+    <string name="lt_play_next">Jouez</string>
+    <string name="lt_reason_new">Nouvelle note pour vous : tenez-la %1$d s, bien stable.</string>
+    <string name="lt_reason_work">Vous avez du mal avec celle-ci ces temps-ci : tenez-la %1$d s, juste.</string>
+    <string name="lt_reason_review">Bien tenue : on l\'entretient, %1$d s.</string>
+    <string name="lt_skip">Autre note</string>
+    <string name="lt_last_try">Dernier essai : %1$d s, %2$d %% juste.</string>
+    <string name="lt_needs_work">Revient plus souvent : %1$s</string>
+    <string name="lt_drone_follow">Me suivre</string>
 </resources>

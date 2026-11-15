@@ -69,6 +69,8 @@ data class SettingsRecord(
     val updateCheck: Boolean = true,
     /** A version the player chose to skip. */
     val updateSkip: String? = null,
+    /** How much a scale's tempo rises after two clean runs (the player can change it in the tempo dialog). */
+    val scaleBpmStep: Int = 10,
 )
 
 /** The whole user dataset, as stored in `backup.json`. */

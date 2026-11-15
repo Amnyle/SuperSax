@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class HoldFirstLatch {
     private final double steadySec, gapSec;
+    /** When true, a new steady note replaces the latched one (the drone follows the player). */
+    private boolean follow;
     private @Nullable Integer latched;
     private @Nullable Integer candidate;
     private double since = -1, lastSeen = -1;
@@ -16,12 +18,13 @@ public final class HoldFirstLatch {
     public HoldFirstLatch() { this(0.6, 0.15); }
 
     public @Nullable Integer getLatched() { return latched; }
+    public void setFollow(boolean v) { follow = v; }
 
     public void reset() { latched = null; candidate = null; since = -1; lastSeen = -1; }
 
     /** Feeds one frame (nearest concert MIDI, null when silent); returns the latched note once there is one. */
     public @Nullable Integer push(double timeSec, @Nullable Integer midi) {
-        if (latched != null) return latched;
+        if (latched != null && !follow) return latched;
         if (midi == null) {
             if (candidate != null && timeSec - lastSeen > gapSec) { candidate = null; since = -1; }
             return null;

@@ -13,19 +13,19 @@ import kotlin.test.assertTrue
 class AdaptationTest {
     private val config = TestAssets.generatorConfig.adaptation
 
-    @Test fun twoCleanRunsAddFiveBpm() {
+    @Test fun twoCleanRunsAddTenBpm() {
         var s = PlayerState(scales = listOf(ScaleProgress("MAJOR:Eb", 60, unlockedAtEpochMs = 1)))
         var r = Adaptation.recordRun(s, "MAJOR:Eb", 60, true, 10, config)
         assertFalse(r.bumped); assertEquals(60, r.newBpm)
         r = Adaptation.recordRun(r.state, "MAJOR:Eb", 60, true, 11, config)
-        assertTrue(r.bumped); assertEquals(65, r.newBpm)
+        assertTrue(r.bumped); assertEquals(70, r.newBpm)
         assertEquals(0, r.state.scale("MAJOR:Eb")!!.consecutiveClean)
         // A mistake in between resets the streak.
         s = r.state
-        r = Adaptation.recordRun(s, "MAJOR:Eb", 65, true, 12, config)
-        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 65, false, 13, config)
-        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 65, true, 14, config)
-        assertFalse(r.bumped); assertEquals(65, r.newBpm)
+        r = Adaptation.recordRun(s, "MAJOR:Eb", 70, true, 12, config)
+        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 70, false, 13, config)
+        r = Adaptation.recordRun(r.state, "MAJOR:Eb", 70, true, 14, config)
+        assertFalse(r.bumped); assertEquals(70, r.newBpm)
     }
 
     @Test fun newScaleUnlocksWhenLastTwoAreSolid() {
