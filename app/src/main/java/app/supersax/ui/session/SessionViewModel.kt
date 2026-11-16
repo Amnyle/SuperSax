@@ -92,8 +92,29 @@ class SessionViewModel(private val c: AppContainer) : ViewModel() {
         _bumpOffer.value?.let { (key, _) -> _bumpOffer.value = key to (bumpFrom + step).coerceAtMost(c.content.generatorConfig.adaptation.maxBpm) }
     }
 
+    private val _result = MutableStateFlow<SessionResult?>(null)
+    /** What changed with the session just saved (shown before leaving the summary). */
+    val result: StateFlow<SessionResult?> = _result.asStateFlow()
+
     fun complete(tiredness: Int?, note: String, onSaved: () -> Unit) {
-        viewModelScope.launch { c.sessions.complete(tiredness, note); onSaved() }
+        viewModelScope.launch {
+            val runs = run.value?.runs.orEmpty()
+            val rankBefore = runCatching { c.rank.current() }.getOrNull()
+            val before = c.practice.playerNow()
+            c.sessions.complete(tiredness, note)
+            val after = c.practice.playerNow()
+            val rankAfter = runCatching { c.rank.current() }.getOrNull()
+            val records = runs.filter { it.clean }.groupBy { it.scaleKey }.map { (key, rs) ->
+                Triple(key, rs.maxOf { it.bpm }, before.scale(key)?.bestCleanBpm?.takeIf { it > 0 })
+            }
+            val tempoUps = after.scales.mapNotNull { a ->
+                val b = before.scale(a.scaleKey) ?: return@mapNotNull null
+                if (a.bpm > b.bpm) Triple(a.scaleKey, b.bpm, a.bpm) else null
+            }
+            val unlocked = after.scales.map { it.scaleKey }.filter { before.scale(it) == null && runs.none { r -> r.scaleKey == it } }
+            _result.value = SessionResult(rankBefore, rankAfter, records, tempoUps, unlocked, runs.count { it.clean }, runs.size)
+            if (runs.isEmpty() && rankBefore == null) onSaved()
+        }
     }
 
     fun discard(onDone: () -> Unit) {

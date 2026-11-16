@@ -28,10 +28,15 @@ public final class SessionPlanner {
         List<String> scaleQueue = scaleRotation(state, config);
         // Never the same scale twice in one session: when there are more scale exercises than unlocked
         // scales, the extra ones introduce the next scales of the unlock order (they unlock when played).
+        // Each part of a long scale exercise (split at the endurance cap) is a scale slot of its own.
         int scaleSlots = 0;
         for (Block b : blocks) {
             if (b.getMinutes() <= 0) continue;
-            for (Exercise e : b.getExercises()) if (e.getType() == ExerciseType.SCALE && e.getTarget().getScaleKey() == null) scaleSlots++;
+            List<Exercise> ex = b.getExercises();
+            for (int i = 0; i < ex.size(); i++) {
+                Exercise e = ex.get(i);
+                if (e.getType() == ExerciseType.SCALE && e.getTarget().getScaleKey() == null) scaleSlots += chunks(b, i, enduranceCapSec);
+            }
         }
         for (String key : config.getAdaptation().getUnlockOrder()) {
             if (scaleQueue.size() >= scaleSlots) break;
@@ -77,6 +82,20 @@ public final class SessionPlanner {
         return out;
     }
 
+    /** Seconds given to exercise [i] of [block] (the first one takes the remainder). */
+    private static int exerciseSec(Block block, int i) {
+        int n = block.getExercises().size();
+        int totalSec = block.getMinutes() * 60;
+        int per = totalSec / n;
+        return per + (i == 0 ? totalSec - per * n : 0);
+    }
+
+    /** How many parts exercise [i] is split into (a playing exercise longer than the endurance cap). */
+    private static int chunks(Block block, int i, int capSec) {
+        int dur = exerciseSec(block, i);
+        return block.getExercises().get(i).getType().isPlaying() && capSec > 0 && dur > capSec ? (int) Math.ceil((double) dur / capSec) : 1;
+    }
+
     private static List<PlannedStep> blockSteps(Block block, PlayerState state, List<String> scaleQueue, PieceChoice pieces,
                                                 GeneratorConfig config, int capSec) {
         List<PlannedStep> steps = new ArrayList<>();
@@ -93,7 +112,10 @@ public final class SessionPlanner {
             boolean playing = e.getType().isPlaying();
             int chunks = playing && dur > capSec ? (int) Math.ceil((double) dur / capSec) : 1;
             int chunkLen = dur / chunks;
+            // A scale exercise in several parts: every part gets the next scale (never the same scale twice).
+            boolean scalePerPart = e.getType() == ExerciseType.SCALE && e.getTarget().getScaleKey() == null;
             for (int c = 1; c <= chunks; c++) {
+                if (scalePerPart && c > 1) target = resolve(e, state, scaleQueue, pieces, config);
                 int d = c == chunks ? dur - chunkLen * (chunks - 1) : chunkLen;
                 if (playing && continuous > 0 && continuous + d > capSec) {
                     steps.add(rest(config.getRestSec()));

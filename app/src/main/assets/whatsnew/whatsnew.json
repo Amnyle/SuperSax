@@ -403,5 +403,20 @@
       "Le bourdon vous suit : en « Me suivre », il passe à chaque nouvelle note tenue. Avec le coach, « Note cible » joue la note à faire.",
       "Gammes : le tempo monte maintenant de 10 BPM après deux passages propres. Changez le pas (+5, +10, +15, +20) dans la fenêtre du tempo ; il est gardé."
     ]
+  },
+  {
+    "id": 36,
+    "en": [
+      "After a session: a results screen shows what changed, with an animation: rank up, a pillar going up, new scale records, the tempo for next time and new scales.",
+      "Weekly review: what you improved (against the week before) and what's next (weakest area, scale to push, next scale to unlock, long-tone notes to work on). \"Update my program\" refreshes your program to where you are now, showing the change first. A card on the home screen tells you when it is ready.",
+      "Sessions never repeat a scale: a long scale exercise changes scale at each part.",
+      "Tempo goes up to 400 BPM (metronome, scales, goals)."
+    ],
+    "fr": [
+      "Après une séance : un écran de résultats montre ce qui a changé, avec une animation : montée de rang, un pilier qui monte, nouveaux records de gamme, le tempo de la prochaine fois et les nouvelles gammes.",
+      "Bilan de la semaine : vos progrès (par rapport à la semaine d'avant) et la suite (point faible, gamme à pousser, prochaine gamme à débloquer, sons filés à travailler). « Mettre à jour mon programme » adapte votre programme à où vous en êtes, en montrant le changement d'abord. Une carte sur l'accueil vous prévient quand il est prêt.",
+      "Les séances ne répètent jamais une gamme : un long exercice de gammes change de gamme à chaque partie.",
+      "Le tempo monte jusqu'à 400 BPM (métronome, gammes, objectifs)."
+    ]
   }
 ]

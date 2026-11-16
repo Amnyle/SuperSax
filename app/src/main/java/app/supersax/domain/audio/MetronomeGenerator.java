@@ -9,7 +9,7 @@ import java.util.List;
  */
 public final class MetronomeGenerator {
     public static final int MIN_BPM = 30;
-    public static final int MAX_BPM = 240;
+    public static final int MAX_BPM = 400;
 
     private final int sampleRate;
     private int bpm;

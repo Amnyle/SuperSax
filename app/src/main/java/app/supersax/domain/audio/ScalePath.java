@@ -89,6 +89,6 @@ public final class ScalePath {
         double g = gaps[gaps.length / 2];
         if (g <= 0.05) return null;
         double bpm = 60.0 / g;
-        return bpm < 30 || bpm > 320 ? null : bpm;
+        return bpm < 30 || bpm > 400 ? null : bpm;
     }
 }

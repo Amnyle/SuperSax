@@ -90,4 +90,12 @@ class SessionPlannerTest {
         assertTrue(plan.steps.none { it.blockKind == BlockKind.NEW_MATERIAL })
         assertEquals(15 * 60, plan.playingSec)
     }
+
+    @Test fun aLongScaleExerciseChangesScaleAtEachPart() {
+        val d = ProgramDay("d", 1, listOf(Block("b", BlockKind.SCALES, 10, listOf(Exercise("e", "scale-runs", ExerciseType.SCALE)))))
+        val plays = SessionPlanner.plan("p", d, state.copy(enduranceCapSec = 300), config).steps.filter { it.kind == StepKind.PLAY }
+        assertEquals(2, plays.size)
+        val keys = plays.map { it.target.scaleKey }
+        assertEquals(keys.distinct(), keys, "never the same scale twice: $keys")
+    }
 }

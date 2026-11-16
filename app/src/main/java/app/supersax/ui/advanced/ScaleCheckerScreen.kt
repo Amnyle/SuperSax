@@ -120,7 +120,7 @@ fun ScaleCheckerScreen(onBack: () -> Unit) {
             Text(stringResource(R.string.scale_checker_hint), style = MaterialTheme.typography.bodySmall)
             MicErrorBanner(mic) { request() }
             TextButton(onClick = { pick = true }) { Text(ui.scaleKey?.let { scaleLabel(it) } ?: stringResource(R.string.pick_scale)) }
-            Stepper(stringResource(R.string.bpm_logged), ui.bpm, vm::setBpm, 30..240, 5)
+            Stepper(stringResource(R.string.bpm_logged), ui.bpm, vm::setBpm, 30..400, 5)
             if (ui.listening) BigButton(stringResource(R.string.stop_listening), vm::stop)
             else BigButton(stringResource(R.string.start_listening), { if (hasMicPermission(context)) vm.start(true) else request() }, enabled = ui.scaleKey != null)
             ui.result?.let { r ->

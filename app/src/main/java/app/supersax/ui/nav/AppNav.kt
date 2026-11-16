@@ -174,6 +174,7 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
                     onRank = { nav.navigate(ExtraRoutes.RANK) },
                     onHistory = { nav.navigate(Routes.HISTORY) },
                     onDaily = { nav.navigate(ExtraRoutes.DAILY) },
+                    onReview = { nav.navigate(ExtraRoutes.REVIEW) },
                 )
             }
             composable(Routes.SESSION) {

@@ -159,7 +159,7 @@ private fun ExerciseEditor(dayId: String, blockId: String, e: Exercise, vm: Prog
                     Text(stringResource(R.string.scale_use_auto))
                 }
                 PinRow(t.pinned) { pin -> vm.setTarget(dayId, blockId, e.id) { it.copy(pinned = pin, bpm = it.bpm ?: 60) } }
-                if (t.pinned) Stepper(stringResource(R.string.bpm), t.bpm ?: 60, { v -> vm.setTarget(dayId, blockId, e.id) { it.copy(bpm = v) } }, 30..240, 5)
+                if (t.pinned) Stepper(stringResource(R.string.bpm), t.bpm ?: 60, { v -> vm.setTarget(dayId, blockId, e.id) { it.copy(bpm = v) } }, 30..400, 5)
             }
             ExerciseType.LONG_TONE, ExerciseType.RANGE_EXTENSION -> {
                 PinRow(t.pinned) { pin -> vm.setTarget(dayId, blockId, e.id) { it.copy(pinned = pin, holdSec = it.holdSec ?: 8) } }

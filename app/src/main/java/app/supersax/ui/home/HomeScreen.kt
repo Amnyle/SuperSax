@@ -23,6 +23,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Insights
+import androidx.compose.runtime.remember
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Event
@@ -85,6 +87,7 @@ fun HomeScreen(
     onRank: () -> Unit,
     onHistory: () -> Unit,
     onDaily: () -> Unit = {},
+    onReview: () -> Unit = {},
 ) {
     val vm = appViewModel { HomeViewModel(it) }
     val ui by vm.ui.collectAsStateWithLifecycle()
@@ -103,6 +106,7 @@ fun HomeScreen(
         }
         if (!ui.loading) {
             TodayHero(ui, vm, onStartSession, onPrograms)
+            WeeklyReviewCard(onReview)
             DailyCard(ui, onDaily)
             WeekCard(ui, locale, onHistory)
             RankCard(ui, onRank)
@@ -293,6 +297,32 @@ private fun UpcomingCard(ui: HomeUi, locale: Locale) {
                     Text(labels.joinToString(" · "), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
                 }
                 Text(stringResource(R.string.minutes_short, u.day.minutes), style = MaterialTheme.typography.titleSmall, textAlign = TextAlign.End)
+            }
+        }
+    }
+}
+
+/**
+ * "Your weekly review is ready": shown from Monday to Wednesday until the review is opened that week (it then
+ * opens on the week just finished).
+ */
+@Composable
+private fun WeeklyReviewCard(onReview: () -> Unit) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val week = app.supersax.domain.goals.GoalEvaluator.weekStart(java.time.LocalDate.now()).toEpochDay()
+    val seen = remember { app.supersax.ui.review.reviewSeenWeek(context) }
+    if (seen == week || java.time.LocalDate.now().dayOfWeek.value > 3) return
+    val s = Sax.colors
+    SectionCard(modifier = Modifier.clickable(onClick = onReview)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(56.dp).clip(RoundedCornerShape(18.dp)).background(s.accentSoft), contentAlignment = Alignment.Center) {
+                Icon(Icons.Rounded.Insights, null, tint = s.accentInk, modifier = Modifier.size(32.dp))
+            }
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Overline(stringResource(R.string.weekly_review))
+                Text(stringResource(R.string.wr_ready), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.wr_ready_sub), style = MaterialTheme.typography.bodySmall, color = s.textSecondary)
             }
         }
     }

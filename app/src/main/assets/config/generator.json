@@ -22,7 +22,7 @@
     "bpmStep": 10,
     "cleanRunsForBump": 2,
     "minBpm": 40,
-    "maxBpm": 240,
+    "maxBpm": 400,
     "solidMinBpm": 60,
     "holdStepSec": 1,
     "holdMaxSec": 40,

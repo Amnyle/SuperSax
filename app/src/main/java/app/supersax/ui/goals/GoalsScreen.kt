@@ -157,7 +157,7 @@ private fun AddGoalDialog(onAdd: (GoalRecord) -> Unit, onDismiss: () -> Unit) {
                     GoalType.TIME -> Stepper(stringResource(R.string.weekly_minutes), minutes, { minutes = it }, 10..600, 10)
                     GoalType.TEMPO -> {
                         TextButton(onClick = { pickScale = true }) { Text(scaleKey?.let { scaleLabel(it) } ?: stringResource(R.string.pick_scale)) }
-                        Stepper(stringResource(R.string.bpm), bpm, { bpm = it }, 40..240, 5)
+                        Stepper(stringResource(R.string.bpm), bpm, { bpm = it }, 40..400, 5)
                     }
                     GoalType.SONG_MILESTONE -> OutlinedTextField(title, { title = it }, label = { Text(stringResource(R.string.onb_song_title)) }, singleLine = true)
                     GoalType.RECORDING -> {

@@ -32,7 +32,7 @@ class MetronomeTest {
         val accent = peak(0); val beat = peak(44_100); val sub = peak(22_050)
         assertTrue(accent > beat && beat > sub, "accent $accent beat $beat sub $sub")
         assertEquals(30, MetronomeGenerator(44_100, 10).bpm)
-        assertEquals(240, MetronomeGenerator(44_100, 400).bpm)
+        assertEquals(400, MetronomeGenerator(44_100, 500).bpm)
     }
 
     @Test fun synthToneHasTheRightPitch() {

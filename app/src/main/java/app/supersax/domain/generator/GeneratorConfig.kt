@@ -37,7 +37,7 @@ data class AdaptationConfig(
     val bpmStep: Int = 5,
     val cleanRunsForBump: Int = 2,
     val minBpm: Int = 40,
-    val maxBpm: Int = 240,
+    val maxBpm: Int = 400,
     /** A scale counts as solid once a clean pair was played at or above this tempo. */
     val solidMinBpm: Int = 60,
     val holdStepSec: Int = 1,

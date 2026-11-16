@@ -39,6 +39,8 @@ fun SessionSummaryScreen(onSaved: () -> Unit) {
     val run by vm.run.collectAsStateWithLifecycle()
     var tiredness by rememberSaveable { mutableStateOf<Int?>(null) }
     var note by rememberSaveable { mutableStateOf("") }
+    val result by vm.result.collectAsStateWithLifecycle()
+    result?.let { SessionResultsView(it, onSaved); return }
     val r = run
     if (r == null) { LaunchedEffect(Unit) { onSaved() }; return }
     ScreenScaffold(stringResource(R.string.session_done)) { padding ->
