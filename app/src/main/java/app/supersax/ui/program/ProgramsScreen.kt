@@ -33,7 +33,7 @@ import app.supersax.ui.nav.appViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProgramsScreen(onBack: () -> Unit, onEdit: (String) -> Unit) {
+fun ProgramsScreen(onBack: () -> Unit, onEdit: (String) -> Unit, onGenerate: () -> Unit = {}) {
     val vm = appViewModel { ProgramsViewModel(it) }
     val ui by vm.ui.collectAsStateWithLifecycle()
     val message by vm.message.collectAsStateWithLifecycle()
@@ -46,14 +46,13 @@ fun ProgramsScreen(onBack: () -> Unit, onEdit: (String) -> Unit) {
     }
     val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) vm.import(resolver, uri) }
     val manualName = stringResource(R.string.program_manual_name)
-    val generatedName = stringResource(R.string.program_default_name)
 
     ScreenScaffold(stringResource(R.string.programs), onBack = onBack) { padding ->
         ScrollColumn(padding) {
             message?.let { Text(stringResource(it), color = MaterialTheme.colorScheme.primary); TextButton(onClick = vm::clearMessage) { Text(stringResource(R.string.ok)) } }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { vm.newManual(manualName, onEdit) }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.new_manual_program)) }
-                OutlinedButton(onClick = { vm.regenerate(generatedName, onEdit) }, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.generate_program)) }
+                OutlinedButton(onClick = onGenerate, modifier = Modifier.heightIn(min = 48.dp)) { Text(stringResource(R.string.generate_program)) }
                 OutlinedButton(onClick = { importer.launch(arrayOf("application/json", "text/plain", "*/*")) }, modifier = Modifier.heightIn(min = 48.dp)) {
                     Text(stringResource(R.string.import_program))
                 }

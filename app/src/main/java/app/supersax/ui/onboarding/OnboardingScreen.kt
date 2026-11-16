@@ -136,14 +136,14 @@ fun OnboardingScreen(onFinished: (manualProgramId: String?) -> Unit) {
 }
 
 @Composable
-private fun Question(text: String) = Text(text, style = MaterialTheme.typography.headlineMedium)
+internal fun Question(text: String) = Text(text, style = MaterialTheme.typography.headlineMedium)
 
 /** Language choices of the onboarding (code, label). */
 private val LANGUAGES = listOf("system" to R.string.language_system, "en" to R.string.language_en, "fr" to R.string.language_fr)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun DaysPage(days: Set<Int>, minutes: Int, onDays: (Set<Int>) -> Unit, onMinutes: (Int) -> Unit) {
+internal fun DaysPage(days: Set<Int>, minutes: Int, onDays: (Set<Int>) -> Unit, onMinutes: (Int) -> Unit) {
     Question(stringResource(R.string.onb_days_q))
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         (1..7).forEach { d ->
@@ -155,7 +155,7 @@ private fun DaysPage(days: Set<Int>, minutes: Int, onDays: (Set<Int>) -> Unit, o
 }
 
 @Composable
-private fun RadioPage(question: String, options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
+internal fun RadioPage(question: String, options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
     Question(question)
     Column(Modifier.selectableGroup(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         options.forEachIndexed { i, label ->
@@ -218,7 +218,7 @@ private fun ScalesPage(clean: Set<String>, bpm: Int, onClean: (Set<String>) -> U
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun FocusPage(focus: List<Focus>, onFocus: (List<Focus>) -> Unit) {
+internal fun FocusPage(focus: List<Focus>, onFocus: (List<Focus>) -> Unit) {
     Question(stringResource(R.string.onb_focus_q))
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Focus.entries.filter { it != Focus.REPERTOIRE }.forEach { f ->
@@ -270,7 +270,12 @@ fun LanguageNamingTheme(
 private fun ResultPage(ui: OnboardingUi) {
     Question(stringResource(R.string.onb_result_title))
     Text(stringResource(R.string.onb_result_body), style = MaterialTheme.typography.bodyLarge)
-    val p = ui.preview ?: return
+    ui.preview?.let { ProgramPreview(it) }
+}
+
+/** A program's days with their blocks and minutes, and its phone sessions. */
+@Composable
+fun ProgramPreview(p: app.supersax.domain.program.Program) {
     p.days.forEach { d ->
         SectionCard(stringResource(R.string.day_minutes, dayLabel(d.dayOfWeek), d.minutes)) {
             d.blocks.forEach { b ->

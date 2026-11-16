@@ -1274,4 +1274,14 @@
     <string name="wr_facts">This week in numbers</string>
     <string name="wr_ready">Your weekly review is ready</string>
     <string name="wr_ready_sub">What you improved, what\'s next, and a program update.</string>
+    <string name="gen_endurance_q">How long can you play now without a break?</string>
+    <string name="gen_build">Build my program</string>
+    <string name="gen_result_title">Your new program</string>
+    <string name="gen_edit_first">Edit it before using it</string>
+    <string name="gen_level_title">Built for your level</string>
+    <string name="gen_level_rank">Rank: %1$s</string>
+    <string name="gen_level_weakest">Weakest area: %1$s (gets more time)</string>
+    <string name="gen_level_scales">Scales in rotation: %1$d, each at your current tempo</string>
+    <string name="gen_level_fastest">Fastest clean scale: %1$s at %2$d BPM</string>
+    <string name="gen_level_note">Long-tone targets, scale tempos and new scales keep adapting as you play.</string>
 </resources>

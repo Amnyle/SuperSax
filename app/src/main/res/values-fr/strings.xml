@@ -1282,4 +1282,14 @@
     <string name="wr_facts">La semaine en chiffres</string>
     <string name="wr_ready">Votre bilan de la semaine est prêt</string>
     <string name="wr_ready_sub">Vos progrès, la suite, et une mise à jour du programme.</string>
+    <string name="gen_endurance_q">Combien de temps pouvez-vous jouer sans pause maintenant ?</string>
+    <string name="gen_build">Créer mon programme</string>
+    <string name="gen_result_title">Votre nouveau programme</string>
+    <string name="gen_edit_first">Le modifier avant de l\'utiliser</string>
+    <string name="gen_level_title">Fait pour votre niveau</string>
+    <string name="gen_level_rank">Rang : %1$s</string>
+    <string name="gen_level_weakest">Point faible : %1$s (reçoit plus de temps)</string>
+    <string name="gen_level_scales">Gammes en rotation : %1$d, chacune à votre tempo actuel</string>
+    <string name="gen_level_fastest">Gamme propre la plus rapide : %1$s à %2$d BPM</string>
+    <string name="gen_level_note">Les objectifs de sons filés, les tempos des gammes et les nouvelles gammes continuent de s\'adapter quand vous jouez.</string>
 </resources>

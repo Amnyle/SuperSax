@@ -76,6 +76,7 @@ object Routes {
     const val SUMMARY = "session_summary"
     const val PROGRAMS = "programs"
     const val PROGRAM_EDIT = "program_edit/{id}"
+    const val PROGRAM_GENERATE = "program_generate"
     const val HISTORY = "history"
     const val GOALS = "goals"
     const val SETTINGS = "settings"
@@ -184,7 +185,16 @@ fun AppNav(nav: NavHostController, startOnboarding: Boolean, startSignal: Int, u
                 )
             }
             composable(Routes.SUMMARY) { SessionSummaryScreen(onSaved = { nav.navigate(Routes.TODAY) { popUpTo(0) } }) }
-            composable(Routes.PROGRAMS) { ProgramsScreen(onBack = { nav.popBackStack() }, onEdit = { nav.navigate(Routes.programEdit(it)) }) }
+            composable(Routes.PROGRAMS) {
+                ProgramsScreen(onBack = { nav.popBackStack() }, onEdit = { nav.navigate(Routes.programEdit(it)) },
+                    onGenerate = { nav.navigate(Routes.PROGRAM_GENERATE) })
+            }
+            composable(Routes.PROGRAM_GENERATE) {
+                app.supersax.ui.program.GenerateProgramScreen(
+                    onBack = { nav.popBackStack() },
+                    onEdit = { id -> nav.navigate(Routes.programEdit(id)) { popUpTo(Routes.PROGRAM_GENERATE) { inclusive = true } } },
+                )
+            }
             composable(Routes.PROGRAM_EDIT, arguments = listOf(navArgument("id") { type = NavType.StringType })) { e ->
                 ProgramEditorScreen(e.arguments?.getString("id")!!, onBack = { nav.popBackStack() })
             }

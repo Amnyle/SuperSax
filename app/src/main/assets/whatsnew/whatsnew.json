@@ -418,5 +418,14 @@
       "Les séances ne répètent jamais une gamme : un long exercice de gammes change de gamme à chaque partie.",
       "Le tempo monte jusqu'à 400 BPM (métronome, gammes, objectifs)."
     ]
+  },
+  {
+    "id": 37,
+    "en": [
+      "Programs → Generate now asks a few questions (days and session length, how long you can play without a break now, what to focus on), then shows a program built for your current level: your rank, your weakest area, your scales and their tempos. Use it as it is, or edit it first."
+    ],
+    "fr": [
+      "Programmes → Générer pose maintenant quelques questions (jours et durée des séances, combien de temps vous jouez sans pause aujourd'hui, sur quoi vous concentrer), puis montre un programme fait pour votre niveau actuel : votre rang, votre point faible, vos gammes et leurs tempos. Utilisez-le tel quel ou modifiez-le d'abord."
+    ]
   }
 ]

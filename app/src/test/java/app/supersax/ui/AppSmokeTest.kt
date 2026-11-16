@@ -77,5 +77,11 @@ class AppSmokeTest {
         click("Weekly review"); waitFor("Sessions:", substring = true)
         rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         click("History"); waitFor("Week of", substring = true)
+        rule.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
+        // Generate asks a few questions, then shows a program built for the current level.
+        click("Programs"); click("Generate")
+        waitFor("Which days", substring = true); click("Next")
+        waitFor("How long can you play now without a break?"); click("Next")
+        click("Build my program"); waitFor("Built for your level"); waitFor("Use this program")
     }
 }
