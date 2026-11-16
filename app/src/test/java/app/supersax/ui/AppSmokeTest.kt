@@ -51,6 +51,12 @@ class AppSmokeTest {
         click("End session")
         waitFor("Session done")
         click("Save")
+        // The results screen comes first (rank, records), then back to Today.
+        rule.waitUntil(10_000) {
+            rule.onAllNodesWithText("Done").fetchSemanticsNodes().isNotEmpty() ||
+                rule.onAllNodesWithText("Start ·", substring = true).fetchSemanticsNodes().isNotEmpty()
+        }
+        if (rule.onAllNodesWithText("Done").fetchSemanticsNodes().isNotEmpty()) click("Done")
         waitFor("Start ·", substring = true)
 
         // Tabs and main screens compose without crashing.
