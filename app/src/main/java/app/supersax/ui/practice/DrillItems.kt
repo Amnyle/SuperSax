@@ -58,6 +58,7 @@ sealed interface DrillItem {
     data class Theory(val lessonId: String, val q: QuizQuestion) : DrillItem { override val kind get() = DrillKind.THEORY_QUIZ }
     data class Ear(val q: app.supersax.domain.drills.EarDrill.Question, val sax: Boolean) : DrillItem { override val kind get() = DrillKind.EAR }
     data class Rhythm(val q: app.supersax.domain.drills.RhythmDrill.Question, val level: Int) : DrillItem { override val kind get() = DrillKind.RHYTHM }
+    data class Degree(val q: app.supersax.domain.drills.ScaleDegrees.Question) : DrillItem { override val kind get() = DrillKind.SCALE_DEGREES }
 }
 
 /** The right answer, as shown after a wrong one. */
@@ -72,6 +73,7 @@ fun expectedText(item: DrillItem): String {
         is DrillItem.Theory -> Quiz.expectedText(item.q, LocaleHelper.effective(LocalContext.current), naming)
         is DrillItem.Ear -> earAnswerText(item, naming)
         is DrillItem.Rhythm -> ""
+        is DrillItem.Degree -> degreeAnswerText(item.q, naming)
     }
 }
 
@@ -171,6 +173,7 @@ fun DrillItemView(item: DrillItem, key: Any, enabled: Boolean, onAnswer: (Boolea
         }
         is DrillItem.Ear -> EarView(item, key, enabled, onAnswer)
         is DrillItem.Rhythm -> RhythmView(item, key, enabled, onAnswer, onMetric)
+        is DrillItem.Degree -> DegreeView(item.q, key, enabled, onAnswer)
         is DrillItem.Theory -> {
             Text(item.q.prompt.get(language), style = prompt)
             item.q.staff?.let { StaffView(it.toScore(), showTime = !it.free) }

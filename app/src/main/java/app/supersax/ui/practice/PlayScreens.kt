@@ -52,6 +52,7 @@ fun levelItems(c: AppContainer, kind: DrillKind, level: Int, count: Int?, seed: 
     DrillKind.RHYTHM -> app.supersax.domain.drills.RhythmDrill.round(level, count ?: app.supersax.domain.drills.RhythmDrill.ROUND, seed).map { DrillItem.Rhythm(it, level) }
     DrillKind.READING -> ReadingDrill.questions(level, count ?: DrillRules.READING_ROUND, seed).map { DrillItem.Reading(it.pitch, it.fifths) }
     DrillKind.SCALE_RECOGNITION -> ScaleRecognition.round(level, count ?: DrillRules.SCALE_ROUND, seed).map { DrillItem.Scale(it, level) }
+    DrillKind.SCALE_DEGREES -> app.supersax.domain.drills.ScaleDegrees.round(level, count ?: app.supersax.domain.drills.ScaleDegrees.ROUND, seed).map { DrillItem.Degree(it) }
     DrillKind.FINGERING -> FingeringDrill.round(c.content.fingerings, level, count ?: DrillRules.FINGERING_ROUND, seed).map { DrillItem.Fingering(it.first, it.second) }
     else -> emptyList()
 }

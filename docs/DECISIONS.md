@@ -327,3 +327,7 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 ## Generate a program from questions
 
 - Programs → Generate opens `GenerateProgramScreen`: days + session length, current stamina (endurance → cap), focus (up to two), then a preview with the level it is built for (rank, limiter pillar, scales in rotation, fastest clean scale). Defaults come from the active program and the player state. "Use this program" saves it active; "Edit it before using it" saves it and opens the editor. The answers update the stored onboarding answers and the player's endurance cap and focus.
+
+## Scale degrees drill
+
+- `ScaleDegrees` (DrillKind.SCALE_DEGREES, written pitch): "which note is degree N of this key" (note keypad, spelling as in the scale) and, from level 3, "which degree is this note" (degree buttons with names). Keys follow the scale-recognition ladder's first six levels (majors to 1/2/4 accidentals, then majors and minors to 2/4/6). Degrees 2–7 are asked (never the tonic); reverse share 0, 1/3, then 1/2 at level 6. Speed limits 6 s / 3 s. A lesson per level. Two questions in the 5-minute daily mix.

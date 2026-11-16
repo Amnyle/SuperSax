@@ -1292,4 +1292,25 @@
     <string name="gen_level_scales">Gammes en rotation : %1$d, chacune à votre tempo actuel</string>
     <string name="gen_level_fastest">Gamme propre la plus rapide : %1$s à %2$d BPM</string>
     <string name="gen_level_note">Les objectifs de sons filés, les tempos des gammes et les nouvelles gammes continuent de s\'adapter quand vous jouez.</string>
+    <string name="deg_title">Degrés de la gamme</string>
+    <string name="deg_sub">Quelle note est le 5e degré de ré majeur ?</string>
+    <string name="deg_q_note">En %1$s, quelle note est le degré %2$d (%3$s) ?</string>
+    <string name="deg_q_degree">En %1$s, quel degré est %2$s ?</string>
+    <string name="deg_tap_note">Touchez la note, avec son dièse ou son bémol s\'il y en a un.</string>
+    <string name="deg_answer">%1$s · %2$s : %3$s</string>
+    <string name="deg_answer_degree">degré %1$d (%2$s)</string>
+    <string name="deg_name_1">tonique</string>
+    <string name="deg_name_2">sus-tonique</string>
+    <string name="deg_name_3">médiante</string>
+    <string name="deg_name_4">sous-dominante</string>
+    <string name="deg_name_5">dominante</string>
+    <string name="deg_name_6">sus-dominante</string>
+    <string name="deg_name_7">sensible</string>
+    <string name="deg_name_7_minor">sous-tonique</string>
+    <string name="lv_deg_1">Do, sol et fa majeur</string>
+    <string name="lv_deg_2">Tonalités majeures jusqu\'à 2 dièses ou bémols</string>
+    <string name="lv_deg_3">Majeures jusqu\'à 4, et quel degré est une note</string>
+    <string name="lv_deg_4">Majeures et mineures jusqu\'à 2</string>
+    <string name="lv_deg_5">Majeures et mineures jusqu\'à 4</string>
+    <string name="lv_deg_6">Toutes les tonalités, dans les deux sens</string>
 </resources>

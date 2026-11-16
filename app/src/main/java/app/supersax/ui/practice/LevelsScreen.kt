@@ -59,6 +59,7 @@ fun drillTitle(kind: DrillKind): String = stringResource(
         DrillKind.FINGERING -> R.string.ex_fingering
         DrillKind.EAR -> R.string.ear_title
         DrillKind.RHYTHM -> R.string.rhythm_title
+        DrillKind.SCALE_DEGREES -> R.string.deg_title
         else -> R.string.lessons
     },
 )
@@ -72,6 +73,7 @@ fun levelDescription(kind: DrillKind, level: Int): String {
             R.string.lv_scale_5, R.string.lv_scale_6, R.string.lv_scale_7, R.string.lv_scale_8)
         DrillKind.FINGERING -> listOf(R.string.lv_fing_1, R.string.lv_fing_2, R.string.lv_fing_3, R.string.lv_fing_4, R.string.lv_fing_5)
         DrillKind.EAR -> listOf(R.string.lv_ear_1, R.string.lv_ear_2, R.string.lv_ear_3, R.string.lv_ear_4, R.string.lv_ear_5, R.string.lv_ear_6, R.string.lv_ear_7, R.string.lv_ear_8)
+        DrillKind.SCALE_DEGREES -> listOf(R.string.lv_deg_1, R.string.lv_deg_2, R.string.lv_deg_3, R.string.lv_deg_4, R.string.lv_deg_5, R.string.lv_deg_6)
         DrillKind.RHYTHM -> listOf(R.string.lv_rh_1, R.string.lv_rh_2, R.string.lv_rh_3, R.string.lv_rh_4, R.string.lv_rh_5, R.string.lv_rh_6, R.string.lv_rh_7)
         else -> emptyList()
     }

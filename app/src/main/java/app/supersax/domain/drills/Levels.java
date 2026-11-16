@@ -20,6 +20,7 @@ public final class Levels {
             case READING: return new long[]{2500, 1200};
             case SCALE_RECOGNITION: return new long[]{9000, 4500};
             case FINGERING: return new long[]{6000, 3000};
+            case SCALE_DEGREES: return new long[]{6000, 3000};
             case EAR: return new long[]{7000, 4000};
             case RHYTHM: return new long[]{70, 35};
             default: return null;
@@ -67,6 +68,7 @@ public final class Levels {
             case THEORY_QUIZ: return lessons;
             case EAR: return EarDrill.LEVELS;
             case RHYTHM: return RhythmDrill.LEVELS;
+            case SCALE_DEGREES: return ScaleDegrees.LEVELS;
             default: return 1;
         }
     }

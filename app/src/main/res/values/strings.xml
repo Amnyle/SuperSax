@@ -1284,4 +1284,25 @@
     <string name="gen_level_scales">Scales in rotation: %1$d, each at your current tempo</string>
     <string name="gen_level_fastest">Fastest clean scale: %1$s at %2$d BPM</string>
     <string name="gen_level_note">Long-tone targets, scale tempos and new scales keep adapting as you play.</string>
+    <string name="deg_title">Scale degrees</string>
+    <string name="deg_sub">Which note is the 5th of D major?</string>
+    <string name="deg_q_note">In %1$s, which note is degree %2$d (%3$s)?</string>
+    <string name="deg_q_degree">In %1$s, which degree is %2$s?</string>
+    <string name="deg_tap_note">Tap the note, with its sharp or flat if it has one.</string>
+    <string name="deg_answer">%1$s · %2$s: %3$s</string>
+    <string name="deg_answer_degree">degree %1$d (%2$s)</string>
+    <string name="deg_name_1">tonic</string>
+    <string name="deg_name_2">supertonic</string>
+    <string name="deg_name_3">mediant</string>
+    <string name="deg_name_4">subdominant</string>
+    <string name="deg_name_5">dominant</string>
+    <string name="deg_name_6">submediant</string>
+    <string name="deg_name_7">leading tone</string>
+    <string name="deg_name_7_minor">subtonic</string>
+    <string name="lv_deg_1">C, G and F major</string>
+    <string name="lv_deg_2">Major keys up to 2 sharps or flats</string>
+    <string name="lv_deg_3">Major keys up to 4, and which degree is a note</string>
+    <string name="lv_deg_4">Major and minor keys up to 2</string>
+    <string name="lv_deg_5">Major and minor keys up to 4</string>
+    <string name="lv_deg_6">Every key, both ways</string>
 </resources>

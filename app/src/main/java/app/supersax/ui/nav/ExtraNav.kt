@@ -47,6 +47,7 @@ import app.supersax.ui.songs.SongsScreen
 import app.supersax.ui.songs.YouTubeSearchScreen
 import app.supersax.ui.advanced.ScaleCheckerScreen
 import androidx.compose.material.icons.rounded.SlowMotionVideo
+import androidx.compose.material.icons.rounded.Stairs
 import androidx.compose.material.icons.rounded.Videocam
 import androidx.compose.material.icons.rounded.Waves
 import androidx.compose.material.icons.rounded.North
@@ -81,6 +82,7 @@ object ExtraRoutes {
     const val LESSONS = "lessons"
     const val LESSON = "lesson/{id}"
     const val SCALE_REC = "scale_recognition"
+    const val DEGREES = "scale_degrees"
     const val FINGERING = "fingering"
     const val FINGERING_CHART = "fingering_chart"
     const val DAILY = "daily"
@@ -182,6 +184,10 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
         LevelsScreen(DrillKind.SCALE_RECOGNITION, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_RECOGNITION, it)) },
             onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.SCALE_RECOGNITION, it)) })
     }
+    composable(ExtraRoutes.DEGREES) {
+        LevelsScreen(DrillKind.SCALE_DEGREES, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_DEGREES, it)) },
+            onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.SCALE_DEGREES, it)) })
+    }
     composable(ExtraRoutes.FINGERING) {
         LevelsScreen(DrillKind.FINGERING, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.FINGERING, it)) },
             onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.FINGERING, it)) },
@@ -257,6 +263,7 @@ fun phoneTrainingEntries(nav: NavHostController): List<HubEntry> {
         HubEntry(stringResource(R.string.ex_reading), stringResource(R.string.reading_sub), Icons.AutoMirrored.Rounded.MenuBook, blue) { nav.navigate(ExtraRoutes.READING) },
         HubEntry(stringResource(R.string.ear_title), stringResource(R.string.ear_sub), Icons.Rounded.Hearing, blue) { nav.navigate(ExtraRoutes.EAR) },
         HubEntry(stringResource(R.string.ex_scale_recognition), stringResource(R.string.scale_rec_sub), Icons.Rounded.Piano, blue) { nav.navigate(ExtraRoutes.SCALE_REC) },
+        HubEntry(stringResource(R.string.deg_title), stringResource(R.string.deg_sub), Icons.Rounded.Stairs, blue) { nav.navigate(ExtraRoutes.DEGREES) },
         HubEntry(stringResource(R.string.lessons), stringResource(R.string.lessons_sub), Icons.Rounded.School, blue) { nav.navigate(ExtraRoutes.LESSONS) },
         HubEntry(stringResource(R.string.ex_fingering), stringResource(R.string.fingering_sub), Icons.Rounded.TouchApp, blue) { nav.navigate(ExtraRoutes.FINGERING) },
         HubEntry(stringResource(R.string.fing_chart_title), stringResource(R.string.fing_chart_sub), Icons.Rounded.GridView, blue) { nav.navigate(ExtraRoutes.FINGERING_CHART) },

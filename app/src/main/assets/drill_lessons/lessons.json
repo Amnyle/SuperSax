@@ -763,5 +763,193 @@
    ],
    "fifths": 0
   }
+ ],
+ "SCALE_DEGREES": [
+  {
+   "title": {
+    "en": "Degrees: counting up the scale",
+    "fr": "Les degrés : compter dans la gamme"
+   },
+   "points": [
+    {
+     "en": "Each note of a scale has a number, its degree: the tonic is 1, the next note 2, and so on up to 7.",
+     "fr": "Chaque note d'une gamme a un numéro, son degré : la tonique est 1, la note suivante 2, et ainsi de suite jusqu'à 7."
+    },
+    {
+     "en": "In C major: {C} 1, {D} 2, {E} 3, {F} 4, {G} 5, {A} 6, {B} 7.",
+     "fr": "En do majeur : {C} 1, {D} 2, {E} 3, {F} 4, {G} 5, {A} 6, {B} 7."
+    },
+    {
+     "en": "G major has one sharp: {G} 1 … {D} 5 … {F#} 7. F major has one flat: {F} 1, {G} 2, {A} 3, {Bb} 4, {C} 5.",
+     "fr": "Sol majeur a un dièse : {G} 1 … {D} 5 … {F#} 7. Fa majeur a un bémol : {F} 1, {G} 2, {A} 3, {Bb} 4, {C} 5."
+    },
+    {
+     "en": "Names to know: 1 tonic, 4 subdominant, 5 dominant, 7 leading tone (it leads back to the tonic).",
+     "fr": "Noms à connaître : 1 tonique, 4 sous-dominante, 5 dominante, 7 sensible (elle ramène à la tonique)."
+    }
+   ],
+   "example": [
+    "C4:1/4 D4:1/4 E4:1/4 F4:1/4",
+    "G4:1/4 A4:1/4 B4:1/4 C5:1/4"
+   ],
+   "fifths": 0,
+   "tip": {
+    "en": "Count on your fingers from the tonic: the tonic is finger 1.",
+    "fr": "Comptez sur vos doigts depuis la tonique : la tonique est le doigt 1."
+   }
+  },
+  {
+   "title": {
+    "en": "Up to two sharps or flats",
+    "fr": "Jusqu'à deux dièses ou bémols"
+   },
+   "points": [
+    {
+     "en": "D major has {F#} and {C#}: {D} {E} {F#} {G} {A} {B} {C#}.",
+     "fr": "Ré majeur a {F#} et {C#} : {D} {E} {F#} {G} {A} {B} {C#}."
+    },
+    {
+     "en": "B♭ major has {Bb} and {Eb}: {Bb} {C} {D} {Eb} {F} {G} {A}.",
+     "fr": "Si♭ majeur a {Bb} et {Eb} : {Bb} {C} {D} {Eb} {F} {G} {A}."
+    },
+    {
+     "en": "Keep the sharps and flats of the key: in D major the 3rd degree is {F#}, never plain F.",
+     "fr": "Gardez les dièses et bémols de la tonalité : en ré majeur le 3e degré est {F#}, jamais fa tout court."
+    },
+    {
+     "en": "Shortcut: the 5th is always a fifth above the tonic (D → A), the 4th a fourth above (D → G).",
+     "fr": "Raccourci : le 5e degré est toujours une quinte au-dessus de la tonique (ré → la), le 4e une quarte (ré → sol)."
+    }
+   ],
+   "example": [
+    "D4:1/4 E4:1/4 F#4:1/4 G4:1/4",
+    "A4:1/4 B4:1/4 C#5:1/4 D5:1/4"
+   ],
+   "fifths": 2,
+   "tip": {
+    "en": "Every letter appears once in a scale: if the 3rd of D is an F, it is {F#}.",
+    "fr": "Chaque lettre apparaît une fois dans une gamme : si le 3e de ré est un fa, c'est {F#}."
+   }
+  },
+  {
+   "title": {
+    "en": "Both ways: which degree is this note?",
+    "fr": "Dans les deux sens : quel degré est cette note ?"
+   },
+   "points": [
+    {
+     "en": "Now some questions ask the other way: \"In E♭ major, which degree is {Ab}?\" Count from the tonic: {Eb} 1, {F} 2, {G} 3, {Ab} 4.",
+     "fr": "Certaines questions sont maintenant à l'envers : « En mi♭ majeur, quel degré est {Ab} ? » Comptez depuis la tonique : {Eb} 1, {F} 2, {G} 3, {Ab} 4."
+    },
+    {
+     "en": "Keys up to four sharps or flats: A major ({F#} {C#} {G#}), E major (+ {D#}), E♭ major ({Bb} {Eb} {Ab}), A♭ major (+ {Db}).",
+     "fr": "Tonalités jusqu'à quatre dièses ou bémols : la majeur ({F#} {C#} {G#}), mi majeur (+ {D#}), mi♭ majeur ({Bb} {Eb} {Ab}), la♭ majeur (+ {Db})."
+    },
+    {
+     "en": "The leading tone is always a half step below the tonic: in E major it is {D#}.",
+     "fr": "La sensible est toujours un demi-ton sous la tonique : en mi majeur c'est {D#}."
+    }
+   ],
+   "example": [
+    "Eb4:1/4 F4:1/4 G4:1/4 Ab4:1/4",
+    "Bb4:1/4 C5:1/4 D5:1/4 Eb5:1/4"
+   ],
+   "fifths": -3,
+   "tip": {
+    "en": "Letters first, then the accidental: Ab is an A, and A is the 4th letter from E.",
+    "fr": "La lettre d'abord, puis l'altération : la♭ est un la, et la est la 4e lettre depuis mi."
+   }
+  },
+  {
+   "title": {
+    "en": "Minor keys",
+    "fr": "Les tonalités mineures"
+   },
+   "points": [
+    {
+     "en": "A natural minor uses the notes of C major from {A}: {A} {B} {C} {D} {E} {F} {G}.",
+     "fr": "La mineur naturel utilise les notes de do majeur à partir de {A} : {A} {B} {C} {D} {E} {F} {G}."
+    },
+    {
+     "en": "In minor the 3rd, 6th and 7th degrees are a half step lower than in major: in A minor the 3rd is {C}, not C♯.",
+     "fr": "En mineur, les 3e, 6e et 7e degrés sont un demi-ton plus bas qu'en majeur : en la mineur le 3e est {C}, pas do♯."
+    },
+    {
+     "en": "The 7th of natural minor is a whole step below the tonic: it is called the subtonic ({G} in A minor).",
+     "fr": "Le 7e degré du mineur naturel est un ton sous la tonique : on l'appelle sous-tonique ({G} en la mineur)."
+    },
+    {
+     "en": "Each minor key shares its key signature with a major key: E minor ↔ G major ({F#}), D minor ↔ F major ({Bb}).",
+     "fr": "Chaque tonalité mineure partage son armure avec une majeure : mi mineur ↔ sol majeur ({F#}), ré mineur ↔ fa majeur ({Bb})."
+    }
+   ],
+   "example": [
+    "A4:1/4 B4:1/4 C5:1/4 D5:1/4",
+    "E5:1/4 F5:1/4 G5:1/4 A5:1/4"
+   ],
+   "fifths": 0,
+   "tip": {
+    "en": "Find the relative major (3rd degree of the minor) and use its sharps or flats.",
+    "fr": "Trouvez la majeure relative (3e degré de la mineure) et prenez ses dièses ou bémols."
+   }
+  },
+  {
+   "title": {
+    "en": "More minor keys",
+    "fr": "Plus de tonalités mineures"
+   },
+   "points": [
+    {
+     "en": "B minor ({F#} {C#}): {B} {C#} {D} {E} {F#} {G} {A}. G minor ({Bb} {Eb}): {G} {A} {Bb} {C} {D} {Eb} {F}.",
+     "fr": "Si mineur ({F#} {C#}) : {B} {C#} {D} {E} {F#} {G} {A}. Sol mineur ({Bb} {Eb}) : {G} {A} {Bb} {C} {D} {Eb} {F}."
+    },
+    {
+     "en": "Up to four sharps or flats: F♯ minor, C♯ minor, C minor, F minor.",
+     "fr": "Jusqu'à quatre dièses ou bémols : fa♯ mineur, do♯ mineur, do mineur, fa mineur."
+    },
+    {
+     "en": "The dominant (5th) is a fifth above the tonic in minor too: C minor → {G}.",
+     "fr": "La dominante (5e) est aussi une quinte au-dessus de la tonique en mineur : do mineur → {G}."
+    }
+   ],
+   "example": [
+    "G4:1/4 A4:1/4 Bb4:1/4 C5:1/4",
+    "D5:1/4 Eb5:1/4 F5:1/4 G5:1/4"
+   ],
+   "fifths": -2,
+   "tip": {
+    "en": "Say the scale out loud once before answering: it is faster than guessing.",
+    "fr": "Dites la gamme une fois à voix haute avant de répondre : c'est plus rapide que deviner."
+   }
+  },
+  {
+   "title": {
+    "en": "Every key, both ways",
+    "fr": "Toutes les tonalités, dans les deux sens"
+   },
+   "points": [
+    {
+     "en": "All keys up to six sharps or flats, major and minor, half the questions the other way round.",
+     "fr": "Toutes les tonalités jusqu'à six dièses ou bémols, majeures et mineures, la moitié des questions à l'envers."
+    },
+    {
+     "en": "F♯ major: {F#} {G#} {A#} {B} {C#} {D#} {E#}. Its 7th is {E#}: the letter E, raised.",
+     "fr": "Fa♯ majeur : {F#} {G#} {A#} {B} {C#} {D#} {E#}. Son 7e degré est {E#} : la lettre mi, haussée."
+    },
+    {
+     "en": "G♭ major: {Gb} {Ab} {Bb} {Cb} {Db} {Eb} {F}. Its 4th is {Cb}.",
+     "fr": "Sol♭ majeur : {Gb} {Ab} {Bb} {Cb} {Db} {Eb} {F}. Son 4e degré est {Cb}."
+    }
+   ],
+   "example": [
+    "F#4:1/4 G#4:1/4 A#4:1/4 B4:1/4",
+    "C#5:1/4 D#5:1/4 E#5:1/4 F#5:1/4"
+   ],
+   "fifths": 6,
+   "tip": {
+    "en": "Three stars need speed: knowing the degrees by heart is what makes reading and improvising easy.",
+    "fr": "Trois étoiles demandent de la vitesse : connaître les degrés par cœur rend la lecture et l'improvisation faciles."
+   }
+  }
  ]
 }
