@@ -454,5 +454,14 @@
     "fr": [
       "File IA : pendant que MVSEP retire le sax, la file montre votre place dans leur file d'attente (ex. place 12 sur 30) ou que la séparation est en cours."
     ]
+  },
+  {
+    "id": 41,
+    "en": [
+      "New: Sax grades (Training → with the sax, and Progress). Eight grades, each with an exam the app marks out of 100 while you play: tone (two long tones), scales (three from the grade's list, by ear), sight-reading (a melody followed note by note), aural and theory. 66 to pass, 80 merit, 90 distinction; passing a grade opens the next."
+    ],
+    "fr": [
+      "Nouveau : Grades de sax (Entraînement → avec le sax, et Progrès). Huit grades, chacun avec un examen que l'appli note sur 100 pendant que vous jouez : son (deux sons filés), gammes (trois de la liste du grade, à l'oreille), déchiffrage (une mélodie suivie note à note), oreille et théorie. 66 pour réussir, 80 mention bien, 90 mention très bien ; réussir un grade ouvre le suivant."
+    ]
   }
 ]

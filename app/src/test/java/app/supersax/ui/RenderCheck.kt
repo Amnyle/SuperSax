@@ -80,4 +80,28 @@ class RenderCheck {
         }
         save("scale-notes")
     }
+
+    @Test fun grades() {
+        val c = androidx.test.core.app.ApplicationProvider.getApplicationContext<app.supersax.SaxApp>().container
+        val settings = c.settings.currentBlocking()
+        rule.setContent {
+            androidx.compose.runtime.CompositionLocalProvider(app.supersax.ui.nav.LocalContainer provides c, app.supersax.ui.nav.LocalSettings provides settings) {
+                SaxTheme { app.supersax.ui.grades.GradesScreen(onBack = {}, onExam = {}) }
+            }
+        }
+        rule.waitForIdle()
+        save("grades")
+    }
+
+    @Test fun examIntro() {
+        val c = androidx.test.core.app.ApplicationProvider.getApplicationContext<app.supersax.SaxApp>().container
+        val settings = c.settings.currentBlocking()
+        rule.setContent {
+            androidx.compose.runtime.CompositionLocalProvider(app.supersax.ui.nav.LocalContainer provides c, app.supersax.ui.nav.LocalSettings provides settings) {
+                SaxTheme { app.supersax.ui.grades.ExamScreen(4, onBack = {}) }
+            }
+        }
+        rule.waitForIdle()
+        save("exam-intro")
+    }
 }

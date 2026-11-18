@@ -335,3 +335,7 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 ## Scale notes in session scale blocks
 
 - `ScaleNotesCard` above the scale runs: written for the player's instrument (concert key → written tonic), a one-line description of the scale type, a table of degree labels (against the major scale: 1, ♭3, ♯4…) and note names from tonic to octave, the notes on the staff, Listen (up and down at the block's tempo, sounding pitch) and Hide.
+
+## Sax grades and exams
+
+- `SaxGrades`: our own grades 1–8 (not an exam board's syllabus, no copyrighted pieces), structured like graded music exams: Tone 20 (two long tones, half on held time vs target, half on in-tune share vs requirement), Scales 25 (three different scales from the grade's written list, detected by ear with `RunDetector`/`ScalePath`; clean at the grade tempo = full, slower in proportion, second try ×0.8), Sight-reading 25 (16 notes at a reading level, followed like the play-along; a note first played wrong loses its share), Aural 15 (6 ear questions at the grade's level), Theory 15 (scale degrees + scale recognition). 66 pass, 80 merit, 90 distinction. Grade N+1 opens when N is passed. Results in kv `grades:results`. Requirements rise every grade (tempo 60 → 132, long tones 6 → 25 s, tuning 60 → 85 %, keys, then pentatonics and modes).

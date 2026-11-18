@@ -49,6 +49,7 @@ import app.supersax.ui.advanced.ScaleCheckerScreen
 import androidx.compose.material.icons.rounded.SlowMotionVideo
 import androidx.compose.material.icons.rounded.Stairs
 import androidx.compose.material.icons.rounded.Videocam
+import androidx.compose.material.icons.rounded.WorkspacePremium
 import androidx.compose.material.icons.rounded.Waves
 import androidx.compose.material.icons.rounded.North
 import androidx.compose.material.icons.rounded.Science
@@ -83,6 +84,9 @@ object ExtraRoutes {
     const val LESSON = "lesson/{id}"
     const val SCALE_REC = "scale_recognition"
     const val DEGREES = "scale_degrees"
+    const val GRADES = "sax_grades"
+    const val EXAM = "grade_exam/{grade}"
+    fun exam(grade: Int) = "grade_exam/$grade"
     const val FINGERING = "fingering"
     const val FINGERING_CHART = "fingering_chart"
     const val DAILY = "daily"
@@ -184,6 +188,10 @@ fun NavGraphBuilder.extraDestinations(nav: NavHostController) {
         LevelsScreen(DrillKind.SCALE_RECOGNITION, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_RECOGNITION, it)) },
             onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.SCALE_RECOGNITION, it)) })
     }
+    composable(ExtraRoutes.GRADES) { app.supersax.ui.grades.GradesScreen(onBack = { nav.popBackStack() }, onExam = { nav.navigate(ExtraRoutes.exam(it)) }) }
+    composable(ExtraRoutes.EXAM, arguments = listOf(navArgument("grade") { type = NavType.IntType })) { e ->
+        app.supersax.ui.grades.ExamScreen(e.arguments!!.getInt("grade"), onBack = { nav.popBackStack() })
+    }
     composable(ExtraRoutes.DEGREES) {
         LevelsScreen(DrillKind.SCALE_DEGREES, { nav.popBackStack() }, { nav.navigate(ExtraRoutes.play(DrillKind.SCALE_DEGREES, it)) },
             onLesson = { nav.navigate(ExtraRoutes.drillLesson(DrillKind.SCALE_DEGREES, it)) })
@@ -224,6 +232,7 @@ fun extraPhoneDrillRoute(type: ExerciseType): String? = when (type) {
 /** Progress: where you stand, and what you logged. */
 @Composable
 fun extraProgressEntries(nav: NavHostController): List<HubEntry> = listOf(
+    HubEntry(stringResource(R.string.gr_title), stringResource(R.string.gr_sub), Icons.Rounded.WorkspacePremium) { nav.navigate(ExtraRoutes.GRADES) },
     HubEntry(stringResource(R.string.stats_title), stringResource(R.string.stats_sub), Icons.Rounded.Insights) { nav.navigate(ExtraRoutes.STATS) },
     HubEntry(stringResource(R.string.rank), stringResource(R.string.rank_sub), Icons.Rounded.Leaderboard) { nav.navigate(ExtraRoutes.RANK) },
     HubEntry(stringResource(R.string.weekly_review), stringResource(R.string.weekly_review_sub), Icons.Rounded.Summarize) { nav.navigate(ExtraRoutes.REVIEW) },
@@ -238,6 +247,7 @@ fun extraLogEntries(nav: NavHostController): List<HubEntry> = listOf(
 /** Training that needs the saxophone in hand. */
 @Composable
 fun saxTrainingEntries(nav: NavHostController): List<HubEntry> = listOf(
+    HubEntry(stringResource(R.string.gr_title), stringResource(R.string.gr_sub), Icons.Rounded.WorkspacePremium) { nav.navigate(ExtraRoutes.GRADES) },
     HubEntry(stringResource(R.string.solo_title), stringResource(R.string.solo_sub), Icons.Rounded.MusicNote) { nav.navigate(ExtraRoutes.SOLO) },
     HubEntry(stringResource(R.string.take_title), stringResource(R.string.take_sub), Icons.Rounded.Videocam) { nav.navigate(ExtraRoutes.TAKE) },
     HubEntry(stringResource(R.string.playalong_title), stringResource(R.string.playalong_sub), Icons.AutoMirrored.Rounded.MenuBook) { nav.navigate(ExtraRoutes.PLAY_ALONG) },
