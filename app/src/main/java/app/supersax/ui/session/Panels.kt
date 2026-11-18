@@ -22,6 +22,7 @@ fun ScalePanel(step: PlannedStep, run: SessionRun, vm: SessionViewModel) {
     val c = app.supersax.ui.nav.LocalContainer.current
     val key = step.target.scaleKey ?: return
     val bpm = step.target.bpm ?: 60
+    ScaleNotesCard(key, bpm)
     SectionCard(stringResource(R.string.scale_runs_title)) {
         Text(stringResource(R.string.scale_runs_hint), style = MaterialTheme.typography.bodyMedium)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

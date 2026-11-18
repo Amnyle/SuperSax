@@ -436,5 +436,14 @@
     "fr": [
       "Nouvel exercice sur téléphone : Degrés de la gamme (Entraînement → sur le téléphone, et dans l'exercice du jour). « En ré majeur, quelle note est le degré 5 (dominante) ? » Touchez la note, avec son dièse ou son bémol. À partir du niveau 3, aussi dans l'autre sens : « En mi♭ majeur, quel degré est la♭ ? » Six niveaux, de do, sol et fa majeur à toutes les tonalités majeures et mineures, chacun avec une courte leçon."
     ]
+  },
+  {
+    "id": 39,
+    "en": [
+      "Scale blocks in a session now show the notes of the scale: what kind of scale it is (e.g. major pentatonic: the major scale without its 4th and 7th), a table of degrees and notes from the tonic to the octave, the notes on the staff, and Listen to hear it up and down. Hide it once you know it."
+    ],
+    "fr": [
+      "Les blocs de gammes en séance montrent maintenant les notes de la gamme : quel type de gamme (ex. pentatonique majeure : la gamme majeure sans sa 4te ni sa 7e), un tableau des degrés et des notes de la tonique à l'octave, les notes sur la portée, et Écouter pour l'entendre en montant et en descendant. Masquez-le une fois connue."
+    ]
   }
 ]

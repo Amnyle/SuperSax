@@ -331,3 +331,7 @@ Decisions taken where the spec (`docs/SPEC.md`) is silent. One line of reasoning
 ## Scale degrees drill
 
 - `ScaleDegrees` (DrillKind.SCALE_DEGREES, written pitch): "which note is degree N of this key" (note keypad, spelling as in the scale) and, from level 3, "which degree is this note" (degree buttons with names). Keys follow the scale-recognition ladder's first six levels (majors to 1/2/4 accidentals, then majors and minors to 2/4/6). Degrees 2–7 are asked (never the tonic); reverse share 0, 1/3, then 1/2 at level 6. Speed limits 6 s / 3 s. A lesson per level. Two questions in the 5-minute daily mix.
+
+## Scale notes in session scale blocks
+
+- `ScaleNotesCard` above the scale runs: written for the player's instrument (concert key → written tonic), a one-line description of the scale type, a table of degree labels (against the major scale: 1, ♭3, ♯4…) and note names from tonic to octave, the notes on the staff, Listen (up and down at the block's tempo, sounding pitch) and Hide.

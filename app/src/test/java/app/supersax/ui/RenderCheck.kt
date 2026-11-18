@@ -64,5 +64,20 @@ class RenderCheck {
         }
         save("widgets")
     }
-}
 
+    @Test fun scaleNotes() {
+        val c = androidx.test.core.app.ApplicationProvider.getApplicationContext<app.supersax.SaxApp>().container
+        val settings = c.settings.currentBlocking()
+        rule.setContent {
+            androidx.compose.runtime.CompositionLocalProvider(app.supersax.ui.nav.LocalContainer provides c, app.supersax.ui.nav.LocalSettings provides settings) {
+                SaxTheme {
+                    Column(Modifier.background(Color.White).width(400.dp)) {
+                        app.supersax.ui.session.ScaleNotesCard("MAJOR_PENTATONIC:Bb", 80)
+                        app.supersax.ui.session.ScaleNotesCard("MAJOR:A", 80)
+                    }
+                }
+            }
+        }
+        save("scale-notes")
+    }
+}

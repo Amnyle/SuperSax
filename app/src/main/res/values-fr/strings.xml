@@ -1313,4 +1313,18 @@
     <string name="lv_deg_4">Majeures et mineures jusqu\'à 2</string>
     <string name="lv_deg_5">Majeures et mineures jusqu\'à 4</string>
     <string name="lv_deg_6">Toutes les tonalités, dans les deux sens</string>
+    <string name="sn_title">Notes de %1$s</string>
+    <string name="sn_show">Afficher les notes</string>
+    <string name="sn_hide">Masquer</string>
+    <string name="sn_major">Gamme majeure : 7 notes, tons et demi-tons T T ½ T T T ½. Claire et joyeuse.</string>
+    <string name="sn_minor">Mineure naturelle : 7 notes, comme la majeure avec 3e, 6e et 7e plus basses. Plus sombre, plus triste.</string>
+    <string name="sn_dorian">Mode dorien : mineur avec une 6te haussée. Le mineur du jazz.</string>
+    <string name="sn_phrygian">Mode phrygien : mineur avec une 2de abaissée. Couleur espagnole.</string>
+    <string name="sn_lydian">Mode lydien : majeur avec une 4te haussée. Rêveur.</string>
+    <string name="sn_mixolydian">Mode mixolydien : majeur avec une 7e abaissée. Blues, rock.</string>
+    <string name="sn_locrian">Mode locrien : 2de et 5te abaissées. Tendu et instable.</string>
+    <string name="sn_major_arpeggio">Arpège majeur : seulement les 1re, 3ce et 5te de la gamme majeure (l\'accord majeur), l\'une après l\'autre.</string>
+    <string name="sn_minor_arpeggio">Arpège mineur : la 1re, la 3ce abaissée et la 5te (l\'accord mineur), l\'une après l\'autre.</string>
+    <string name="sn_major_pentatonic">Pentatonique majeure : 5 notes, la gamme majeure sans sa 4te ni sa 7e. Pas de demi-ton, donc rien ne frotte : idéale pour improviser.</string>
+    <string name="sn_minor_pentatonic">Pentatonique mineure : 5 notes (1, ♭3, 4, 5, ♭7), la mineure naturelle sans sa 2de ni sa 6te. La base des solos blues et rock.</string>
 </resources>
