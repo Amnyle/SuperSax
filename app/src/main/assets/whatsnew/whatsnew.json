@@ -445,5 +445,14 @@
     "fr": [
       "Les blocs de gammes en séance montrent maintenant les notes de la gamme : quel type de gamme (ex. pentatonique majeure : la gamme majeure sans sa 4te ni sa 7e), un tableau des degrés et des notes de la tonique à l'octave, les notes sur la portée, et Écouter pour l'entendre en montant et en descendant. Masquez-le une fois connue."
     ]
+  },
+  {
+    "id": 40,
+    "en": [
+      "AI queue: while MVSEP removes the sax, the queue shows your place in their line (e.g. place 12 of 30) or that it is being separated now."
+    ],
+    "fr": [
+      "File IA : pendant que MVSEP retire le sax, la file montre votre place dans leur file d'attente (ex. place 12 sur 30) ou que la séparation est en cours."
+    ]
   }
 ]

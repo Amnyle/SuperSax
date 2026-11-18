@@ -132,6 +132,22 @@ fun QueueRow(j: SeparationJob, onOpen: (String) -> Unit, showTitle: Boolean = fa
             color = when (j.step) { SeparationJob.Step.DONE -> Sax.colors.good; SeparationJob.Step.FAILED -> MaterialTheme.colorScheme.error; else -> Sax.colors.text })
         if (j.step == SeparationJob.Step.FAILED) Text(if (j.error == app.supersax.separation.OFFLINE) stringResource(R.string.sep_offline) else j.error ?: "",
             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+        if (j.active && j.step == SeparationJob.Step.SEPARATING && j.removal.isMvsep) {
+            val d = j.detail
+            val parts = d?.split(":")
+            Text(
+                when {
+                    parts != null && parts[0] == "waiting" && parts.size == 3 ->
+                        if ((parts[2].toIntOrNull() ?: 0) > 0) stringResource(R.string.mvsep_queue_of, parts[1].toIntOrNull() ?: 0, parts[2].toIntOrNull() ?: 0)
+                        else stringResource(R.string.mvsep_queue, parts[1].toIntOrNull() ?: 0)
+                    d == "waiting" -> stringResource(R.string.mvsep_waiting)
+                    d == "distributing" || d == "merging" -> stringResource(R.string.mvsep_gpus)
+                    else -> stringResource(R.string.mvsep_processing)
+                },
+                style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary,
+            )
+            Text(stringResource(R.string.mvsep_slow_hint), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+        }
         if (j.active && j.step != SeparationJob.Step.QUEUED) {
             if (j.progress > 0) LinearProgressIndicator(progress = { j.progress / 100f }, modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)
             else LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = Sax.colors.accent)

@@ -29,7 +29,8 @@ object Mvsep {
         WIND(54, mapOf("add_opt1" to "3", "add_opt2" to "0")),
     }
 
-    data class Status(val state: String, val message: String?, val backTrack: String?)
+    /** [phase] is MVSEP's own status (waiting, processing, distributing, merging…); [order] of [queueCount] while waiting. */
+    data class Status(val state: String, val message: String?, val backTrack: String?, val phase: String? = null, val order: Int? = null, val queueCount: Int? = null)
 
     private fun read(c: HttpURLConnection): JsonObject {
         val code = c.responseCode
@@ -96,7 +97,9 @@ object Mvsep {
                 if (url == null) Status("error", "no \"Other\" file in the result", null) else Status("success", null, url)
             }
             "failed", "not_found" -> Status("error", message ?: status, null)
-            else -> Status("progress", message, null)
+            else -> Status("progress", message, null, status,
+                (data?.get("current_order") as? JsonPrimitive)?.content?.toIntOrNull(),
+                (data?.get("queue_count") as? JsonPrimitive)?.content?.toIntOrNull())
         }
     }
 

@@ -87,6 +87,8 @@ data class SeparationJob(
     val taskId: String? = null,
     val backTrack: String? = null,
     val progress: Int = 0,
+    /** Where the service is with it, e.g. "waiting:12:30" (place 12 of 30 in MVSEP's queue) or "processing". */
+    val detail: String? = null,
     val error: String? = null,
     val resultSongId: String? = null,
 ) {
@@ -199,6 +201,8 @@ class SeparationWorker(context: Context, params: WorkerParameters) : CoroutineWo
                         val s = withContext(Dispatchers.IO) { Mvsep.get(job.taskId) }
                         if (s.state == "success" && s.backTrack != null) { q.update(job.id) { it.copy(backTrack = s.backTrack) }; return }
                         if (s.state == "error") throw Lalal.ServiceException(s.message ?: "separation failed")
+                        val detail = if (s.phase == "waiting" && s.order != null) "waiting:${s.order}:${s.queueCount ?: 0}" else s.phase
+                        if (detail != job.detail) q.update(job.id) { it.copy(detail = detail) }
                         delay(5000)
                     } else {
                         val s = withContext(Dispatchers.IO) { Lalal.check(key, job.taskId) }

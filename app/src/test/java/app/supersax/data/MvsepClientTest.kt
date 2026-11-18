@@ -11,7 +11,11 @@ class MvsepClientTest {
     private fun parse(s: String) = Mvsep.parseGet(Json.parseToJsonElement(s) as JsonObject)
 
     @Test fun states() {
-        assertEquals("progress", parse("""{"success":true,"status":"waiting","data":{"queue_count":3,"current_order":2}}""").state)
+        val waiting = parse("""{"success":true,"status":"waiting","data":{"queue_count":3,"current_order":2}}""")
+        assertEquals("progress", waiting.state)
+        assertEquals("waiting", waiting.phase)
+        assertEquals(2, waiting.order)
+        assertEquals(3, waiting.queueCount)
         assertEquals("progress", parse("""{"success":true,"status":"distributing","data":{}}""").state)
         val done = parse("""{"success":true,"status":"done","data":{"files":[{"type":"Saxophone","url":"https://de.mvsep.com/a_saxophone.mp3"},{"type":"Other","url":"https://de.mvsep.com/a_other.mp3"}]}}""")
         assertEquals("success", done.state); assertEquals("https://de.mvsep.com/a_other.mp3", done.backTrack)

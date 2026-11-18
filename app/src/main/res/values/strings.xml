@@ -1319,4 +1319,10 @@
     <string name="sn_minor_arpeggio">Minor arpeggio: the 1st, lowered 3rd and 5th (the minor chord), one after the other.</string>
     <string name="sn_major_pentatonic">Major pentatonic: 5 notes, the major scale without its 4th and 7th. No half steps, so nothing clashes: great for improvising.</string>
     <string name="sn_minor_pentatonic">Minor pentatonic: 5 notes (1, ♭3, 4, 5, ♭7), the natural minor without its 2nd and 6th. The base of blues and rock solos.</string>
+    <string name="mvsep_queue_of">Waiting in MVSEP\'s queue: place %1$d of %2$d</string>
+    <string name="mvsep_queue">Waiting in MVSEP\'s queue: place %1$d</string>
+    <string name="mvsep_waiting">Waiting in MVSEP\'s queue</string>
+    <string name="mvsep_gpus">MVSEP is separating it on several GPUs</string>
+    <string name="mvsep_processing">MVSEP is separating it now (a few minutes)</string>
+    <string name="mvsep_slow_hint">The sax model is MVSEP\'s best and heaviest: when their servers are busy the queue can take a long time, sometimes half an hour or more. The app keeps checking even when it is closed.</string>
 </resources>
