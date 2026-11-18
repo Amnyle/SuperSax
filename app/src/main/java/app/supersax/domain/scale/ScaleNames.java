@@ -12,6 +12,7 @@ public final class ScaleNames {
         switch (t) {
             case MAJOR: return fr ? "majeur" : "major";
             case NATURAL_MINOR: return fr ? "mineur" : "minor";
+            case HARMONIC_MINOR: return fr ? "mineur harmonique" : "harmonic minor";
             case DORIAN: return fr ? "dorien" : "Dorian";
             case PHRYGIAN: return fr ? "phrygien" : "Phrygian";
             case LYDIAN: return fr ? "lydien" : "Lydian";

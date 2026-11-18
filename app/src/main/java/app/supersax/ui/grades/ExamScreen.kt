@@ -195,10 +195,12 @@ private fun ScalesTest(g: Grade, seed: Long, onDone: (Double) -> Unit) {
     var tries by remember { mutableIntStateOf(0) }
     var lastMsg by remember { mutableStateOf<String?>(null) }
     val scores = remember { mutableStateListOf<Double>() }
-    val key = concertKey(scales[index.coerceAtMost(scales.size - 1)], instrument)
+    val item = scales[index.coerceAtMost(scales.size - 1)]
+    val key = concertKey(item, instrument)
     DisposableEffect(Unit) { c.mic.start(true); onDispose { c.mic.stop() } }
     val clean = stringResource(R.string.gr_scale_clean)
     val wrong = stringResource(R.string.gr_scale_wrong)
+    val short = stringResource(R.string.gr_scale_short)
     fun next(score: Double) {
         scores += score
         tries = 0
@@ -210,13 +212,14 @@ private fun ScalesTest(g: Grade, seed: Long, onDone: (Double) -> Unit) {
             val run = detector.feed(f) ?: return@collect
             val second = tries == 1
             tries++
-            val score = SaxGrades.scaleScore(run.clean, run.path.bpm, g, second)
-            lastMsg = if (run.clean) clean.format(run.path.bpm?.roundToInt() ?: 0) else wrong
+            val score = SaxGrades.scaleScore(run.clean, run.path.bpm, run.path.span, item, g, second)
+            lastMsg = if (!run.clean) wrong else if (run.path.span < item.range) short.format(run.path.bpm?.roundToInt() ?: 0) else clean.format(run.path.bpm?.roundToInt() ?: 0)
             if (run.clean || tries >= SaxGrades.SCALE_TRIES) next(score)
         }
     }
     Text(stringResource(R.string.gr_scale_play, index + 1, scales.size, scaleLabel(key)), style = MaterialTheme.typography.titleLarge)
-    Text(stringResource(R.string.gr_scale_hint, g.scaleBpm, SaxGrades.SCALE_TRIES), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
+    Text(stringResource(R.string.gr_scale_range, rangeLabel(item.range)), style = MaterialTheme.typography.titleMedium)
+    Text(stringResource(R.string.gr_scale_hint, g.notesPerMin(item), SaxGrades.SCALE_TRIES), style = MaterialTheme.typography.bodySmall, color = Sax.colors.textSecondary)
     Text(stringResource(R.string.gr_try, (tries + 1).coerceAtMost(SaxGrades.SCALE_TRIES), SaxGrades.SCALE_TRIES), style = MaterialTheme.typography.bodyMedium)
     lastMsg?.let { Text(it, style = MaterialTheme.typography.bodyMedium, color = Sax.colors.textSecondary) }
     TextButton(onClick = { next(0.0) }) { Text(stringResource(R.string.gr_skip)) }

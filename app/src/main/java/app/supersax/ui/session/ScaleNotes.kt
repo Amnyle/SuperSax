@@ -52,6 +52,7 @@ private fun scaleExplanation(t: ScaleType): String = stringResource(
     when (t) {
         ScaleType.MAJOR -> R.string.sn_major
         ScaleType.NATURAL_MINOR -> R.string.sn_minor
+        ScaleType.HARMONIC_MINOR -> R.string.sn_harmonic_minor
         ScaleType.DORIAN -> R.string.sn_dorian
         ScaleType.PHRYGIAN -> R.string.sn_phrygian
         ScaleType.LYDIAN -> R.string.sn_lydian

@@ -12,6 +12,8 @@ import java.util.List;
 public enum ScaleType {
     MAJOR(steps7(), list(0, 2, 4, 5, 7, 9, 11), 0, Family.MAJOR),
     NATURAL_MINOR(steps7(), list(0, 2, 3, 5, 7, 8, 10), -3, Family.MINOR),
+    /** Natural minor with a raised 7th (the leading tone): 1 2 ♭3 4 5 ♭6 7. */
+    HARMONIC_MINOR(steps7(), list(0, 2, 3, 5, 7, 8, 11), -3, Family.MINOR),
     DORIAN(steps7(), list(0, 2, 3, 5, 7, 9, 10), -2, Family.MODE),
     PHRYGIAN(steps7(), list(0, 1, 3, 5, 7, 8, 10), -4, Family.MODE),
     LYDIAN(steps7(), list(0, 2, 4, 6, 7, 9, 11), 1, Family.MODE),

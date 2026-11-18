@@ -1327,14 +1327,14 @@
     <string name="mvsep_slow_hint">The sax model is MVSEP\'s best and heaviest: when their servers are busy the queue can take a long time, sometimes half an hour or more. The app keeps checking even when it is closed.</string>
     <string name="gr_title">Sax grades</string>
     <string name="gr_sub">Grades 1 to 8 with exams to pass</string>
-    <string name="gr_intro">Eight grades, each with an exam marked out of 100 by the app: tone, scales, sight-reading, aural and theory. %1$d to pass, %2$d for merit, %3$d for distinction. Passing a grade opens the next.</string>
+    <string name="gr_intro">Eight grades, each with an exam marked out of 100 by the app: tone, scales, sight-reading, aural and theory. %1$d to pass, %2$d for merit, %3$d for distinction, as in graded music exams. Passing a grade opens the next.</string>
     <string name="gr_grade_n">Grade %1$d</string>
     <string name="gr_best">Best: %1$s (%2$d/100)</string>
     <string name="gr_locked">Pass grade %1$d to open it</string>
     <string name="gr_not_taken">Not taken yet</string>
     <string name="gr_take">Take the exam</string>
     <string name="gr_retake">Take it again</string>
-    <string name="gr_note">Super Sax\'s own grades, built like the usual graded music exams; they are not an official exam board\'s grades.</string>
+    <string name="gr_note">Scales, keys, ranges and tempos follow the saxophone technical work of Trinity College London\'s Woodwind syllabus (graded exams from 2022). Chromatic, whole-tone and 7th-chord items are not checked yet; the other parts are the app\'s own. Not an official exam: Super Sax is not linked to Trinity College London.</string>
     <string name="gr_distinction">Distinction</string>
     <string name="gr_merit">Merit</string>
     <string name="gr_pass">Pass</string>
@@ -1345,7 +1345,7 @@
     <string name="gr_sec_aural">Aural</string>
     <string name="gr_sec_theory">Theory</string>
     <string name="gr_tone_req">Hold %1$s for %2$d s each, in tune at least %3$d %% of the time.</string>
-    <string name="gr_scales_req">%1$d scales from this list, by ear, up and down (one octave or more), at %2$d BPM (one note per beat):</string>
+    <string name="gr_scales_req">Two scales and one arpeggio from this list, from memory, up and down over the range given. Scales at least crotchet = %1$d in quavers (%2$d notes a minute), arpeggios %3$d notes a minute.</string>
     <string name="gr_reading_req">A 16-note melody at note-reading level %1$d, played straight away.</string>
     <string name="gr_aural_req">%1$d ear-training questions at level %2$d.</string>
     <string name="gr_theory_req">%1$d questions on scale degrees and key signatures.</string>
@@ -1358,9 +1358,9 @@
     <string name="gr_tone_hint">Steady and in tune: %1$d %% of the hold in tune for full marks.</string>
     <string name="gr_tone_done">Last long tone: %1$d %%</string>
     <string name="gr_scale_play">Scale %1$d of %2$d: %3$s</string>
-    <string name="gr_scale_hint">Up and down from the tonic, one note per beat at %1$d BPM or faster. %2$d tries.</string>
+    <string name="gr_scale_hint">Up and down from the tonic, at least %1$d notes a minute (even quavers). %2$d tries.</string>
     <string name="gr_try">Try %1$d of %2$d</string>
-    <string name="gr_scale_clean">Clean, about %1$d BPM.</string>
+    <string name="gr_scale_clean">Clean, about %1$d notes a minute.</string>
     <string name="gr_scale_wrong">Not clean.</string>
     <string name="gr_skip">Skip (no marks)</string>
     <string name="gr_reading_play">Play this melody</string>
@@ -1374,4 +1374,12 @@
     <string name="gr_marks">Marks</string>
     <string name="gr_back_to_grades">Back to the grades</string>
     <string name="locked">Locked</string>
+    <string name="scale_harmonic_minor">harmonic minor</string>
+    <string name="sn_harmonic_minor">Harmonic minor: natural minor with a raised 7th (1 2 ♭3 4 5 ♭6 7), so the 7th leads back to the tonic. The jump from ♭6 to 7 sounds exotic.</string>
+    <string name="gr_range_1">1 octave</string>
+    <string name="gr_range_12th">to a 12th</string>
+    <string name="gr_range_2">2 octaves</string>
+    <string name="gr_range_2half">2½ octaves</string>
+    <string name="gr_scale_range">Range: %1$s</string>
+    <string name="gr_scale_short">Clean, about %1$d notes a minute, but not over the whole range (half marks).</string>
 </resources>

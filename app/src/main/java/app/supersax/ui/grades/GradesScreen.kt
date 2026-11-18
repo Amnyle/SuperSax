@@ -71,6 +71,15 @@ class GradeStore(private val c: AppContainer) {
 /** Concert scale key ("MAJOR:Eb") of a written exam scale, for the listener and the labels. */
 fun concertKey(s: GradeScale, instrument: Instrument): String = ScaleId.fromWritten(PitchClass.parse(s.writtenTonic), s.type, instrument).key
 
+/** "1 octave", "a 12th", "2 octaves", "2½ octaves". */
+@Composable
+fun rangeLabel(semitones: Int): String = stringResource(when {
+    semitones >= 30 -> R.string.gr_range_2half
+    semitones >= 24 -> R.string.gr_range_2
+    semitones >= 19 -> R.string.gr_range_12th
+    else -> R.string.gr_range_1
+})
+
 @Composable
 fun awardLabel(a: Award): String = stringResource(when (a) {
     Award.DISTINCTION -> R.string.gr_distinction
@@ -140,9 +149,9 @@ fun GradeContents(g: Grade) {
         val notes = g.longToneNotes.map { writtenNoteLabel(instrument.writtenToConcertMidi(it)) }
         Line(stringResource(R.string.gr_sec_tone), stringResource(R.string.gr_tone_req,
             notes.joinToString(" & "), g.longToneSec, Math.round(g.longToneInTune * 100).toInt()))
-        val names = g.scales.map { scaleLabel(concertKey(it, instrument)) }
-        Line(stringResource(R.string.gr_sec_scales), stringResource(R.string.gr_scales_req, SaxGrades.SCALES_ASKED, g.scaleBpm) + "\n" +
-            names.joinToString(", "))
+        val names = g.scales.map { scaleLabel(concertKey(it, instrument)) + " (" + rangeLabel(it.range) + ")" }
+        Line(stringResource(R.string.gr_sec_scales), stringResource(R.string.gr_scales_req, g.scaleCrotchet, g.scaleNotesPerMin, g.arpeggioNotesPerMin) + "\n" +
+            names.joinToString("\n"))
         Line(stringResource(R.string.gr_sec_reading), stringResource(R.string.gr_reading_req, g.readingLevel))
         Line(stringResource(R.string.gr_sec_aural), stringResource(R.string.gr_aural_req, SaxGrades.AURAL_QUESTIONS, g.earLevel))
         Line(stringResource(R.string.gr_sec_theory), stringResource(R.string.gr_theory_req, SaxGrades.THEORY_QUESTIONS))

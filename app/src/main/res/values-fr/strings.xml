@@ -1335,14 +1335,14 @@
     <string name="mvsep_slow_hint">Le modèle sax est le meilleur et le plus lourd de MVSEP : quand leurs serveurs sont chargés, l\'attente peut être longue, parfois une demi-heure ou plus. L\'appli continue de vérifier même fermée.</string>
     <string name="gr_title">Grades de sax</string>
     <string name="gr_sub">Grades 1 à 8 avec des examens à réussir</string>
-    <string name="gr_intro">Huit grades, chacun avec un examen noté sur 100 par l\'appli : son, gammes, déchiffrage, oreille et théorie. %1$d pour réussir, %2$d pour la mention bien, %3$d pour la mention très bien. Réussir un grade ouvre le suivant.</string>
+    <string name="gr_intro">Huit grades, chacun avec un examen noté sur 100 par l\'appli : son, gammes, déchiffrage, oreille et théorie. %1$d pour réussir, %2$d pour la mention bien, %3$d pour la mention très bien, comme aux examens de musique. Réussir un grade ouvre le suivant.</string>
     <string name="gr_grade_n">Grade %1$d</string>
     <string name="gr_best">Meilleur : %1$s (%2$d/100)</string>
     <string name="gr_locked">Réussissez le grade %1$d pour l\'ouvrir</string>
     <string name="gr_not_taken">Pas encore passé</string>
     <string name="gr_take">Passer l\'examen</string>
     <string name="gr_retake">Le repasser</string>
-    <string name="gr_note">Les grades propres à Super Sax, construits comme les examens de musique habituels ; ce ne sont pas les grades d\'un organisme officiel.</string>
+    <string name="gr_note">Les gammes, tonalités, étendues et tempos suivent le travail technique de saxophone du programme Woodwind de Trinity College London (examens depuis 2022). Les gammes chromatiques, par tons et les accords de 7e ne sont pas encore vérifiés ; les autres parties sont propres à l\'appli. Pas un examen officiel : Super Sax n\'a pas de lien avec Trinity College London.</string>
     <string name="gr_distinction">Mention très bien</string>
     <string name="gr_merit">Mention bien</string>
     <string name="gr_pass">Réussi</string>
@@ -1353,7 +1353,7 @@
     <string name="gr_sec_aural">Oreille</string>
     <string name="gr_sec_theory">Théorie</string>
     <string name="gr_tone_req">Tenir %1$s %2$d s chacune, juste au moins %3$d %% du temps.</string>
-    <string name="gr_scales_req">%1$d gammes de cette liste, à l\'oreille, en montant et en descendant (une octave ou plus), à %2$d BPM (une note par temps) :</string>
+    <string name="gr_scales_req">Deux gammes et un arpège de cette liste, par cœur, en montant et en descendant sur l\'étendue indiquée. Gammes au moins noire = %1$d en croches (%2$d notes par minute), arpèges %3$d notes par minute.</string>
     <string name="gr_reading_req">Une mélodie de 16 notes au niveau de lecture %1$d, jouée tout de suite.</string>
     <string name="gr_aural_req">%1$d questions d\'oreille au niveau %2$d.</string>
     <string name="gr_theory_req">%1$d questions sur les degrés et les armures.</string>
@@ -1366,9 +1366,9 @@
     <string name="gr_tone_hint">Stable et juste : %1$d %% de la tenue juste pour tous les points.</string>
     <string name="gr_tone_done">Dernier son filé : %1$d %%</string>
     <string name="gr_scale_play">Gamme %1$d sur %2$d : %3$s</string>
-    <string name="gr_scale_hint">En montant et descendant depuis la tonique, une note par temps à %1$d BPM ou plus. %2$d essais.</string>
+    <string name="gr_scale_hint">En montant et descendant depuis la tonique, au moins %1$d notes par minute (croches régulières). %2$d essais.</string>
     <string name="gr_try">Essai %1$d sur %2$d</string>
-    <string name="gr_scale_clean">Propre, environ %1$d BPM.</string>
+    <string name="gr_scale_clean">Propre, environ %1$d notes par minute.</string>
     <string name="gr_scale_wrong">Pas propre.</string>
     <string name="gr_skip">Passer (sans points)</string>
     <string name="gr_reading_play">Jouez cette mélodie</string>
@@ -1382,4 +1382,12 @@
     <string name="gr_marks">Points</string>
     <string name="gr_back_to_grades">Retour aux grades</string>
     <string name="locked">Verrouillé</string>
+    <string name="scale_harmonic_minor">mineur harmonique</string>
+    <string name="sn_harmonic_minor">Mineur harmonique : la mineure naturelle avec la 7e haussée (1 2 ♭3 4 5 ♭6 7), pour que la 7e ramène à la tonique. Le saut de ♭6 à 7 sonne oriental.</string>
+    <string name="gr_range_1">1 octave</string>
+    <string name="gr_range_12th">jusqu\'à la 12e</string>
+    <string name="gr_range_2">2 octaves</string>
+    <string name="gr_range_2half">2 octaves ½</string>
+    <string name="gr_scale_range">Étendue : %1$s</string>
+    <string name="gr_scale_short">Propre, environ %1$d notes par minute, mais pas sur toute l\'étendue (moitié des points).</string>
 </resources>

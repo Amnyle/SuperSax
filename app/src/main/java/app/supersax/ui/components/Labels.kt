@@ -28,6 +28,7 @@ fun scaleTypeLabel(t: ScaleType): String = stringResource(
     when (t) {
         ScaleType.MAJOR -> R.string.scale_major
         ScaleType.NATURAL_MINOR -> R.string.scale_minor
+        ScaleType.HARMONIC_MINOR -> R.string.scale_harmonic_minor
         ScaleType.DORIAN -> R.string.scale_dorian
         ScaleType.PHRYGIAN -> R.string.scale_phrygian
         ScaleType.LYDIAN -> R.string.scale_lydian

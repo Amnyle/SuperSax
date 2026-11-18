@@ -25,9 +25,13 @@ public final class ScalePath {
         public final int played, before;
         public final int notes;
         public final @Nullable Double bpm;
-        Result(Problem problem, int index, int played, int before, int notes, @Nullable Double bpm) {
-            this.problem = problem; this.index = index; this.played = played; this.before = before; this.notes = notes; this.bpm = bpm;
+        /** Semitones between the lowest and the highest note of a clean run (0 otherwise). */
+        public final int span;
+        Result(Problem problem, int index, int played, int before, int notes, @Nullable Double bpm) { this(problem, index, played, before, notes, bpm, 0); }
+        Result(Problem problem, int index, int played, int before, int notes, @Nullable Double bpm, int span) {
+            this.problem = problem; this.index = index; this.played = played; this.before = before; this.notes = notes; this.bpm = bpm; this.span = span;
         }
+        public int getSpan() { return span; }
         public Problem getProblem() { return problem; }
         public int getIndex() { return index; }
         public int getPlayed() { return played; }
@@ -71,7 +75,8 @@ public final class ScalePath {
         int last = path.get(path.size() - 1);
         if (!path.contains(start + 12) && !path.contains(start - 12)) return new Result(Problem.NO_OCTAVE, -1, start, -1, seq.size(), bpm);
         if (last != start) return new Result(Problem.NOT_HOME, where.get(where.size() - 1), last, start, seq.size(), bpm);
-        return new Result(Problem.NONE, -1, -1, -1, seq.size(), bpm);
+        int span = java.util.Collections.max(path) - java.util.Collections.min(path);
+        return new Result(Problem.NONE, -1, -1, -1, seq.size(), bpm, span);
     }
 
     private static boolean neighbours(TreeSet<Integer> ladder, int a, int b) {

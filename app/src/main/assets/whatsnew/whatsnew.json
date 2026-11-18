@@ -463,5 +463,14 @@
     "fr": [
       "Nouveau : Grades de sax (Entraînement → avec le sax, et Progrès). Huit grades, chacun avec un examen que l'appli note sur 100 pendant que vous jouez : son (deux sons filés), gammes (trois de la liste du grade, à l'oreille), déchiffrage (une mélodie suivie note à note), oreille et théorie. 66 pour réussir, 80 mention bien, 90 mention très bien ; réussir un grade ouvre le suivant."
     ]
+  },
+  {
+    "id": 42,
+    "en": [
+      "Sax grades now follow the real syllabus for scales: keys, ranges (one octave, a 12th, two octaves, 2½ octaves), arpeggios and minimum tempos come from the saxophone technical work of Trinity College London's Woodwind syllabus (graded exams from 2022). Each exam asks two scales and an arpeggio. Pass marks are 60, merit 75, distinction 87, as in graded exams. New scale type: harmonic minor."
+    ],
+    "fr": [
+      "Les grades de sax suivent maintenant le vrai programme pour les gammes : tonalités, étendues (une octave, une 12e, deux octaves, 2 octaves ½), arpèges et tempos minimum viennent du travail technique de saxophone du programme Woodwind de Trinity College London (examens depuis 2022). Chaque examen demande deux gammes et un arpège. Réussi à 60, mention bien 75, très bien 87, comme aux examens. Nouveau type de gamme : mineur harmonique."
+    ]
   }
 ]

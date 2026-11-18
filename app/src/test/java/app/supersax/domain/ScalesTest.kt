@@ -25,7 +25,11 @@ class ScalesTest {
                 assertEquals(type.semitones + 12, notes.map { it.midi - notes[0].midi }, "$id semitones")
                 // Accidentals in the notes agree with the key signature.
                 val sig = id.keySignature
-                notes.forEach { n -> assertEquals(sig.alterFor(n.letter), n.alter, "$id ${n}") }
+                // (Harmonic minor raises its 7th on purpose: one accidental above the key signature.)
+                notes.forEachIndexed { i, n ->
+                    val expected = sig.alterFor(n.letter) + if (type == ScaleType.HARMONIC_MINOR && i == 6) 1 else 0
+                    assertEquals(expected, n.alter, "$id ${n}")
+                }
             }
         }
     }
